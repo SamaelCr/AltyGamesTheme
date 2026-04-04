@@ -23,21 +23,18 @@
 //]]>
 </script>
 
-<!-- 2. CARGA DE ASSETS DESDE GITHUB (Recuerda actualizar v= al subir cambios) -->
-<link href='https://cdn.jsdelivr.net/gh/SamaelCr/AltyGamesTheme@main/styles.css?v=2.98' rel='stylesheet' type='text/css'/>
-<script src='https://cdn.jsdelivr.net/gh/SamaelCr/AltyGamesTheme@main/script.js?v=1.0' type='text/javascript'/>
+<!-- 2. ASSETS GITHUB (Actualiza v= al subir el CSS nuevo) -->
+<link href='https://cdn.jsdelivr.net/gh/SamaelCr/AltyGamesTheme@main/styles.css?v=3.00' rel='stylesheet' type='text/css'/>
+<script src='https://cdn.jsdelivr.net/gh/SamaelCr/AltyGamesTheme@main/script.js?v=1.01' type='text/javascript'/>
 
 <b:skin><![CDATA[
 /*
 -----------------------------------------------
 Theme Name: Devil Survivor 2 (Restoration Final)
-Design by: AltyGames
 -----------------------------------------------
-
 <Group description="Fondo" selector="body">
   <Variable name="body.background" description="Imagen de fondo" type="background" color="$(body.bg)" default="$(color) url(https://1.bp.blogspot.com/-d7NByOREYKU/VpTJ7zJgvUI/AAAAAAAACTw/X6HasrYaVs4/s000/bg_body.gif) repeat fixed top center" value="$(color) url(https://1.bp.blogspot.com/-d7NByOREYKU/VpTJ7zJgvUI/AAAAAAAACTw/X6HasrYaVs4/s000/bg_body.gif) repeat fixed top center"/>
 </Group>
-
 <Group description="AltyGames: Colores" selector="body">
   <Variable name="brand.color" description="Color Principal" type="color" default="#0860ca" value="#0860ca"/>
   <Variable name="hover.color" description="Color de Hover (Menu)" type="color" default="#0860ca" value="#0860ca"/>
@@ -46,49 +43,25 @@ Design by: AltyGames
 </Group>
 */
 
-/* --- APLICACIÓN DE VARIABLES DEL DISEÑADOR --- */
 :root {
   --brand-color: $(brand.color) !important;
   --hover-color: $(hover.color) !important;
   --title-color: $(title.color) !important;
 }
 
-body {
-  background: $(body.background) !important;
-  background-color: $(body.bg) !important;
-}
+body { background: $(body.background) !important; background-color: $(body.bg) !important; }
 
-/* --- FIX DEFINITIVO REDES SOCIALES --- */
-.jorib li a { 
-    background-color: $(brand.color) !important; 
-    color: #ffffff !important; 
-    border: 3px solid #ffffff !important;
-    transition: 0.1s;
-}
-.jorib li a:hover { 
-    background-color: #ffffff !important; 
-    color: $(brand.color) !important; 
-    border-color: $(brand.color) !important;
-    transform: translate(2px, 2px); 
-    box-shadow: 2px 2px 0px #000 !important;
-}
-.jorib li a i { color: inherit !important; }
-
-/* --- FIX NAVEGACIÓN --- */
+/* REGLAS DE SOBREESCRITURA PARA ICONOS Y MENU */
+.tool-btn i { color: #ffffff !important; opacity: 1 !important; text-shadow: none !important; }
+.jorib li a { background-color: $(brand.color) !important; color: #ffffff !important; border: 3px solid #ffffff !important; }
+.jorib li a:hover { background-color: #ffffff !important; color: $(brand.color) !important; border-color: $(brand.color) !important; }
 ul.dark_menu li:hover:before { background: $(hover.color) !important; }
-.tool-btn:hover:before { background: $(brand.color) !important; }
 
-/* --- FIX VISIBILIDAD MODO CLARO (FICHA Y REQUISITOS) --- */
-.light-theme .info-grid, .light-theme .info-grid *, 
-.light-theme .req-container, .light-theme .req-container * { 
-    color: #111111 !important; 
-}
+/* FIX VISIBILIDAD MODO CLARO */
+.light-theme .info-grid, .light-theme .info-grid *, .light-theme .req-container, .light-theme .req-container * { color: #111111 !important; }
 .light-theme .info-grid { background: rgba(0,0,0,0.05) !important; border-color: #ddd !important; }
 .light-theme .req-container { background: #f4f4f4 !important; border: 1px solid #ddd !important; }
-.light-theme .info-grid b, .light-theme .req-grid b { color: $(brand.color) !important; }
-.light-theme .req-title { color: #b8860b !important; }
 
-/* Estilos base */
 .post-body img { max-width: 100%; height: auto; }
 .post-body { line-height: 1.6; font-size: 16px; color: inherit; }
 a { color: $(brand.color); }
@@ -96,7 +69,6 @@ a { color: $(brand.color); }
 </head>
 
 <body>
-<!-- ESTRUCTURA DEL MENÚ LATERAL -->
 <div id='side-drawer'>
   <div class='drawer-header'>
     <span>MENÚ</span>
@@ -107,7 +79,6 @@ a { color: $(brand.color); }
 <div id='drawer-overlay'/>
 
 <div id='wrapper'>
-  <!-- HEADER -->
   <div id='header'>
     <div class='header-inner'>
       <b:section class='blognames' id='blognames' maxwidgets='1' showaddelement='no'>
@@ -142,7 +113,6 @@ a { color: $(brand.color); }
     </div>
   </div> 
 
-  <!-- NAVEGACIÓN -->
   <div class='menujohanes'>
     <b:section id='Navigation' maxwidgets='1' showaddelement='yes'>
       <b:widget id='LinkList1' locked='false' title='Navegacion' type='LinkList' version='1'>
@@ -170,20 +140,17 @@ a { color: $(brand.color); }
     </div>
   </div>
 
-  <!-- CONTENIDO PRINCIPAL -->
   <div id='casing'>
     <div id='content-wrapper'>
       <b:if cond='data:blog.pageType == "index"'>
         <div class='section-title'><i class='fa-solid fa-star'/> DESTACADOS</div>
         <div id='featured-ajax-grid'/>
         <script src='/feeds/posts/summary/-/Destacado?alt=json-in-script&amp;callback=loadFeatured&amp;max-results=2' type='text/javascript'/>
-
         <div class='section-title'><i class='fa-solid fa-calendar-days'/> ÚLTIMAS PUBLICACIONES</div>
         <div class='latest-grid-container' id='main-ajax-grid'/>
         <div id='blog-pager'/>
         <script src='/feeds/posts/summary?alt=json-in-script&amp;callback=loadMainGrid&amp;max-results=999' type='text/javascript'/>
       </b:if>
-
       <b:if cond='data:blog.pageType in {"item","static_page"}'>
           <b:section id='MainGrid' showaddelement='no'>
             <b:widget id='Blog1' locked='true' title='Entradas del blog' type='Blog'>
@@ -208,15 +175,7 @@ a { color: $(brand.color); }
             </b:widget>
           </b:section>
       </b:if>
-
-      <b:if cond='data:blog.pageType == "index"'>
-          <div style='display:none !important'>
-             <b:section id='MainGridHidden' showaddelement='no'/>
-          </div>
-      </b:if>
     </div>
-
-    <!-- SIDEBAR -->
     <div class='sidebar'>
       <div class='sidebar-search'>
         <form expr:action='data:blog.homepageUrl + "search"' method='get'>
@@ -231,8 +190,6 @@ a { color: $(brand.color); }
       </b:section>
     </div>
   </div>
-
-  <!-- FOOTER -->
   <div class='fleft'><p>- Copyright &#169; 2026 <data:blog.title/> - Restoration by AltyGames -</p></div>
 </div>
 </body>

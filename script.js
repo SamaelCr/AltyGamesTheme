@@ -1,7 +1,6 @@
 var posts_per_page = 9;
 var featured_label = "Destacado";
 
-/* MOTOR IMÁGENES HQ */
 function getSmartThumb(entry) {
   var thumb = "";
   if (entry.media$thumbnail) { thumb = entry.media$thumbnail.url; } 
@@ -16,7 +15,6 @@ function getSmartThumb(entry) {
   return thumb;
 }
 
-/* ETIQUETAS */
 function getLabels(entry) {
   var html = '<div class="post-labels">';
   if (entry.category) {
@@ -106,23 +104,10 @@ $(document).ready(function() {
   });
   if (htmlEl.hasClass('light-theme')) { themeBtn.find('i').attr('class', 'fa-solid fa-moon'); } else { themeBtn.find('i').attr('class', 'fa-solid fa-sun'); }
 
-  /* --- LÓGICA PANEL LATERAL (DRAWER) --- */
-  // Clonar el menú horizontal al panel lateral para móviles
+  /* PANEL LATERAL */
   var menuHTML = $('.dark_menu').first().html();
   $('#drawer-content').html('<ul class="dark_menu">' + menuHTML + '</ul>');
-
-  // Abrir Menú Lateral
-  $('#menu-toggle').on('click', function() {
-    $('body').addClass('drawer-open');
-  });
-
-  // Cerrar Menú Lateral
-  $('#drawer-close, #drawer-overlay').on('click', function() {
-    $('body').removeClass('drawer-open');
-  });
-
-  // Cerrar panel al pulsar un enlace
-  $('#side-drawer a').on('click', function() {
-    $('body').removeClass('drawer-open');
-  });
+  $('#menu-toggle').on('click', function() { $('body').addClass('drawer-open'); });
+  $('#drawer-close, #drawer-overlay').on('click', function() { $('body').removeClass('drawer-open'); });
+  $('#side-drawer a').on('click', function() { $('body').removeClass('drawer-open'); });
 });

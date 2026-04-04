@@ -1,6 +1,6 @@
 /**
 * Theme Name: Devil Survivor 2 (Restoration Final)
-* Version: 7.5 - Final Responsive Side Drawer
+* Version: 8.0 - Full Feature + Submenu & Mobile Fix
 * GitHub: SamaelCr/AltyGamesTheme
 */
 
@@ -89,9 +89,10 @@ ul.dark_menu li a {
     text-decoration: none !important; border: 0 !important; 
 }
 
-/* SUBMENU */
+/* SUBMENU FIX (Se corrigió la distancia para que no se oculte al bajar) */
 ul.dark_menu li ul { 
-    display: none; position: absolute; left: -45px; top: 48px; 
+    display: none; position: absolute; left: -45px; 
+    top: 100%; padding-top: 5px; /* Crea un puente para el hover */
     width: auto; list-style: none !important; z-index: 9999; 
     flex-direction: column; gap: 6px; 
 }
@@ -106,6 +107,9 @@ ul.dark_menu li:hover > ul { display: flex; }
     color: #fff !important; z-index: 20; background: none !important; 
     overflow: hidden; border: 0 !important; text-decoration: none !important;
 }
+/* Fix Iconos Opacos: Forzado de blanco puro */
+.tool-btn i { color: #ffffff !important; opacity: 1 !important; text-decoration: none !important; }
+
 .tool-btn:before { 
     content: ""; position: absolute; top: 0; left: 0; right: 0; bottom: 0; 
     background: rgba(0,0,0,0.8); transform: skewX(-20deg); transition: 0.3s; z-index: 1; 
@@ -194,18 +198,27 @@ body.drawer-open #drawer-overlay { display: block; }
     display: flex !important; flex-direction: column !important; 
     margin: 0 !important; padding: 0 !important; opacity: 1 !important; float: none !important;
 }
-#side-drawer ul.dark_menu li { margin-bottom: 10px; width: 100%; min-width: 0; }
+#side-drawer ul.dark_menu li { margin-bottom: 10px; width: 100%; min-width: 0 !important; }
 #side-drawer ul.dark_menu li:before { transform: skewX(-10deg); }
 
-/* --- 10. MEDIA QUERIES (RESPONSIVE) --- */
+/* --- 10. MEDIA QUERIES (RESPONSIVE FIX) --- */
 @media screen and (max-width: 768px) {
     #header { height: 250px; }
-    h1#blog-title { font-size: 24pt; top: 60px; width: 70%; line-height: 30px; }
+    h1#blog-title { font-size: 24pt; top: 60px; width: 100%; text-align: center; left: 0; }
     .jorib { top: 10px; right: 10px; transform: scale(0.8); }
     
-    #menu-toggle { display: flex; } /* Hamburguesa visible */
-    ul.dark_menu { display: none; } /* Escondemos el menú horizontal */
-    .nav-tools { margin-top: -45px; float: right; }
+    /* Header Móvil Reordenado */
+    .nav-tools { 
+        margin-top: 0; float: none; width: 100%; 
+        display: flex; justify-content: center; /* Centra los iconos de modo y lupa */
+        padding-top: 10px; position: relative;
+    }
+    
+    #menu-toggle { 
+        display: flex; position: absolute; left: 15px; top: 10px; 
+    } /* Hamburguesa a la izquierda */
+
+    ul.dark_menu { display: none; } /* Ocultar horizontal */
 
     #casing { flex-direction: column; padding: 10px 0; }
     #content-wrapper { width: 100%; padding: 0 15px; }
