@@ -1,6 +1,6 @@
 /**
 * Theme Name: Devil Survivor 2 (Restoration Final)
-* Version: 6.9 - Full Responsive Support
+* Version: 7.5 - Final Responsive Side Drawer
 * GitHub: SamaelCr/AltyGamesTheme
 */
 
@@ -13,7 +13,6 @@
 /* --- 1. ESTILOS BASE --- */
 body { 
     margin: 0; padding: 0; 
-    /* background: #000 url(https://1.bp.blogspot.com/-d7NByOREYKU/VpTJ7zJgvUI/AAAAAAAACTw/X6HasrYaVs4/s000/bg_body.gif) repeat fixed top center !important; */
     font-family: 'Segoe UI', Tahoma, sans-serif; 
     color: #fff !important; 
     transition: background 0.3s; 
@@ -47,26 +46,29 @@ h1#blog-title {
 }
 h1#blog-title a { color: #fff !important; text-decoration: none !important; border: 0 !important; }
 
-/* --- 3. REDES SOCIALES (PIXEL ART) --- */
+/* --- 3. REDES SOCIALES (FIX HOVER) --- */
 .jorib { 
     position: absolute; top: 15px; right: 20px; z-index: 99; 
     display: flex; list-style: none; padding: 0; margin: 0; gap: 10px; 
 }
 .jorib li a { 
     display: flex; width: 45px; height: 45px; 
-    background-color: var(--brand-color); color: #fff !important; 
+    background-color: var(--brand-color) !important; 
+    color: #ffffff !important; 
     align-items: center; justify-content: center; 
-    text-decoration: none !important; border: 3px solid #fff !important; 
+    text-decoration: none !important; border: 3px solid #ffffff !important; 
     box-shadow: 4px 4px 0px #000; font-size: 22px; transition: 0.1s; 
 }
 .jorib li a:hover { 
+    background-color: #ffffff !important; 
+    color: var(--brand-color) !important;
+    border-color: var(--brand-color) !important;
     transform: translate(2px, 2px); 
     box-shadow: 2px 2px 0px #000;
-    background-color: #fff; color: var(--brand-color) !important;
-    border-color: var(--brand-color) !important;
 }
+.jorib li a i { color: inherit !important; }
 
-/* --- 4. MENU DE NAVEGACION --- */
+/* --- 4. MENU DE NAVEGACION (ESCRITORIO) --- */
 .menujohanes { position: relative; width: 1120px; margin: auto; z-index: 1000; height: 40px; }
 ul.dark_menu { 
     margin: 0; padding: 0; padding-left: 30px; list-style: none !important; 
@@ -94,13 +96,9 @@ ul.dark_menu li ul {
     flex-direction: column; gap: 6px; 
 }
 ul.dark_menu li ul li { list-style: none !important; }
-ul.dark_menu li ul:after { 
-    content: ""; position: absolute; top: -20px; left: 0; 
-    width: 100%; height: 25px; background: transparent; z-index: -1; 
-}
 ul.dark_menu li:hover > ul { display: flex; }
 
-/* --- 5. LUPA Y TEMA --- */
+/* --- 5. LUPA, TEMA Y HAMBURGUESA --- */
 .nav-tools { float: right; margin-top: -45px; display: flex; margin-right: 20px; gap: 5px; border: 0 !important; }
 .tool-btn { 
     position: relative; width: 50px; height: 40px; cursor: pointer; 
@@ -108,23 +106,20 @@ ul.dark_menu li:hover > ul { display: flex; }
     color: #fff !important; z-index: 20; background: none !important; 
     overflow: hidden; border: 0 !important; text-decoration: none !important;
 }
-.tool-btn i { 
-    position: relative; z-index: 5; display: block; 
-    text-decoration: none !important; border: 0 !important; outline: 0 !important;
-}
 .tool-btn:before { 
     content: ""; position: absolute; top: 0; left: 0; right: 0; bottom: 0; 
     background: rgba(0,0,0,0.8); transform: skewX(-20deg); transition: 0.3s; z-index: 1; 
 }
 .tool-btn:hover:before { background: var(--brand-color); }
+#menu-toggle { display: none; } /* Oculto en PC */
 
 /* --- 6. CONTENEDORES Y GRIDS --- */
 #casing { 
     border: 1px solid var(--brand-color); margin: 10px auto; 
-    width: 1120px; background: rgba(113,113,113,0.05); overflow: hidden; 
+    max-width: 1120px; width: 95%; background: rgba(113,113,113,0.05); overflow: hidden; 
     padding: 20px 0; min-height: 600px; display: flex; box-sizing: border-box; 
 }
-#content-wrapper { width: 800px; padding: 0 20px; box-sizing: border-box; display: flex; flex-direction: column; }
+#content-wrapper { flex: 1; padding: 0 20px; box-sizing: border-box; display: flex; flex-direction: column; overflow: hidden; }
 .section-title { 
     font-size: 18px; text-transform: uppercase; margin: 10px 0 20px 0; 
     color: var(--title-color); font-weight: bold; 
@@ -143,87 +138,80 @@ ul.dark_menu li:hover > ul { display: flex; }
 
 /* --- 7. PLANTILLA DE ENTRADAS --- */
 .post-body-container { width: 100%; color: #fff !important; }
-.post-main-img { width: 100%; border-radius: 4px; border-bottom: 4px solid var(--brand-color); margin-bottom: 20px; box-shadow: 5px 5px 0px rgba(0,0,0,0.5); }
+.post-main-img { width: 100%; height: auto; border-radius: 4px; border-bottom: 4px solid var(--brand-color); margin-bottom: 20px; box-shadow: 5px 5px 0px rgba(0,0,0,0.5); }
 .post-sub-title { background: var(--brand-color) !important; color: #fff !important; padding: 12px 15px !important; text-transform: uppercase !important; font-weight: bold !important; font-size: 18px !important; margin: 25px 0 15px 0 !important; border-left: 5px solid #fff !important; display: block !important; }
 
-/* FICHA TÉCNICA */
 .info-grid { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 10px !important; background: rgba(255,255,255,0.05) !important; padding: 15px !important; border: 1px solid #333 !important; margin: 15px 0 !important; border-radius: 4px !important; }
 .info-item { color: #fff !important; }
 .info-item b { color: var(--brand-color) !important; text-transform: uppercase !important; font-size: 12px !important; }
 
-/* REQUISITOS DEL SISTEMA */
 .req-container { background: #0a0a0a !important; border: 1px dashed #444 !important; padding: 20px !important; margin: 25px 0 !important; border-radius: 5px !important; }
 .req-title { color: #ffca28 !important; font-weight: bold !important; margin-bottom: 15px !important; display: block !important; text-transform: uppercase !important; font-size: 16px !important; }
 .req-grid { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 20px !important; }
 .req-grid div { color: #fff !important; font-size: 13px !important; line-height: 1.6 !important; }
 .req-grid b { color: #0860ca !important; display: block; margin-bottom: 5px; text-transform: uppercase; }
 
-/* --- FIX: COMPATIBILIDAD CON MODO CLARO --- */
+/* --- 8. MODO CLARO Y FIXES --- */
 .light-theme .info-grid { background: rgba(0,0,0,0.05) !important; border-color: #ddd !important; }
 .light-theme .req-container { background: #f4f4f4 !important; border: 1px solid #ddd !important; }
 
-/* Forzado de color de texto en modo claro */
 .light-theme .info-grid, .light-theme .info-grid *, 
-.light-theme .req-container, .light-theme .req-container * { 
-    color: #111 !important; 
-}
-/* Mantenemos colores de acento */
+.light-theme .req-container, .light-theme .req-container * { color: #111 !important; }
 .light-theme .info-grid b, .light-theme .req-grid b { color: var(--brand-color) !important; }
 .light-theme .req-title { color: #c49000 !important; }
 
-/* BOTONES DE DESCARGA */
 .dl-wrapper { text-align: center !important; margin: 30px 0 !important; display: flex !important; flex-direction: column !important; gap: 12px !important; align-items: center !important; }
 .btn-dl { display: flex !important; align-items: center !important; justify-content: center !important; gap: 10px !important; background: #28a745 !important; color: #fff !important; padding: 16px 30px !important; text-decoration: none !important; font-weight: bold !important; text-transform: uppercase !important; border-radius: 4px !important; width: 80% !important; max-width: 420px !important; box-shadow: 0px 4px 0px #1e7e34 !important; }
 .btn-dl.torrent { background: #007bff !important; box-shadow: 0px 4px 0px #0056b3 !important; }
 
-/* --- 8. OTROS Y FOOTER --- */
-.post-labels { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 5px; }
-.post-tag { font-size: 9px; text-transform: uppercase; background: rgba(255,255,255,0.1); padding: 2px 5px; border-radius: 2px; color: #999; font-weight: bold; }
 .sidebar { width: 340px; padding-right: 20px; box-sizing: border-box; }
-.sidebar-search form { display: flex; border: 1px solid #ccc; background: transparent; padding: 5px 10px; align-items: center; }
-.sidebar-search input { border: 0; background: transparent; color: inherit; width: 100%; padding: 8px 0; outline: none; }
-.sidebar-search button { background: none; border: none; color: #999; }
-#blog-pager { clear: both; width: 100%; text-align: center; margin: 30px auto; padding: 20px 0; border-top: 1px solid rgba(255,255,255,0.1); }
-.showpageNum a, .showpagePoint { display: inline-block; margin: 0 5px; padding: 6px 14px; color: #ff4c4c !important; font-weight: bold; font-size: 16px; text-decoration: none !important; }
-.showpagePoint { color: #fff !important; background: var(--brand-color); border-radius: 2px; }
-.fleft { text-align: center; padding: 15px; border: 1px solid var(--brand-color); background: rgba(0,0,0,0.8); color: #999; width: 1120px; margin: 10px auto; }
+.fleft { text-align: center; padding: 15px; border: 1px solid var(--brand-color); background: rgba(0,0,0,0.8); color: #999; max-width: 1120px; width: 95%; margin: 10px auto; }
 
-/* FIX MODO DISEÑO BLOGGER */
-body#layout #header, body#layout .menujohanes, body#layout #casing, body#layout .jorib, body#layout .nav-tools, body#layout #content-wrapper, body#layout .sidebar, body#layout .fleft { 
-  position: static !important; width: 95% !important; height: auto !important; margin: 15px auto !important; padding: 15px !important; 
-  display: block !important; float: none !important; background: #fff !important; border: 1px dashed #666 !important; color: #000 !important; 
+/* --- 9. MENÚ LATERAL (SIDE DRAWER) --- */
+#side-drawer {
+    position: fixed; top: 0; left: -300px; width: 280px; height: 100%; 
+    background: #000; border-right: 2px solid var(--brand-color);
+    z-index: 10001; transition: 0.4s cubic-bezier(0.77,0.2,0.05,1.0);
+    padding: 20px; box-sizing: border-box; overflow-y: auto;
 }
-body#layout ul.dark_menu { opacity: 1 !important; margin: 10px 0 !important; padding: 0 !important; display: block !important; }
-body#layout ul.dark_menu li { display: block !important; margin: 5px 0 !important; border: 1px solid #eee !important; }
-body#layout ul.dark_menu li:before { display: none !important; }
+body.drawer-open { overflow: hidden; }
+body.drawer-open #side-drawer { left: 0; }
 
-/* --- 9. MEDIA QUERIES (SOPORTE RESPONSIVE) --- */
-@media screen and (max-width: 1120px) {
-    .menujohanes, #casing, .fleft, .header-inner { width: 95% !important; }
+#drawer-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.8); z-index: 10000; display: none;
 }
+body.drawer-open #drawer-overlay { display: block; }
 
+.drawer-header { 
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 30px; border-bottom: 1px solid #333; padding-bottom: 10px;
+}
+.drawer-header span { font-weight: bold; color: var(--brand-color); letter-spacing: 2px; }
+#drawer-close { cursor: pointer; font-size: 20px; color: #fff; }
+
+#side-drawer ul.dark_menu { 
+    display: flex !important; flex-direction: column !important; 
+    margin: 0 !important; padding: 0 !important; opacity: 1 !important; float: none !important;
+}
+#side-drawer ul.dark_menu li { margin-bottom: 10px; width: 100%; min-width: 0; }
+#side-drawer ul.dark_menu li:before { transform: skewX(-10deg); }
+
+/* --- 10. MEDIA QUERIES (RESPONSIVE) --- */
 @media screen and (max-width: 768px) {
     #header { height: 250px; }
-    h1#blog-title { font-size: 24pt; top: 60px; line-height: 30px; }
+    h1#blog-title { font-size: 24pt; top: 60px; width: 70%; line-height: 30px; }
     .jorib { top: 10px; right: 10px; transform: scale(0.8); }
     
-    .menujohanes { height: auto; margin-top: 10px; }
-    ul.dark_menu { display: none; } /* Ocultar menú principal en móvil por diseño sesgado */
-    .nav-tools { margin-top: 0; float: none; justify-content: center; padding-bottom: 10px; width: 100%; }
+    #menu-toggle { display: flex; } /* Hamburguesa visible */
+    ul.dark_menu { display: none; } /* Escondemos el menú horizontal */
+    .nav-tools { margin-top: -45px; float: right; }
 
     #casing { flex-direction: column; padding: 10px 0; }
     #content-wrapper { width: 100%; padding: 0 15px; }
     .sidebar { width: 100%; padding: 20px 15px; border-top: 1px solid var(--brand-color); margin-top: 20px; }
     
-    /* GRIDS A 1 COLUMNA */
-    #featured-ajax-grid, .latest-grid-container { grid-template-columns: 1fr !important; gap: 15px !important; }
-    .info-grid, .req-grid { grid-template-columns: 1fr !important; gap: 15px !important; }
-    
-    .btn-dl { width: 100% !important; }
-    .post-main-img { height: auto; }
-}
-
-@media screen and (max-width: 480px) {
-    h1#blog-title { font-size: 18pt; top: 70px; }
-    .section-title { font-size: 14px; }
+    #featured-ajax-grid, .latest-grid-container, .info-grid, .req-grid { 
+        grid-template-columns: 1fr !important; 
+    }
 }

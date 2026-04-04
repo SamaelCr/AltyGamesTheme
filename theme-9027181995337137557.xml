@@ -23,9 +23,9 @@
 //]]>
 </script>
 
-<!-- 2. CARGA DE ASSETS DESDE GITHUB (v=2.97 para refrescar cambios) -->
-<link href='https://cdn.jsdelivr.net/gh/SamaelCr/AltyGamesTheme@main/styles.css?v=2.94' rel='stylesheet' type='text/css'/>
-<script src='https://cdn.jsdelivr.net/gh/SamaelCr/AltyGamesTheme@main/script.js' type='text/javascript'/>
+<!-- 2. CARGA DE ASSETS DESDE GITHUB (Recuerda actualizar v= al subir cambios) -->
+<link href='https://cdn.jsdelivr.net/gh/SamaelCr/AltyGamesTheme@main/styles.css?v=2.98' rel='stylesheet' type='text/css'/>
+<script src='https://cdn.jsdelivr.net/gh/SamaelCr/AltyGamesTheme@main/script.js?v=1.0' type='text/javascript'/>
 
 <b:skin><![CDATA[
 /*
@@ -72,7 +72,7 @@ body {
     transform: translate(2px, 2px); 
     box-shadow: 2px 2px 0px #000 !important;
 }
-.jorib li a i { color: inherit !important; } /* Fuerza al icono a tomar el color del enlace */
+.jorib li a i { color: inherit !important; }
 
 /* --- FIX NAVEGACIÓN --- */
 ul.dark_menu li:hover:before { background: $(hover.color) !important; }
@@ -92,12 +92,20 @@ ul.dark_menu li:hover:before { background: $(hover.color) !important; }
 .post-body img { max-width: 100%; height: auto; }
 .post-body { line-height: 1.6; font-size: 16px; color: inherit; }
 a { color: $(brand.color); }
-
 ]]></b:skin>
-
 </head>
 
 <body>
+<!-- ESTRUCTURA DEL MENÚ LATERAL -->
+<div id='side-drawer'>
+  <div class='drawer-header'>
+    <span>MENÚ</span>
+    <div id='drawer-close'><i class='fa-solid fa-xmark'/></div>
+  </div>
+  <div id='drawer-content'/>
+</div>
+<div id='drawer-overlay'/>
+
 <div id='wrapper'>
   <!-- HEADER -->
   <div id='header'>
@@ -148,6 +156,7 @@ a { color: $(brand.color); }
       </b:widget>
     </b:section>
     <div class='nav-tools'>
+      <div class='tool-btn' id='menu-toggle'><i class='fa-solid fa-bars'/></div>
       <div class='tool-btn' id='theme-toggle'><i class='fa-solid fa-sun'/></div>
       <b:section id='LupaConfig' maxwidgets='1' showaddelement='yes'>
         <b:widget id='LinkList3' locked='false' title='Configuración Lupa' type='LinkList' version='2' visible='true'>
@@ -164,8 +173,6 @@ a { color: $(brand.color); }
   <!-- CONTENIDO PRINCIPAL -->
   <div id='casing'>
     <div id='content-wrapper'>
-      
-      <!-- LOGICA PARA LA HOME -->
       <b:if cond='data:blog.pageType == "index"'>
         <div class='section-title'><i class='fa-solid fa-star'/> DESTACADOS</div>
         <div id='featured-ajax-grid'/>
@@ -177,7 +184,6 @@ a { color: $(brand.color); }
         <script src='/feeds/posts/summary?alt=json-in-script&amp;callback=loadMainGrid&amp;max-results=999' type='text/javascript'/>
       </b:if>
 
-      <!-- LOGICA PARA ENTRADAS Y PAGINAS -->
       <b:if cond='data:blog.pageType in {"item","static_page"}'>
           <b:section id='MainGrid' showaddelement='no'>
             <b:widget id='Blog1' locked='true' title='Entradas del blog' type='Blog'>
