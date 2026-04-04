@@ -1,6 +1,6 @@
 /**
 * Theme Name: Devil Survivor 2 (Restoration Final)
-* Version: 9.8 - Forced Search Theme & Ultra Sharp Icons + Download Buttons Restored
+* Version: 9.9 - Modern Pagination, Tags Restored & Download Buttons
 * GitHub: SamaelCr/AltyGamesTheme
 */
 
@@ -24,7 +24,6 @@ body {
 /* MODO CLARO GENERAL */
 html.light-theme body, .light-theme body, body.light-theme { background: #fdfdfd !important; color: #111 !important; }
 .light-theme #casing { background: #fff !important; border-color: #eee !important; }
-.light-theme .post-tag { background: #f0f0f0 !important; color: #666 !important; }
 .light-theme .post-card h2 a { color: #111 !important; }
 .light-theme .section-title { border-color: #eee !important; }
 
@@ -164,7 +163,7 @@ ul.dark_menu li:hover > ul { display: flex; }
 .light-theme .info-grid, .light-theme .info-grid *, .light-theme .req-container, .light-theme .req-container * { color: #111 !important; }
 .light-theme .info-grid b, .light-theme .req-grid b { color: var(--brand-color) !important; }
 
-/* BOTONES DE DESCARGA (RESTORED FROM V6.5) */
+/* BOTONES DE DESCARGA */
 .dl-wrapper { 
     text-align: center !important; 
     margin: 30px 0 !important; 
@@ -218,7 +217,6 @@ ul.dark_menu li:hover > ul { display: flex; }
     background: #222 !important; border: 0; color: #fff !important; padding: 0 15px; cursor: pointer;
 }
 
-/* ANTI-ADBLOCK CLASS NAME */
 .sidebar-box {
     width: 100%; height: 250px; background: #111111 !important;
     border: 2px solid #333333 !important; display: flex;
@@ -235,7 +233,6 @@ html.light-theme .sidebar-search button, .light-theme .sidebar-search button { b
 html.light-theme .sidebar-search button:hover, .light-theme .sidebar-search button:hover {
     background: var(--brand-color) !important; color: #ffffff !important;
 }
-
 html.light-theme .sidebar-box, .light-theme .sidebar-box {
     background: #ffffff !important; border: 2px solid #dddddd !important; color: #888888 !important;
 }
@@ -254,7 +251,52 @@ body.drawer-open #drawer-overlay { display: block; }
 #side-drawer .has-children ul { display: none; position: static; background: rgba(255,255,255,0.03); padding-left: 20px; width: 100%; }
 #side-drawer .has-children.active > ul { display: flex; flex-direction: column; }
 
-/* --- 10. MEDIA QUERIES --- */
+/* --- 10. ETIQUETAS Y PAGINACIÓN (NUEVO DISEÑO) --- */
+.post-labels { 
+    display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; 
+}
+.post-tag { 
+    font-size: 11px; text-transform: uppercase; 
+    background: rgba(255,255,255,0.1); padding: 5px 10px; 
+    border-radius: 4px; color: #ccc !important; font-weight: bold; 
+    transition: all 0.3s ease; text-decoration: none !important;
+}
+.post-tag:hover { background: var(--brand-color); color: #fff !important; }
+
+#blog-pager { 
+    clear: both; width: 100%; display: flex; justify-content: center; align-items: center; gap: 8px;
+    margin: 40px auto 20px auto; padding: 20px 0; 
+    border-top: 1px solid rgba(255,255,255,0.1); 
+}
+.showpageNum, .showpagePoint { 
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 40px; height: 40px; border-radius: 6px; 
+    color: #fff !important; font-weight: bold; font-size: 15px; 
+    text-decoration: none !important; transition: all 0.2s ease; 
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+}
+.showpageNum:hover { 
+    background: var(--brand-color); border-color: var(--brand-color);
+    transform: translateY(-3px); box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+}
+.showpagePoint { 
+    background: var(--brand-color); border-color: var(--brand-color);
+    cursor: default; box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+}
+
+/* Modo Claro: Etiquetas y Paginación */
+html.light-theme .post-tag { background: #f0f0f0; color: #666 !important; }
+html.light-theme .post-tag:hover { background: var(--brand-color); color: #fff !important; }
+
+html.light-theme #blog-pager { border-top-color: #eaeaea; }
+html.light-theme .showpageNum { background: #fff; border-color: #ddd; color: #333 !important; }
+html.light-theme .showpageNum:hover { 
+    background: var(--brand-color); border-color: var(--brand-color); color: #fff !important; 
+    box-shadow: 0 4px 10px rgba(8, 96, 202, 0.3); 
+}
+html.light-theme .showpagePoint { color: #fff !important; box-shadow: 0 4px 10px rgba(8, 96, 202, 0.3); }
+
+/* --- 11. MEDIA QUERIES --- */
 @media screen and (max-width: 768px) {
     #header { height: 200px; }
     h1#blog-title { font-size: 20pt; top: 50px; width: 100%; text-align: center; left: 0; }
