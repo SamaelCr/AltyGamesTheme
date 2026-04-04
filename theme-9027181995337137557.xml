@@ -23,9 +23,21 @@
 //]]>
 </script>
 
-<!-- 2. CARGA DE ASSETS -->
+<!-- 2. CARGA DE ASSETS (3 OPCIONES DE CDN) -->
+
+<!-- OPCIÓN 1: GITHACK (DESARROLLO - ACTUALIZACIÓN AL INSTANTE) -->
 <link href='https://raw.githack.com/SamaelCr/AltyGamesTheme/main/styles.css' rel='stylesheet' type='text/css'/>
 <script src='https://raw.githack.com/SamaelCr/AltyGamesTheme/main/script.js' type='text/javascript'/>
+
+<!-- OPCIÓN 2: STATICALLY (DESARROLLO SEMI-PRO) 
+<link href='https://cdn.statically.io/gh/SamaelCr/AltyGamesTheme/main/styles.css' rel='stylesheet' type='text/css'/>
+<script src='https://cdn.statically.io/gh/SamaelCr/AltyGamesTheme/main/script.js' type='text/javascript'/>
+-->
+
+<!-- OPCIÓN 3: JSDELIVR (PRODUCCIÓN - MÁXIMA VELOCIDAD) 
+<link href='https://cdn.jsdelivr.net/gh/SamaelCr/AltyGamesTheme@main/styles.css' rel='stylesheet' type='text/css'/>
+<script src='https://cdn.jsdelivr.net/gh/SamaelCr/AltyGamesTheme@main/script.js' type='text/javascript'/>
+-->
 
 <b:skin><![CDATA[
 /*
