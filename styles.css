@@ -1,6 +1,6 @@
 /**
 * Theme Name: Devil Survivor 2 (Restoration Final)
-* Version: 9.7 - Search Theme Sync & Full Features
+* Version: 9.8 - Forced Search Theme & Ultra Sharp Icons
 * GitHub: SamaelCr/AltyGamesTheme
 */
 
@@ -22,7 +22,7 @@ body {
 }
 
 /* MODO CLARO GENERAL */
-.light-theme body, body.light-theme { background: #fdfdfd !important; color: #111 !important; }
+html.light-theme body, .light-theme body, body.light-theme { background: #fdfdfd !important; color: #111 !important; }
 .light-theme #casing { background: #fff !important; border-color: #eee !important; }
 .light-theme .post-tag { background: #f0f0f0 !important; color: #666 !important; }
 .light-theme .post-card h2 a { color: #111 !important; }
@@ -48,7 +48,7 @@ h1#blog-title {
 }
 h1#blog-title a { color: #fff !important; text-decoration: none !important; border: 0 !important; }
 
-/* --- 3. REDES SOCIALES (PIXEL ART) --- */
+/* --- 3. REDES SOCIALES --- */
 .jorib { 
     position: absolute; top: 15px; right: 20px; z-index: 99; 
     display: flex; list-style: none; padding: 0; margin: 0; gap: 10px; 
@@ -70,7 +70,7 @@ h1#blog-title a { color: #fff !important; text-decoration: none !important; bord
 }
 .jorib li a i { color: inherit !important; }
 
-/* --- 4. MENU DE NAVEGACION (ESCRITORIO) --- */
+/* --- 4. MENU DE NAVEGACION --- */
 .menujohanes { position: relative; width: 1120px; margin: auto; z-index: 1000; height: 40px; }
 ul.dark_menu { 
     margin: 0; padding: 0; padding-left: 30px; list-style: none !important; 
@@ -91,17 +91,16 @@ ul.dark_menu li a {
     text-decoration: none !important; border: 0 !important; 
 }
 
-/* SUBMENU FIX: Puente para evitar que se cierre al bajar */
+/* SUBMENU BRIDGE */
 ul.dark_menu li ul { 
     display: none; position: absolute; left: -45px; 
-    top: 40px; 
-    padding-top: 10px; 
+    top: 40px; padding-top: 10px; 
     width: auto; list-style: none !important; z-index: 9999; 
     flex-direction: column; gap: 6px; 
 }
 ul.dark_menu li:hover > ul { display: flex; }
 
-/* --- 5. LUPA, TEMA Y BOTÓN MÓVIL --- */
+/* --- 5. LUPA, TEMA Y BOTONES (ICONOS BLANCOS FIX) --- */
 .nav-tools { float: right; margin-top: -45px; display: flex; margin-right: 20px; gap: 5px; border: 0 !important; }
 .tool-btn { 
     position: relative; width: 50px; height: 40px; cursor: pointer; 
@@ -109,8 +108,15 @@ ul.dark_menu li:hover > ul { display: flex; }
     z-index: 20; background: none !important; 
     overflow: hidden; border: 0 !important; text-decoration: none !important;
 }
-/* Fix: Iconos blancos y nítidos */
-.tool-btn i { color: #ffffff !important; opacity: 1 !important; visibility: visible !important; font-size: 18px; position: relative; z-index: 5; }
+/* Forzado de iconos blancos ultra nítidos */
+.tool-btn i, .tool-btn svg { 
+    color: #ffffff !important; 
+    fill: #ffffff !important; 
+    opacity: 1 !important; 
+    font-size: 18px !important; 
+    position: relative; z-index: 5; 
+    visibility: visible !important;
+}
 
 .tool-btn:before { 
     content: ""; position: absolute; top: 0; left: 0; right: 0; bottom: 0; 
@@ -119,7 +125,7 @@ ul.dark_menu li:hover > ul { display: flex; }
 .tool-btn:hover:before { background: var(--brand-color); }
 #menu-toggle { display: none; }
 
-/* --- 6. CUERPO (CASING) Y GRIDS --- */
+/* --- 6. CUERPO Y GRIDS --- */
 #casing { 
     border: 1px solid var(--brand-color); margin: 10px auto; 
     max-width: 1120px; width: 95%; background: rgba(113,113,113,0.05); 
@@ -142,7 +148,7 @@ ul.dark_menu li:hover > ul { display: flex; }
 .post-card h2 { margin: 5px 0 3px 0; font-size: 14px; line-height: 1.3; font-weight: bold; height: 38px; overflow: hidden; }
 .post-card h2 a { color: inherit; text-decoration: none !important; border: 0 !important; }
 
-/* --- 7. COMPONENTES DE ENTRADA (FICHA/REQUISITOS) --- */
+/* --- 7. FICHA Y REQUISITOS --- */
 .post-body-container { width: 100%; color: #fff !important; }
 .post-main-img { width: 100%; height: auto; border-radius: 4px; border-bottom: 4px solid var(--brand-color); margin-bottom: 20px; box-shadow: 5px 5px 0px rgba(0,0,0,0.5); }
 .post-sub-title { background: var(--brand-color) !important; color: #fff !important; padding: 12px 15px !important; text-transform: uppercase !important; font-weight: bold !important; font-size: 18px !important; margin: 25px 0 15px 0 !important; border-left: 5px solid #fff !important; display: block !important; }
@@ -162,88 +168,64 @@ ul.dark_menu li:hover > ul { display: flex; }
 .light-theme .req-container { background: #f4f4f4 !important; border: 1px solid #ddd !important; }
 .light-theme .info-grid, .light-theme .info-grid *, .light-theme .req-container, .light-theme .req-container * { color: #111 !important; }
 .light-theme .info-grid b, .light-theme .req-grid b { color: var(--brand-color) !important; }
-.light-theme .req-title { color: #c49000 !important; }
 
-/* --- 8. BUSCADOR SIDEBAR (SYNC DE TEMAS) --- */
+/* --- 8. BUSCADOR SIDEBAR (FIX DEFINITIVO TEMA) --- */
 .sidebar { width: 340px; padding-right: 20px; box-sizing: border-box; }
 .sidebar-search { margin-bottom: 20px; width: 100%; }
 
-/* Default: Modo Oscuro */
+/* Estilo Oscuro (Default) */
 .sidebar-search form { 
-    display: flex; background: #0a0a0a; border: 2px solid #333; 
-    padding: 2px; position: relative; transition: 0.3s; width: 100%;
+    display: flex; background: #000000 !important; border: 2px solid #333 !important; 
+    padding: 2px; position: relative; width: 100%;
 }
-.sidebar-search form:focus-within { border-color: var(--brand-color); }
 .sidebar-search input { 
-    border: 0; background: transparent; color: #fff; width: 100%; 
-    padding: 10px 15px; outline: none; font-size: 13px; font-family: inherit;
+    border: 0; background: transparent !important; color: #ffffff !important; 
+    width: 100%; padding: 10px 15px; outline: none; font-size: 13px;
 }
 .sidebar-search button { 
-    background: #222; border: 0; color: #fff; padding: 0 15px; 
-    cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center;
+    background: #222 !important; border: 0; color: #fff !important; padding: 0 15px; cursor: pointer;
 }
-.sidebar-search button:hover { background: var(--brand-color); }
 
-/* Override: Modo Claro */
-.light-theme .sidebar-search form { 
+/* Estilo Claro (Override) */
+html.light-theme .sidebar-search form, .light-theme .sidebar-search form { 
     background: #ffffff !important; 
-    border-color: #dddddd !important; 
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    border: 2px solid #dddddd !important; 
 }
-.light-theme .sidebar-search input { 
+html.light-theme .sidebar-search input, .light-theme .sidebar-search input { 
     color: #111111 !important; 
 }
-.light-theme .sidebar-search input::placeholder { color: #999; }
-.light-theme .sidebar-search button { 
-    background: #eeeeee !important; 
-    color: #444444 !important; 
+html.light-theme .sidebar-search button, .light-theme .sidebar-search button { 
+    background: #f0f0f0 !important; 
+    color: #333333 !important; 
 }
-.light-theme .sidebar-search button:hover { 
-    background: var(--brand-color) !important; 
-    color: #ffffff !important; 
+html.light-theme .sidebar-search button:hover, .light-theme .sidebar-search button:hover {
+    background: var(--brand-color) !important;
+    color: #ffffff !important;
 }
 
-/* OTROS ELEMENTOS */
-.dl-wrapper { text-align: center !important; margin: 30px 0 !important; display: flex !important; flex-direction: column !important; gap: 12px !important; align-items: center !important; }
-.btn-dl { display: flex !important; align-items: center !important; justify-content: center !important; gap: 10px !important; background: #28a745 !important; color: #fff !important; padding: 16px 30px !important; text-decoration: none !important; font-weight: bold !important; text-transform: uppercase !important; border-radius: 4px !important; width: 80% !important; max-width: 420px !important; box-shadow: 0px 4px 0px #1e7e34 !important; }
-.btn-dl.torrent { background: #007bff !important; box-shadow: 0px 4px 0px #0056b3 !important; }
-
-/* --- 9. MENÚ LATERAL (SIDE DRAWER) --- */
+/* --- 9. MENÚ LATERAL --- */
 #side-drawer { position: fixed; top: 0; left: -300px; width: 280px; height: 100%; background: #000; border-right: 2px solid var(--brand-color); z-index: 10001; transition: 0.4s; padding: 20px; box-sizing: border-box; overflow-y: auto; }
 body.drawer-open #side-drawer { left: 0; }
 #drawer-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10000; display: none; }
 body.drawer-open #drawer-overlay { display: block; }
 .drawer-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 1px solid #333; padding-bottom: 10px; color: var(--brand-color); font-weight: bold; }
-
 #side-drawer ul.dark_menu { display: flex !important; flex-direction: column !important; margin: 0 !important; padding: 0 !important; opacity: 1 !important; float: none !important; }
 #side-drawer ul.dark_menu li { margin-bottom: 5px; width: 100%; min-width: 0 !important; position: relative; list-style: none !important;}
 #side-drawer ul.dark_menu li a { text-align: left; padding: 15px; font-size: 14px; border-bottom: 1px solid rgba(255,255,255,0.05); text-decoration: none !important; color: #fff !important; display: block; }
-
-/* Flecha para hijos en móvil */
-#side-drawer .has-children > a:after {
-    content: "\f107"; font-family: "Font Awesome 6 Free"; font-weight: 900;
-    float: right; transition: 0.3s;
-}
+#side-drawer .has-children > a:after { content: "\f107"; font-family: "Font Awesome 6 Free"; font-weight: 900; float: right; transition: 0.3s; }
 #side-drawer .has-children.active > a:after { transform: rotate(180deg); }
 #side-drawer .has-children ul { display: none; position: static; background: rgba(255,255,255,0.03); padding-left: 20px; width: 100%; }
 #side-drawer .has-children.active > ul { display: flex; flex-direction: column; }
 
-/* --- 10. MEDIA QUERIES (RESPONSIVE) --- */
+/* --- 10. MEDIA QUERIES (HEADER MÓVIL FIX) --- */
 @media screen and (max-width: 768px) {
-    #header { height: 250px; }
-    h1#blog-title { font-size: 24pt; top: 60px; width: 100%; text-align: center; left: 0; }
-    .jorib { top: 10px; right: 10px; transform: scale(0.8); }
-    
+    #header { height: 200px; }
+    h1#blog-title { font-size: 20pt; top: 50px; width: 100%; text-align: center; left: 0; }
+    .jorib { top: 10px; right: 10px; transform: scale(0.7); }
     .menujohanes { width: 100%; height: 50px; }
     ul.dark_menu { display: none; } 
-
-    .nav-tools { 
-        margin-top: 0; float: none; width: 100%; height: 50px;
-        display: flex; justify-content: center; 
-        padding: 0 15px; box-sizing: border-box; position: relative;
-    }
+    .nav-tools { margin-top: 0; float: none; width: 100%; height: 50px; display: flex; justify-content: center; padding: 0 15px; box-sizing: border-box; position: relative; }
     #menu-toggle { display: flex !important; position: absolute; left: 15px; top: 0; }
-
     #casing { flex-direction: column; width: 100%; padding: 10px 0; }
     .sidebar { width: 100%; border-top: 1px solid var(--brand-color); margin-top: 20px; padding: 20px 15px; }
     #featured-ajax-grid, .latest-grid-container, .info-grid, .req-grid { grid-template-columns: 1fr !important; }
