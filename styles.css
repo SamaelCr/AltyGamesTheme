@@ -1,6 +1,6 @@
 /**
 * Theme Name: Devil Survivor 2 (Restoration Final)
-* Version: 6.5 - Fix: Requisitos Container Light Mode
+* Version: 6.9 - Full Responsive Support
 * GitHub: SamaelCr/AltyGamesTheme
 */
 
@@ -13,7 +13,7 @@
 /* --- 1. ESTILOS BASE --- */
 body { 
     margin: 0; padding: 0; 
-    /*background: #000 url(https://1.bp.blogspot.com/-d7NByOREYKU/VpTJ7zJgvUI/AAAAAAAACTw/X6HasrYaVs4/s000/bg_body.gif) repeat fixed top center !important; */
+    /* background: #000 url(https://1.bp.blogspot.com/-d7NByOREYKU/VpTJ7zJgvUI/AAAAAAAACTw/X6HasrYaVs4/s000/bg_body.gif) repeat fixed top center !important; */
     font-family: 'Segoe UI', Tahoma, sans-serif; 
     color: #fff !important; 
     transition: background 0.3s; 
@@ -196,3 +196,34 @@ body#layout #header, body#layout .menujohanes, body#layout #casing, body#layout 
 body#layout ul.dark_menu { opacity: 1 !important; margin: 10px 0 !important; padding: 0 !important; display: block !important; }
 body#layout ul.dark_menu li { display: block !important; margin: 5px 0 !important; border: 1px solid #eee !important; }
 body#layout ul.dark_menu li:before { display: none !important; }
+
+/* --- 9. MEDIA QUERIES (SOPORTE RESPONSIVE) --- */
+@media screen and (max-width: 1120px) {
+    .menujohanes, #casing, .fleft, .header-inner { width: 95% !important; }
+}
+
+@media screen and (max-width: 768px) {
+    #header { height: 250px; }
+    h1#blog-title { font-size: 24pt; top: 60px; line-height: 30px; }
+    .jorib { top: 10px; right: 10px; transform: scale(0.8); }
+    
+    .menujohanes { height: auto; margin-top: 10px; }
+    ul.dark_menu { display: none; } /* Ocultar menú principal en móvil por diseño sesgado */
+    .nav-tools { margin-top: 0; float: none; justify-content: center; padding-bottom: 10px; width: 100%; }
+
+    #casing { flex-direction: column; padding: 10px 0; }
+    #content-wrapper { width: 100%; padding: 0 15px; }
+    .sidebar { width: 100%; padding: 20px 15px; border-top: 1px solid var(--brand-color); margin-top: 20px; }
+    
+    /* GRIDS A 1 COLUMNA */
+    #featured-ajax-grid, .latest-grid-container { grid-template-columns: 1fr !important; gap: 15px !important; }
+    .info-grid, .req-grid { grid-template-columns: 1fr !important; gap: 15px !important; }
+    
+    .btn-dl { width: 100% !important; }
+    .post-main-img { height: auto; }
+}
+
+@media screen and (max-width: 480px) {
+    h1#blog-title { font-size: 18pt; top: 70px; }
+    .section-title { font-size: 14px; }
+}
