@@ -24,17 +24,45 @@
 </script>
 
 <b:skin><![CDATA[
-/**
-* Theme Name: Devil Survivor 2 (Restoration Final)
-* Assets en GitHub: SamaelCr/AltyGamesTheme
-*/
-/* Pequeño fix para que las imágenes de los posts no se desborden */
+/*
+-----------------------------------------------
+Theme Name: Devil Survivor 2 (Restoration Final)
+-----------------------------------------------
+
+/* 1. SECCIÓN CONTEXTO (FONDO) */
+<Group description="Fondo" selector="body">
+  <Variable name="body.background" description="Imagen de fondo" type="background" color="$(body.bg)" default="$(color) url(https://1.bp.blogspot.com/-d7NByOREYKU/VpTJ7zJgvUI/AAAAAAAACTw/X6HasrYaVs4/s000/bg_body.gif) repeat fixed top center" value="$(color) url(https://1.bp.blogspot.com/-d7NByOREYKU/VpTJ7zJgvUI/AAAAAAAACTw/X6HasrYaVs4/s000/bg_body.gif) repeat fixed top center"/>
+</Group>
+
+/* 2. SECCIÓN AVANZADO (COLORES) */
+<Group description="AltyGames: Colores" selector="body">
+  <Variable name="brand.color" description="Color Principal" type="color" default="#0860ca" value="#0860ca"/>
+  <Variable name="hover.color" description="Color de Hover" type="color" default="#0860ca" value="#0860ca"/>
+  <Variable name="title.color" description="Color de Titulos" type="color" default="#357ebd" value="#357ebd"/>
+  <Variable name="body.bg" description="Color de fondo (si no hay imagen)" type="color" default="#000000" value="#000000"/>
+</Group>
+
+/* APLICACIÓN DE VARIABLES */
+:root {
+  --brand-color: $(brand.color);
+  --hover-color: $(hover.color);
+  --title-color: $(title.color);
+}
+
+body {
+  background: $(body.background); /* Aquí Blogger mete la imagen de 'Contexto' */
+  background-color: $(body.bg);
+}
+
+/* Fixes base */
 .post-body img { max-width: 100%; height: auto; }
 .post-body { line-height: 1.6; font-size: 16px; color: inherit; }
+a { color: $(brand.color); }
+a:hover { color: $(hover.color); }
 ]]></b:skin>
 
-<!-- 2. CARGA DE ASSETS DESDE GITHUB (jsDelivr CDN) -->
-<link href='https://cdn.jsdelivr.net/gh/SamaelCr/AltyGamesTheme@main/styles.css?v=2.90' rel='stylesheet' type='text/css'/>
+<!-- 2. CARGA DE ASSETS DESDE GITHUB (Recuerda actualizar la versión v= ) -->
+<link href='https://cdn.jsdelivr.net/gh/SamaelCr/AltyGamesTheme@main/styles.css?v=2.95' rel='stylesheet' type='text/css'/>
 <script src='https://cdn.jsdelivr.net/gh/SamaelCr/AltyGamesTheme@main/script.js' type='text/javascript'/>
 
 </head>
@@ -140,13 +168,11 @@
                   </div>
                 </article>
               </b:includable>
-              <!-- Includables necesarios para que Blogger no falle -->
               <b:includable id='backlinkDeleteIcon' var='backlink'/><b:includable id='backlinks' var='post'/><b:includable id='comment-form' var='post'/><b:includable id='commentDeleteIcon' var='comment'/><b:includable id='comment_count_picker' var='post'/><b:includable id='comment_picker' var='post'><b:include data='post' name='comments'/></b:includable><b:includable id='comments' var='post'><div class='comments' id='comments'><h4>Comentarios:</h4><data:post.commentHtml/></div></b:includable><b:includable id='feedLinks'/><b:includable id='feedLinksBody' var='links'/><b:includable id='iframe_comments' var='post'/><b:includable id='mobile-index-post' var='post'/><b:includable id='mobile-main' var='top'/><b:includable id='mobile-nextprev'/><b:includable id='mobile-post' var='post'/><b:includable id='nextprev'/><b:includable id='postQuickEdit' var='post'/><b:includable id='shareButtons' var='post'/><b:includable id='status-message'/><b:includable id='threaded-comment-form' var='post'/><b:includable id='threaded_comment_js' var='post'/><b:includable id='threaded_comments' var='post'/>
             </b:widget>
           </b:section>
       </b:if>
 
-      <!-- SECCION OCULTA (Para evitar duplicados en la Home) -->
       <b:if cond='data:blog.pageType == "index"'>
           <div style='display:none !important'>
              <b:section id='MainGridHidden' showaddelement='no'/>

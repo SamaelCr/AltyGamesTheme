@@ -13,7 +13,7 @@
 /* --- 1. ESTILOS BASE --- */
 body { 
     margin: 0; padding: 0; 
-    background: #000 url(https://1.bp.blogspot.com/-d7NByOREYKU/VpTJ7zJgvUI/AAAAAAAACTw/X6HasrYaVs4/s000/bg_body.gif) repeat fixed top center !important; 
+    /*background: #000 url(https://1.bp.blogspot.com/-d7NByOREYKU/VpTJ7zJgvUI/AAAAAAAACTw/X6HasrYaVs4/s000/bg_body.gif) repeat fixed top center !important; */
     font-family: 'Segoe UI', Tahoma, sans-serif; 
     color: #fff !important; 
     transition: background 0.3s; 
