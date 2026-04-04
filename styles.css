@@ -1,6 +1,6 @@
 /**
 * Theme Name: Devil Survivor 2 (Restoration Final)
-* Version: 9.6 - Unified Search Style & Mobile Fixes
+* Version: 9.7 - Search Theme Sync & Full Features
 * GitHub: SamaelCr/AltyGamesTheme
 */
 
@@ -109,6 +109,7 @@ ul.dark_menu li:hover > ul { display: flex; }
     z-index: 20; background: none !important; 
     overflow: hidden; border: 0 !important; text-decoration: none !important;
 }
+/* Fix: Iconos blancos y nítidos */
 .tool-btn i { color: #ffffff !important; opacity: 1 !important; visibility: visible !important; font-size: 18px; position: relative; z-index: 5; }
 
 .tool-btn:before { 
@@ -163,48 +164,46 @@ ul.dark_menu li:hover > ul { display: flex; }
 .light-theme .info-grid b, .light-theme .req-grid b { color: var(--brand-color) !important; }
 .light-theme .req-title { color: #c49000 !important; }
 
-/* --- 8. BUSCADOR SIDEBAR (UNIFICADO DESKTOP/MOBILE) --- */
+/* --- 8. BUSCADOR SIDEBAR (SYNC DE TEMAS) --- */
 .sidebar { width: 340px; padding-right: 20px; box-sizing: border-box; }
 .sidebar-search { margin-bottom: 20px; width: 100%; }
+
+/* Default: Modo Oscuro */
 .sidebar-search form { 
-    display: flex; 
-    background: #0a0a0a; 
-    border: 2px solid #333; 
-    padding: 2px; 
-    position: relative; 
-    transition: 0.3s;
-    width: 100%;
+    display: flex; background: #0a0a0a; border: 2px solid #333; 
+    padding: 2px; position: relative; transition: 0.3s; width: 100%;
 }
 .sidebar-search form:focus-within { border-color: var(--brand-color); }
 .sidebar-search input { 
-    border: 0; 
-    background: transparent; 
-    color: #fff; 
-    width: 100%; 
-    padding: 10px 15px; 
-    outline: none; 
-    font-size: 13px;
-    font-family: inherit;
+    border: 0; background: transparent; color: #fff; width: 100%; 
+    padding: 10px 15px; outline: none; font-size: 13px; font-family: inherit;
 }
 .sidebar-search button { 
-    background: #222; 
-    border: 0; 
-    color: #fff; 
-    padding: 0 15px; 
-    cursor: pointer; 
-    transition: 0.3s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    background: #222; border: 0; color: #fff; padding: 0 15px; 
+    cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center;
 }
 .sidebar-search button:hover { background: var(--brand-color); }
 
-/* Ajuste del buscador en modo claro */
-.light-theme .sidebar-search form { background: #f9f9f9; border-color: #ccc; }
-.light-theme .sidebar-search input { color: #111; }
-.light-theme .sidebar-search button { background: #eee; color: #666; }
-.light-theme .sidebar-search button:hover { background: var(--brand-color); color: #fff; }
+/* Override: Modo Claro */
+.light-theme .sidebar-search form { 
+    background: #ffffff !important; 
+    border-color: #dddddd !important; 
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+.light-theme .sidebar-search input { 
+    color: #111111 !important; 
+}
+.light-theme .sidebar-search input::placeholder { color: #999; }
+.light-theme .sidebar-search button { 
+    background: #eeeeee !important; 
+    color: #444444 !important; 
+}
+.light-theme .sidebar-search button:hover { 
+    background: var(--brand-color) !important; 
+    color: #ffffff !important; 
+}
 
+/* OTROS ELEMENTOS */
 .dl-wrapper { text-align: center !important; margin: 30px 0 !important; display: flex !important; flex-direction: column !important; gap: 12px !important; align-items: center !important; }
 .btn-dl { display: flex !important; align-items: center !important; justify-content: center !important; gap: 10px !important; background: #28a745 !important; color: #fff !important; padding: 16px 30px !important; text-decoration: none !important; font-weight: bold !important; text-transform: uppercase !important; border-radius: 4px !important; width: 80% !important; max-width: 420px !important; box-shadow: 0px 4px 0px #1e7e34 !important; }
 .btn-dl.torrent { background: #007bff !important; box-shadow: 0px 4px 0px #0056b3 !important; }
@@ -229,7 +228,7 @@ body.drawer-open #drawer-overlay { display: block; }
 #side-drawer .has-children ul { display: none; position: static; background: rgba(255,255,255,0.03); padding-left: 20px; width: 100%; }
 #side-drawer .has-children.active > ul { display: flex; flex-direction: column; }
 
-/* --- 10. MEDIA QUERIES (RESPONSIVE FIX) --- */
+/* --- 10. MEDIA QUERIES (RESPONSIVE) --- */
 @media screen and (max-width: 768px) {
     #header { height: 250px; }
     h1#blog-title { font-size: 24pt; top: 60px; width: 100%; text-align: center; left: 0; }
