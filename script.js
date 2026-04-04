@@ -1,6 +1,7 @@
 var posts_per_page = 9;
 var featured_label = "Destacado";
 
+/* MOTOR IMÁGENES HQ */
 function getSmartThumb(entry) {
   var thumb = "";
   if (entry.media$thumbnail) { thumb = entry.media$thumbnail.url; } 
@@ -73,7 +74,7 @@ function loadMainGrid(json) {
 }
 
 $(document).ready(function() {
-  /* SUBMENÚS (_) */
+  /* 1. LÓGICA DE SUBMENÚS (Guion bajo _) */
   $('.dark_menu li').each(function() {
     var $link = $(this).find('a').first();
     var text = $link.text().trim();
@@ -88,7 +89,7 @@ $(document).ready(function() {
   });
   $('.dark_menu').addClass('menu-ready');
 
-  /* TOGGLE TEMA */
+  /* 2. TOGGLE TEMA */
   const themeBtn = $('#theme-toggle');
   const htmlEl = $('html');
   themeBtn.on('click', function() {
@@ -102,12 +103,19 @@ $(document).ready(function() {
       themeBtn.find('i').attr('class', 'fa-solid fa-moon');
     }
   });
-  if (htmlEl.hasClass('light-theme')) { themeBtn.find('i').attr('class', 'fa-solid fa-moon'); } else { themeBtn.find('i').attr('class', 'fa-solid fa-sun'); }
 
-  /* PANEL LATERAL */
-  var menuHTML = $('.dark_menu').first().html();
+  /* 3. PANEL LATERAL (SIDE DRAWER) */
+  // Clonamos el menú ya procesado (con hijos) al Drawer
+  var menuHTML = $('.menujohanes .dark_menu').html();
   $('#drawer-content').html('<ul class="dark_menu">' + menuHTML + '</ul>');
+
+  // Abrir/Cerrar
   $('#menu-toggle').on('click', function() { $('body').addClass('drawer-open'); });
   $('#drawer-close, #drawer-overlay').on('click', function() { $('body').removeClass('drawer-open'); });
-  $('#side-drawer a').on('click', function() { $('body').removeClass('drawer-open'); });
+
+  // Lógica de expansión para hijos en móvil
+  $('#side-drawer .has-children > a').on('click', function(e) {
+    e.preventDefault(); // Evita que navegue
+    $(this).parent().toggleClass('active');
+  });
 });
