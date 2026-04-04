@@ -34,7 +34,7 @@
 ]]></b:skin>
 
 <!-- 2. CARGA DE ASSETS DESDE GITHUB (jsDelivr CDN) -->
-<link href='https://cdn.jsdelivr.net/gh/SamaelCr/AltyGamesTheme@main/styles.css?v=1.1' rel='stylesheet' type='text/css'/>
+<link href='https://cdn.jsdelivr.net/gh/SamaelCr/AltyGamesTheme@main/styles.css?v=2.90' rel='stylesheet' type='text/css'/>
 <script src='https://cdn.jsdelivr.net/gh/SamaelCr/AltyGamesTheme@main/script.js' type='text/javascript'/>
 
 </head>
