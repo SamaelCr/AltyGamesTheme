@@ -23,21 +23,9 @@
 //]]>
 </script>
 
-<!-- 2. CARGA DE ASSETS (3 OPCIONES DE CDN) -->
-
-<!-- OPCIÓN 1: GITHACK (DESARROLLO - ACTUALIZACIÓN AL INSTANTE) -->
+<!-- 2. CARGA DE ASSETS -->
 <link href='https://raw.githack.com/SamaelCr/AltyGamesTheme/main/styles.css' rel='stylesheet' type='text/css'/>
 <script src='https://raw.githack.com/SamaelCr/AltyGamesTheme/main/script.js' type='text/javascript'/>
-
-<!-- OPCIÓN 2: STATICALLY (DESARROLLO SEMI-PRO) 
-<link href='https://cdn.statically.io/gh/SamaelCr/AltyGamesTheme/main/styles.css' rel='stylesheet' type='text/css'/>
-<script src='https://cdn.statically.io/gh/SamaelCr/AltyGamesTheme/main/script.js' type='text/javascript'/>
--->
-
-<!-- OPCIÓN 3: JSDELIVR (PRODUCCIÓN - MÁXIMA VELOCIDAD) 
-<link href='https://cdn.jsdelivr.net/gh/SamaelCr/AltyGamesTheme@main/styles.css' rel='stylesheet' type='text/css'/>
-<script src='https://cdn.jsdelivr.net/gh/SamaelCr/AltyGamesTheme@main/script.js' type='text/javascript'/>
--->
 
 <b:skin><![CDATA[
 /*
@@ -75,10 +63,25 @@ ul.dark_menu li ul { top: 100% !important; padding-top: 5px !important; }
 .jorib li a { background-color: $(brand.color) !important; color: #ffffff !important; border: 3px solid #ffffff !important; }
 .jorib li a:hover { background-color: #ffffff !important; color: $(brand.color) !important; border-color: $(brand.color) !important; }
 
-/* FIX VISIBILIDAD MODO CLARO */
+/* FIX VISIBILIDAD MODO CLARO GENERALES */
 .light-theme .info-grid, .light-theme .info-grid *, .light-theme .req-container, .light-theme .req-container * { color: #111111 !important; }
 .light-theme .info-grid { background: rgba(0,0,0,0.05) !important; border-color: #ddd !important; }
 .light-theme .req-container { background: #f4f4f4 !important; border: 1px solid #ddd !important; }
+
+/* =========================================
+   FIX: SIDEBAR Y ANUNCIOS (MODO OSCURO/CLARO) BYPASS CACHE
+   ========================================= */
+.ad-placeholder {
+    width: 100%; height: 250px; background: #111111 !important;
+    border: 2px solid #333333 !important; display: flex;
+    align-items: center; justify-content: center; color: #555555 !important;
+    font-weight: bold; border-radius: 4px; transition: 0.3s;
+}
+html.light-theme .sidebar-search form { background: #ffffff !important; border: 2px solid #dddddd !important; }
+html.light-theme .sidebar-search input { color: #111111 !important; }
+html.light-theme .sidebar-search button { background: #f0f0f0 !important; color: #333333 !important; }
+html.light-theme .sidebar-search button:hover { background: $(brand.color) !important; color: #ffffff !important; }
+html.light-theme .ad-placeholder { background: #ffffff !important; border: 2px solid #dddddd !important; color: #888888 !important; }
 
 .post-body img { max-width: 100%; height: auto; }
 .post-body { line-height: 1.6; font-size: 16px; color: inherit; }
@@ -208,7 +211,11 @@ a { color: $(brand.color); }
       </div>
       <b:section id='SidebarArea' showaddelement='yes'>
         <b:widget id='HTML1' locked='false' title='Anuncio' type='HTML' version='1'>
-          <b:includable id='main'><div class='widget-content'><div style='width:100%; height:250px; background:#111; border:1px solid #333; display:flex; align-items:center; justify-content:center; color:#555;'>PUBLICIDAD</div></div></b:includable>
+          <b:includable id='main'>
+            <div class='widget-content'>
+              <div class='ad-placeholder'>PUBLICIDAD</div>
+            </div>
+          </b:includable>
         </b:widget>
       </b:section>
     </div>
