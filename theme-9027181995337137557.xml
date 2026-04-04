@@ -11,7 +11,7 @@
 <link href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css' rel='stylesheet'/>
 <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js' type='text/javascript'/>
 
-<!-- 1. ANTI-FLICKER TEMA (Optimización de carga rápida) -->
+<!-- 1. ANTI-FLICKER TEMA -->
 <script type='text/javascript'>
 //<![CDATA[
 (function() {
@@ -26,8 +26,11 @@
 <b:skin><![CDATA[
 /**
 * Theme Name: Devil Survivor 2 (Restoration Final)
-* Assets administrados en GitHub: SamaelCr/AltyGamesTheme
+* Assets en GitHub: SamaelCr/AltyGamesTheme
 */
+/* Pequeño fix para que las imágenes de los posts no se desborden */
+.post-body img { max-width: 100%; height: auto; }
+.post-body { line-height: 1.6; font-size: 16px; color: inherit; }
 ]]></b:skin>
 
 <!-- 2. CARGA DE ASSETS DESDE GITHUB (jsDelivr CDN) -->
@@ -38,32 +41,17 @@
 
 <body>
 <div id='wrapper'>
+  <!-- HEADER -->
   <div id='header'>
     <div class='header-inner'>
       <b:section class='blognames' id='blognames' maxwidgets='1' showaddelement='no'>
         <b:widget id='Header1' locked='true' title='AltyGames (cabecera)' type='Header' version='1'>
-          <b:widget-settings>
-            <b:widget-setting name='displayUrl'>https://blogger.googleusercontent.com/img/a/AVvXsEghd-V12AIsPlu3hXmHw8uR22fj1Z5WG_e8-uJCzCIP-G_kxCcgygHxw0YEegz4nrVmSJ_uuM7gpe70fP6nGLILPTvXeElbQQSaZhKPOUSKVT5IpUylK5OWnxobSGpXiu8WzNJbja_DQPqGP_tFsFYT7xO2Y2Wnu8HTRj0toPwKrVNeokssd6gg_Av8wDE=s1600</b:widget-setting>
-            <b:widget-setting name='displayHeight'>900</b:widget-setting>
-            <b:widget-setting name='sectionWidth'>150</b:widget-setting>
-            <b:widget-setting name='useImage'>true</b:widget-setting>
-            <b:widget-setting name='shrinkToFit'>false</b:widget-setting>
-            <b:widget-setting name='imagePlacement'>BEHIND</b:widget-setting>
-            <b:widget-setting name='displayWidth'>1600</b:widget-setting>
-          </b:widget-settings>
           <b:includable id='main'>
             <b:if cond='data:useImage'><style type='text/css'>#header { background-image: url("<data:sourceUrl/>"); }</style></b:if>
             <h1 id='blog-title'><a expr:href='data:blog.homepageUrl'><data:title/></a></h1>
           </b:includable>
-          <b:includable id='description'>
-            <div class='descriptionwrapper'><p class='description'><span><data:description/></span></p></div>
-          </b:includable>
-          <b:includable id='title'>
-            <b:tag cond='data:blog.url != data:blog.homepageUrl' expr:href='data:blog.homepageUrl' name='a'><data:title/></b:tag>
-          </b:includable>
         </b:widget>
       </b:section>
-      
       <div class='jorib'>
         <b:section id='Social' maxwidgets='1' showaddelement='yes'>
           <b:widget id='LinkList2' locked='false' title='Redes Sociales' type='LinkList' version='1'>
@@ -88,6 +76,7 @@
     </div>
   </div> 
 
+  <!-- NAVEGACIÓN -->
   <div class='menujohanes'>
     <b:section id='Navigation' maxwidgets='1' showaddelement='yes'>
       <b:widget id='LinkList1' locked='false' title='Navegacion' type='LinkList' version='1'>
@@ -114,41 +103,59 @@
     </div>
   </div>
 
+  <!-- CONTENIDO PRINCIPAL -->
   <div id='casing'>
     <div id='content-wrapper'>
+      
+      <!-- LOGICA PARA LA HOME (INDEX) -->
       <b:if cond='data:blog.pageType == "index"'>
         <div class='section-title'><i class='fa-solid fa-star'/> DESTACADOS</div>
         <div id='featured-ajax-grid'/>
         <script src='/feeds/posts/summary/-/Destacado?alt=json-in-script&amp;callback=loadFeatured&amp;max-results=2' type='text/javascript'/>
+
+        <div class='section-title'><i class='fa-solid fa-calendar-days'/> ÚLTIMAS PUBLICACIONES</div>
+        <div class='latest-grid-container' id='main-ajax-grid'/>
+        <div id='blog-pager'/>
+        <script src='/feeds/posts/summary?alt=json-in-script&amp;callback=loadMainGrid&amp;max-results=999' type='text/javascript'/>
       </b:if>
 
-      <div class='section-title'><i class='fa-solid fa-calendar-days'/> ÚLTIMAS PUBLICACIONES</div>
-      <div class='latest-grid-container' id='main-ajax-grid'/>
-      <div id='blog-pager'/>
-      <script src='/feeds/posts/summary?alt=json-in-script&amp;callback=loadMainGrid&amp;max-results=999' type='text/javascript'/>
-      
-      <div style='display:none'>
-        <b:section id='MainGrid' showaddelement='no'>
-          <b:widget id='Blog1' locked='true' title='Entradas del blog' type='Blog'>
-            <b:includable id='main' var='top'>
-              <div class='blog-posts hfeed'>
-                <b:loop values='data:posts' var='post'>
-                  <b:include data='post' name='post'/>
-                </b:loop>
-              </div>
-            </b:includable>
-            <b:includable id='post' var='post'>
-              <div class='post hentry'>
-                <h3 class='post-title'><data:post.title/></h3>
-                <div class='post-body'><data:post.body/></div>
-              </div>
-            </b:includable>
-            <b:includable id='backlinkDeleteIcon' var='backlink'/><b:includable id='backlinks' var='post'/><b:includable id='comment-form' var='post'/><b:includable id='commentDeleteIcon' var='comment'/><b:includable id='comment_count_picker' var='post'/><b:includable id='comment_picker' var='post'/><b:includable id='comments' var='post'/><b:includable id='feedLinks'/><b:includable id='feedLinksBody' var='links'/><b:includable id='iframe_comments' var='post'/><b:includable id='mobile-index-post' var='post'/><b:includable id='mobile-main' var='top'/><b:includable id='mobile-nextprev'/><b:includable id='mobile-post' var='post'/><b:includable id='nextprev'/><b:includable id='postQuickEdit' var='post'/><b:includable id='shareButtons' var='post'/><b:includable id='status-message'/><b:includable id='threaded-comment-form' var='post'/><b:includable id='threaded_comment_js' var='post'/><b:includable id='threaded_comments' var='post'/>
-          </b:widget>
-        </b:section>
-      </div>
+      <!-- LOGICA PARA ENTRADAS (ITEM) Y PAGINAS ESTATICAS -->
+      <b:if cond='data:blog.pageType in {"item","static_page"}'>
+          <b:section id='MainGrid' showaddelement='no'>
+            <b:widget id='Blog1' locked='true' title='Entradas del blog' type='Blog'>
+              <b:includable id='main' var='top'>
+                <div class='blog-posts hfeed'>
+                  <b:loop values='data:posts' var='post'>
+                    <b:include data='post' name='post'/>
+                    <b:include cond='data:blog.pageType in {"static_page","item"}' data='post' name='comment_picker'/>
+                  </b:loop>
+                </div>
+              </b:includable>
+              <b:includable id='post' var='post'>
+                <article class='post hentry' itemprop='blogPost' itemscope='itemscope' itemtype='http://schema.org/BlogPosting'>
+                  <h2 class='section-title'><data:post.title/></h2>
+                  <div class='post-body entry-content' expr:id='"post-body-" + data:post.id' itemprop='articleBody'>
+                    <data:post.body/>
+                    <div style='clear: both;'/>
+                  </div>
+                </article>
+              </b:includable>
+              <!-- Includables necesarios para que Blogger no falle -->
+              <b:includable id='backlinkDeleteIcon' var='backlink'/><b:includable id='backlinks' var='post'/><b:includable id='comment-form' var='post'/><b:includable id='commentDeleteIcon' var='comment'/><b:includable id='comment_count_picker' var='post'/><b:includable id='comment_picker' var='post'><b:include data='post' name='comments'/></b:includable><b:includable id='comments' var='post'><div class='comments' id='comments'><h4>Comentarios:</h4><data:post.commentHtml/></div></b:includable><b:includable id='feedLinks'/><b:includable id='feedLinksBody' var='links'/><b:includable id='iframe_comments' var='post'/><b:includable id='mobile-index-post' var='post'/><b:includable id='mobile-main' var='top'/><b:includable id='mobile-nextprev'/><b:includable id='mobile-post' var='post'/><b:includable id='nextprev'/><b:includable id='postQuickEdit' var='post'/><b:includable id='shareButtons' var='post'/><b:includable id='status-message'/><b:includable id='threaded-comment-form' var='post'/><b:includable id='threaded_comment_js' var='post'/><b:includable id='threaded_comments' var='post'/>
+            </b:widget>
+          </b:section>
+      </b:if>
+
+      <!-- SECCION OCULTA (Para evitar duplicados en la Home) -->
+      <b:if cond='data:blog.pageType == "index"'>
+          <div style='display:none !important'>
+             <b:section id='MainGridHidden' showaddelement='no'/>
+          </div>
+      </b:if>
+
     </div>
 
+    <!-- SIDEBAR -->
     <div class='sidebar'>
       <div class='sidebar-search'>
         <form expr:action='data:blog.homepageUrl + "search"' method='get'>
@@ -163,6 +170,8 @@
       </b:section>
     </div>
   </div>
+
+  <!-- FOOTER -->
   <div class='fleft'><p>- Copyright &#169; 2026 <data:blog.title/> - Restoration by AltyGames -</p></div>
 </div>
 </body>
