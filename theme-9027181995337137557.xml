@@ -23,12 +23,18 @@
 //]]>
 </script>
 
-<!-- 2. CARGA DE ACTIVOS (ASSETS) -->
-<!-- OPCIÓN A: STATICALLY (USAR PARA DESARROLLO - ACTUALIZACIÓN RÁPIDA) -->
+<!-- 2. CARGA DE ASSETS (3 OPCIONES DE CDN) -->
+
+<!-- OPCIÓN 1: GITHACK (DESARROLLO - ACTUALIZACIÓN AL INSTANTE) -->
+<link href='https://raw.githack.com/SamaelCr/AltyGamesTheme/main/styles.css' rel='stylesheet' type='text/css'/>
+<script src='https://raw.githack.com/SamaelCr/AltyGamesTheme/main/script.js' type='text/javascript'/>
+
+<!-- OPCIÓN 2: STATICALLY (DESARROLLO SEMI-PRO) 
 <link href='https://cdn.statically.io/gh/SamaelCr/AltyGamesTheme/main/styles.css' rel='stylesheet' type='text/css'/>
 <script src='https://cdn.statically.io/gh/SamaelCr/AltyGamesTheme/main/script.js' type='text/javascript'/>
+-->
 
-<!-- OPCIÓN B: JSDELIVR (DESCOMENTAR PARA PRODUCCIÓN CUANDO EL TEMA ESTÉ TERMINADO) 
+<!-- OPCIÓN 3: JSDELIVR (PRODUCCIÓN - MÁXIMA VELOCIDAD) 
 <link href='https://cdn.jsdelivr.net/gh/SamaelCr/AltyGamesTheme@main/styles.css' rel='stylesheet' type='text/css'/>
 <script src='https://cdn.jsdelivr.net/gh/SamaelCr/AltyGamesTheme@main/script.js' type='text/javascript'/>
 -->
@@ -58,22 +64,22 @@ Design by: AltyGames
 
 body { background: $(body.background) !important; background-color: $(body.bg) !important; }
 
-/* --- FIX ICONOS HERRAMIENTAS (Nitidez total) --- */
+/* FIX ICONOS: Forzado de nitidez y color blanco */
 .tool-btn i { color: #ffffff !important; opacity: 1 !important; visibility: visible !important; }
 
-/* --- FIX REDES SOCIALES --- */
+/* FIX MENU: Submenú accesible y hover */
+ul.dark_menu li:hover:before { background: $(hover.color) !important; }
+ul.dark_menu li ul { top: 100% !important; padding-top: 5px !important; }
+
+/* FIX REDES SOCIALES */
 .jorib li a { background-color: $(brand.color) !important; color: #ffffff !important; border: 3px solid #ffffff !important; }
 .jorib li a:hover { background-color: #ffffff !important; color: $(brand.color) !important; border-color: $(brand.color) !important; }
 
-/* --- FIX NAVEGACIÓN --- */
-ul.dark_menu li:hover:before { background: $(hover.color) !important; }
-
-/* --- FIX VISIBILIDAD MODO CLARO --- */
+/* FIX VISIBILIDAD MODO CLARO */
 .light-theme .info-grid, .light-theme .info-grid *, .light-theme .req-container, .light-theme .req-container * { color: #111111 !important; }
 .light-theme .info-grid { background: rgba(0,0,0,0.05) !important; border-color: #ddd !important; }
 .light-theme .req-container { background: #f4f4f4 !important; border: 1px solid #ddd !important; }
 
-/* Estilos base */
 .post-body img { max-width: 100%; height: auto; }
 .post-body { line-height: 1.6; font-size: 16px; color: inherit; }
 a { color: $(brand.color); }
@@ -81,7 +87,7 @@ a { color: $(brand.color); }
 </head>
 
 <body>
-<!-- PANEL LATERAL (SIDE DRAWER) -->
+<!-- ESTRUCTURA MENÚ LATERAL -->
 <div id='side-drawer'>
   <div class='drawer-header'>
     <span>MENÚ</span>
@@ -127,7 +133,7 @@ a { color: $(brand.color); }
     </div>
   </div> 
 
-  <!-- BARRA DE NAVEGACIÓN -->
+  <!-- NAVEGACIÓN -->
   <div class='menujohanes'>
     <b:section id='Navigation' maxwidgets='1' showaddelement='yes'>
       <b:widget id='LinkList1' locked='false' title='Navegacion' type='LinkList' version='1'>
@@ -155,7 +161,7 @@ a { color: $(brand.color); }
     </div>
   </div>
 
-  <!-- CONTENIDO -->
+  <!-- CONTENIDO PRINCIPAL -->
   <div id='casing'>
     <div id='content-wrapper'>
       <b:if cond='data:blog.pageType == "index"'>
@@ -187,7 +193,7 @@ a { color: $(brand.color); }
                   </div>
                 </article>
               </b:includable>
-              <!-- Includables necesarios de Blogger -->
+              <!-- Includables necesarios -->
               <b:includable id='backlinkDeleteIcon' var='backlink'/><b:includable id='backlinks' var='post'/><b:includable id='comment-form' var='post'/><b:includable id='commentDeleteIcon' var='comment'/><b:includable id='comment_count_picker' var='post'/><b:includable id='comment_picker' var='post'><b:include data='post' name='comments'/></b:includable><b:includable id='comments' var='post'><div class='comments' id='comments'><h4>Comentarios:</h4><data:post.commentHtml/></div></b:includable><b:includable id='feedLinks'/><b:includable id='feedLinksBody' var='links'/><b:includable id='iframe_comments' var='post'/><b:includable id='mobile-index-post' var='post'/><b:includable id='mobile-main' var='top'/><b:includable id='mobile-nextprev'/><b:includable id='mobile-post' var='post'/><b:includable id='nextprev'/><b:includable id='postQuickEdit' var='post'/><b:includable id='shareButtons' var='post'/><b:includable id='status-message'/><b:includable id='threaded-comment-form' var='post'/><b:includable id='threaded_comment_js' var='post'/><b:includable id='threaded_comments' var='post'/>
             </b:widget>
           </b:section>
