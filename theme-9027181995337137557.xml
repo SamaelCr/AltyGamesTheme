@@ -83,7 +83,7 @@ ul.dark_menu li ul { top: 100% !important; padding-top: 5px !important; }
 /* =========================================
    FIX: SIDEBAR Y ANUNCIOS (MODO OSCURO/CLARO) BYPASS CACHE
    ========================================= */
-.ad-placeholder {
+.sidebar-box {
     width: 100%; height: 250px; background: #111111 !important;
     border: 2px solid #333333 !important; display: flex;
     align-items: center; justify-content: center; color: #555555 !important;
@@ -93,7 +93,7 @@ html.light-theme .sidebar-search form { background: #ffffff !important; border: 
 html.light-theme .sidebar-search input { color: #111111 !important; }
 html.light-theme .sidebar-search button { background: #f0f0f0 !important; color: #333333 !important; }
 html.light-theme .sidebar-search button:hover { background: $(brand.color) !important; color: #ffffff !important; }
-html.light-theme .ad-placeholder { background: #ffffff !important; border: 2px solid #dddddd !important; color: #888888 !important; }
+html.light-theme .sidebar-box { background: #ffffff !important; border: 2px solid #dddddd !important; color: #888888 !important; }
 
 .post-body img { max-width: 100%; height: auto; }
 .post-body { line-height: 1.6; font-size: 16px; color: inherit; }
@@ -225,7 +225,7 @@ a { color: $(brand.color); }
         <b:widget id='HTML1' locked='false' title='Anuncio' type='HTML' version='1'>
           <b:includable id='main'>
             <div class='widget-content'>
-              <div class='ad-placeholder'>PUBLICIDAD</div>
+              <div class='sidebar-box'>PUBLICIDAD</div>
             </div>
           </b:includable>
         </b:widget>
