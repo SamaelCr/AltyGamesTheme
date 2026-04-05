@@ -1,6 +1,6 @@
 /**
 * Theme Name: Devil Survivor 2 (Restoration Final)
-* Version: 11.8 - Trailer Title & Embed Fixes
+* Version: 11.9 - Modern Pagination, Tags Restored & Download Buttons
 * GitHub: SamaelCr/AltyGamesTheme
 */
 
@@ -142,41 +142,35 @@ ul.dark_menu li:hover > ul { display: flex; }
 .post-card h2 { margin: 5px 0 3px 0; font-size: 14px; line-height: 1.3; font-weight: bold; height: 38px; overflow: hidden; }
 .post-card h2 a { color: inherit; text-decoration: none !important; border: 0 !important; }
 
-/* --- 7. FICHA Y REQUISITOS --- */
+/* --- 7. FICHA, REQUISITOS Y DESCRIPCIÓN --- */
 .post-body-container { width: 100%; color: #fff !important; }
 .light-theme .post-body-container { color: #111 !important; }
 
-/* FIX MODO CLARO: El texto hereda oscuro, pero EXCLUIMOS a los títulos (.post-sub-title) */
-.light-theme .post-body-container p, 
-.light-theme .post-body-container span:not(.post-sub-title), 
-.light-theme .post-body-container div:not(.steam-buy-box):not(.steam-btn) { 
-    color: inherit !important; 
-}
+/* FIX: Sincronización de texto con tema claro/oscuro */
+.post-body-container p, .post-body-container span:not(.post-sub-title), .post-body-container div:not(.steam-buy-box):not(.steam-btn) { color: inherit !important; }
 
 .post-main-img { width: 100%; height: auto; border-radius: 4px; border-bottom: 4px solid var(--brand-color); margin-bottom: 20px; box-shadow: 5px 5px 0px rgba(0,0,0,0.5); }
-
-/* LOS TÍTULOS SIEMPRE BLANCOS */
 .post-sub-title { background: var(--brand-color) !important; color: #ffffff !important; padding: 12px 15px !important; text-transform: uppercase !important; font-weight: bold !important; font-size: 18px !important; margin: 25px 0 15px 0 !important; border-left: 5px solid #fff !important; display: block !important; }
 .light-theme .post-sub-title { color: #ffffff !important; }
 
 .info-grid { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 10px !important; background: rgba(255,255,255,0.05) !important; padding: 15px !important; border: 1px solid #333 !important; margin: 15px 0 !important; border-radius: 4px !important; }
+.info-item { color: inherit !important; }
 .info-item b { color: var(--brand-color) !important; text-transform: uppercase !important; font-size: 12px !important; }
 
 .req-container { background: #0a0a0a !important; border: 1px dashed #444 !important; padding: 20px !important; margin: 25px 0 !important; border-radius: 5px !important; }
 .req-title { color: #ffca28 !important; font-weight: bold !important; margin-bottom: 15px !important; display: block !important; text-transform: uppercase !important; font-size: 16px !important; }
 .req-grid { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 20px !important; }
-.req-grid div { font-size: 13px !important; line-height: 1.6 !important; }
+.req-grid div { color: inherit !important; font-size: 13px !important; line-height: 1.6 !important; }
 .req-grid b { color: #0860ca !important; display: block; margin-bottom: 5px; text-transform: uppercase; }
 
-/* --- 8. STEAM, TRAILER E INSTRUCCIONES INTEGRADAS --- */
+/* --- 8. STEAM, TRAILER E INSTRUCCIONES --- */
 .steam-buy-box { background: #171a21 !important; border: 1px solid #2a475e !important; display: flex !important; align-items: center !important; justify-content: space-between !important; padding: 15px 25px !important; margin: 20px 0 !important; border-radius: 4px !important; }
-.steam-text { color: #acb2b8 !important; font-size: 13px !important; font-weight: bold !important; text-transform: uppercase !important; border: 0 !important; }
-.steam-btn { background: linear-gradient(to right, #47bfff 5%, #1a44c2 95%) !important; color: #fff !important; padding: 10px 20px !important; text-decoration: none !important; font-weight: bold !important; border-radius: 3px !important; display: flex !important; align-items: center !important; gap: 8px !important; transition: 0.3s !important; font-size: 13px !important; border: 0 !important; box-shadow: none !important; }
+.steam-text { color: #acb2b8 !important; font-size: 13px !important; font-weight: bold !important; text-transform: uppercase !important; }
+.steam-btn { background: linear-gradient(to right, #47bfff 5%, #1a44c2 95%) !important; color: #fff !important; padding: 10px 20px !important; text-decoration: none !important; font-weight: bold !important; border-radius: 3px !important; display: flex !important; align-items: center !important; gap: 8px !important; transition: 0.3s !important; font-size: 13px !important; border: 0 !important; }
 .steam-btn:hover { transform: scale(1.03) !important; box-shadow: 0 0 15px rgba(71, 191, 255, 0.6) !important; }
 
-/* SECCIÓN TRAILER */
 .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; background: #000; margin: 0 0 20px 0; border-radius: 4px; border: 1px solid var(--brand-color); box-shadow: 5px 5px 0px rgba(0,0,0,0.5); }
-.video-container iframe, .video-container object, .video-container embed { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+.video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
 
 .inst-container { background: rgba(255, 255, 255, 0.03) !important; border: 1px solid var(--brand-color) !important; padding: 20px !important; margin: 15px 0 !important; border-radius: 4px !important; color: inherit !important; }
 .inst-title { color: var(--brand-color) !important; font-weight: bold !important; text-transform: uppercase !important; margin-bottom: 15px !important; display: flex !important; align-items: center !important; gap: 10px !important; font-size: 16px !important; }
@@ -209,10 +203,6 @@ body.drawer-open #drawer-overlay { display: block; }
 #side-drawer ul.dark_menu { display: flex !important; flex-direction: column !important; margin: 0 !important; padding: 0 !important; opacity: 1 !important; float: none !important; }
 #side-drawer ul.dark_menu li { margin-bottom: 5px; width: 100%; min-width: 0 !important; position: relative; list-style: none !important;}
 #side-drawer ul.dark_menu li a { text-align: left; padding: 15px; font-size: 14px; border-bottom: 1px solid rgba(255,255,255,0.05); text-decoration: none !important; color: #fff !important; display: block; }
-#side-drawer .has-children > a:after { content: "\f107"; font-family: "Font Awesome 6 Free"; font-weight: 900; float: right; transition: 0.3s; }
-#side-drawer .has-children.active > a:after { transform: rotate(180deg); }
-#side-drawer .has-children ul { display: none; position: static; background: rgba(255,255,255,0.03); padding-left: 20px; width: 100%; }
-#side-drawer .has-children.active > ul { display: flex; flex-direction: column; }
 
 /* --- 12. ETIQUETAS Y PAGINACIÓN --- */
 .post-labels { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
@@ -224,12 +214,12 @@ body.drawer-open #drawer-overlay { display: block; }
 .showpageNum:hover { background: var(--brand-color); border-color: var(--brand-color); transform: translateY(-3px); box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
 .showpagePoint { background: var(--brand-color); border-color: var(--brand-color); cursor: default; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
 
-/* --- 13. DISQUS CONTAINER --- */
+/* --- 13. DISQUS CONTAINER (IMPORTANTE) --- */
 #comments { 
     margin: 40px 0; 
     padding: 20px; 
     border: 1px solid var(--brand-color); 
-    background: #111111 !important; 
+    background: #0b0b0b !important; /* Fondo sólido oscuro obligatorio */
     border-radius: 4px; 
 }
 #comments h4 { font-size: 18px; text-transform: uppercase; color: var(--brand-color); margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; }
@@ -241,7 +231,7 @@ body.drawer-open #drawer-overlay { display: block; }
 .light-theme .steam-text { color: #444 !important; }
 .light-theme .inst-container { background: #f9f9f9 !important; border-color: #ddd !important; }
 .light-theme .inst-list li { border-bottom-color: #eee !important; }
-.light-theme #comments { background: #f9f9f9 !important; border-color: #ddd !important; color: #333 !important; }
+.light-theme #comments { background: #ffffff !important; border-color: #ddd !important; color: #111 !important; }
 .light-theme .sidebar-search form { background: #ffffff !important; border: 2px solid #dddddd !important; }
 .light-theme .sidebar-search input { color: #111111 !important; }
 .light-theme .sidebar-search button { background: #f0f0f0 !important; color: #333333 !important; }

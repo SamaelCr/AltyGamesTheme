@@ -44,10 +44,10 @@ function loadFeatured(json) {
 }
 
 function loadMainGrid(json) {
-  var entries = json.feed.entry ||[];
+  var entries = json.feed.entry || [];
   var url = window.location.href;
   var currentPage = url.indexOf("PageNo=") != -1 ? parseInt(url.split("PageNo=")[1]) : 1;
-  var filteredEntries = entries.filter(e => !(e.category ||[]).some(l => l.term === featured_label));
+  var filteredEntries = entries.filter(e => !(e.category || []).some(l => l.term === featured_label));
   var start = (currentPage - 1) * posts_per_page;
   var end = start + posts_per_page;
   var pageEntries = filteredEntries.slice(start, end);
@@ -102,20 +102,20 @@ $(document).ready(function() {
       localStorage.setItem('theme', 'light');
       themeBtn.find('i').attr('class', 'fa-solid fa-moon');
     }
-    
-    // FIX: Obligar a Disqus a recargarse para que detecte el nuevo color de fondo
+
+    /* FIX: Recarga de Disqus con retraso para detectar el nuevo fondo */
     if (typeof DISQUS !== 'undefined') {
-        DISQUS.reset({ reload: true });
+        setTimeout(function() {
+            DISQUS.reset({ reload: true });
+        }, 200); 
     }
   });
 
   /* 3. PANEL LATERAL (SIDE DRAWER) */
   var menuHTML = $('.menujohanes .dark_menu').html();
   $('#drawer-content').html('<ul class="dark_menu">' + menuHTML + '</ul>');
-
   $('#menu-toggle').on('click', function() { $('body').addClass('drawer-open'); });
   $('#drawer-close, #drawer-overlay').on('click', function() { $('body').removeClass('drawer-open'); });
-
   $('#side-drawer .has-children > a').on('click', function(e) {
     e.preventDefault();
     $(this).parent().toggleClass('active');
