@@ -213,13 +213,12 @@ a { color: $(brand.color); }
                   </div>
                 </article>
               </b:includable>
-              <!-- SECCIÓN DISQUS -->
+              <!-- MODULO DE COMENTARIOS DISQUS -->
               <b:includable id='comment_picker' var='post'>
                 <div class='comments' id='comments'>
                   <h4>Comunidad</h4>
                   <div id='disqus_thread'/>
                   <script type='text/javascript'>
-                    //<![CDATA[
                     var disqus_shortname = 'altygames'; 
                     var disqus_config = function () {
                       this.page.url = "<data:post.url.canonical/>";
@@ -227,16 +226,39 @@ a { color: $(brand.color); }
                     };
                     (function() {
                       var d = document, s = d.createElement('script');
+                      s.async = true;
                       s.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
                       s.setAttribute('data-timestamp', +new Date());
                       (d.head || d.body).appendChild(s);
                     })();
-                    //]]>
                   </script>
                 </div>
               </b:includable>
-              <!-- Includables vacíos -->
-              <b:includable id='backlinkDeleteIcon' var='backlink'/><b:includable id='backlinks' var='post'/><b:includable id='comment-form' var='post'/><b:includable id='commentDeleteIcon' var='comment'/><b:includable id='comment_count_picker' var='post'/><b:includable id='comments' var='post'/><b:includable id='feedLinks'/><b:includable id='feedLinksBody' var='links'/><b:includable id='iframe_comments' var='post'/><b:includable id='mobile-index-post' var='post'/><b:includable id='mobile-main' var='top'/><b:includable id='mobile-nextprev'/><b:includable id='mobile-post' var='post'/><b:includable id='nextprev'/><b:includable id='postQuickEdit' var='post'/><b:includable id='shareButtons' var='post'/><b:includable id='status-message'/><b:includable id='threaded-comment-form' var='post'/><b:includable id='threaded_comment_js' var='post'/><b:includable id='threaded_comments' var='post'/>
+              <b:includable id='comments' var='post'>
+                <div class='comments' id='comments'>
+                  <h4>Comentarios</h4>
+                  <div class='comments-content'>
+                    <data:post.commentHtml/>
+                  </div>
+                </div>
+              </b:includable>
+              <b:includable id='threaded_comments' var='post'>
+                <div class='comments' id='comments'>
+                  <h4>Comentarios</h4>
+                  <div class='comments-content'>
+                    <data:post.commentHtml/>
+                  </div>
+                </div>
+              </b:includable>
+              <b:includable id='iframe_comments' var='post'>
+                <div class='comments' id='comments'>
+                   <h4>Comentarios</h4>
+                   <script expr:src='data:post.commentSrc' type='text/javascript'/>
+                   <div class='cmt_iframe_holder' expr:data-href='data:post.url' expr:data-viewtype='data:post.viewType'/>
+                </div>
+              </b:includable>
+              <!-- Otros includables (vacíos para evitar errores) -->
+              <b:includable id='backlinkDeleteIcon' var='backlink'/><b:includable id='backlinks' var='post'/><b:includable id='comment-form' var='post'/><b:includable id='commentDeleteIcon' var='comment'/><b:includable id='comment_count_picker' var='post'/><b:includable id='feedLinks'/><b:includable id='feedLinksBody' var='links'/><b:includable id='mobile-index-post' var='post'/><b:includable id='mobile-main' var='top'/><b:includable id='mobile-nextprev'/><b:includable id='mobile-post' var='post'/><b:includable id='nextprev'/><b:includable id='postQuickEdit' var='post'/><b:includable id='shareButtons' var='post'/><b:includable id='status-message'/><b:includable id='threaded-comment-form' var='post'/><b:includable id='threaded_comment_js' var='post'/>
             </b:widget>
           </b:section>
       </b:if>
@@ -261,23 +283,5 @@ a { color: $(brand.color); }
   </div>
   <div class='fleft'><p>- Copyright &#169; 2026 <data:blog.title/> - Restoration by AltyGames -</p></div>
 </div>
-
-<script type='text/javascript'>
-//<![CDATA[
-/* SCRIPT PARA REUBICAR TÍTULO DE BLOGGER AUTOMÁTICAMENTE */
-$(document).ready(function() {
-    if($('body').hasClass('item-view') || window.location.href.indexOf('.html') > -1) {
-        var pageTitleText = document.title.split(' - ')[0]; 
-        var postTitleHTML = '<h2 class="section-title" style="text-align:center; border:0; margin-top:0;">' + pageTitleText + '</h2>';
-        var firstImg = $('.post-body-container img').first();
-        if(firstImg.length) {
-            if(firstImg.parent('a').length) { firstImg.parent('a').after(postTitleHTML); } 
-            else { firstImg.after(postTitleHTML); }
-        }
-    }
-});
-//]]>
-</script>
-
 </body>
 </html>

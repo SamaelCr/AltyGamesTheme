@@ -1,6 +1,6 @@
 /**
 * Theme Name: Devil Survivor 2 (Restoration Final)
-* Version: 10.5 - Pro Comments & Layout Fix
+* Version: 11.9 - Modern Pagination, Tags Restored & Download Buttons
 * GitHub: SamaelCr/AltyGamesTheme
 */
 
@@ -142,7 +142,7 @@ ul.dark_menu li:hover > ul { display: flex; }
 .post-card h2 { margin: 5px 0 3px 0; font-size: 14px; line-height: 1.3; font-weight: bold; height: 38px; overflow: hidden; }
 .post-card h2 a { color: inherit; text-decoration: none !important; border: 0 !important; }
 
-/* --- 7. FICHA Y REQUISITOS --- */
+/* --- 7. FICHA, REQUISITOS Y DESCRIPCIÓN --- */
 .post-body-container { width: 100%; color: #fff !important; }
 .light-theme .post-body-container { color: #111 !important; }
 .post-body-container p, .post-body-container span, .post-body-container div:not(.steam-buy-box):not(.steam-btn) { color: inherit !important; }
@@ -150,105 +150,45 @@ ul.dark_menu li:hover > ul { display: flex; }
 .post-main-img { width: 100%; height: auto; border-radius: 4px; border-bottom: 4px solid var(--brand-color); margin-bottom: 20px; box-shadow: 5px 5px 0px rgba(0,0,0,0.5); }
 .post-sub-title { background: var(--brand-color) !important; color: #fff !important; padding: 12px 15px !important; text-transform: uppercase !important; font-weight: bold !important; font-size: 18px !important; margin: 25px 0 15px 0 !important; border-left: 5px solid #fff !important; display: block !important; }
 
-/* SECCIÓN STEAM */
-.steam-buy-box { background: #171a21 !important; border: 1px solid #2a475e !important; display: flex !important; align-items: center !important; justify-content: space-between !important; padding: 15px 25px !important; margin: 20px 0 !important; border-radius: 4px !important; }
-.steam-text { color: #acb2b8 !important; font-size: 13px !important; font-weight: bold !important; text-transform: uppercase !important; }
-.steam-btn { background: linear-gradient(to right, #47bfff 5%, #1a44c2 95%) !important; color: #fff !important; padding: 10px 20px !important; text-decoration: none !important; font-weight: bold !important; border-radius: 3px !important; display: flex !important; align-items: center !important; gap: 8px !important; transition: 0.3s !important; font-size: 13px !important; border: 0 !important; }
-.steam-btn:hover { transform: scale(1.03) !important; box-shadow: 0 0 15px rgba(71, 191, 255, 0.6) !important; }
-
 .info-grid { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 10px !important; background: rgba(255,255,255,0.05) !important; padding: 15px !important; border: 1px solid #333 !important; margin: 15px 0 !important; border-radius: 4px !important; }
+.info-item { color: inherit !important; }
 .info-item b { color: var(--brand-color) !important; text-transform: uppercase !important; font-size: 12px !important; }
 
 .req-container { background: #0a0a0a !important; border: 1px dashed #444 !important; padding: 20px !important; margin: 25px 0 !important; border-radius: 5px !important; }
 .req-title { color: #ffca28 !important; font-weight: bold !important; margin-bottom: 15px !important; display: block !important; text-transform: uppercase !important; font-size: 16px !important; }
 .req-grid { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 20px !important; }
-.req-grid div { font-size: 13px !important; line-height: 1.6 !important; }
+.req-grid div { color: inherit !important; font-size: 13px !important; line-height: 1.6 !important; }
 .req-grid b { color: #0860ca !important; display: block; margin-bottom: 5px; text-transform: uppercase; }
 
-/* SECCIÓN INSTRUCCIONES */
-.inst-container { background: rgba(255, 255, 255, 0.03) !important; border: 1px solid var(--brand-color) !important; padding: 20px !important; margin: 15px 0 !important; border-radius: 4px !important; }
+/* --- 8. STEAM & INSTRUCCIONES INTEGRADAS --- */
+.steam-buy-box { background: #171a21 !important; border: 1px solid #2a475e !important; display: flex !important; align-items: center !important; justify-content: space-between !important; padding: 15px 25px !important; margin: 20px 0 !important; border-radius: 4px !important; }
+.steam-text { color: #acb2b8 !important; font-size: 13px !important; font-weight: bold !important; text-transform: uppercase !important; }
+.steam-btn { background: linear-gradient(to right, #47bfff 5%, #1a44c2 95%) !important; color: #fff !important; padding: 10px 20px !important; text-decoration: none !important; font-weight: bold !important; border-radius: 3px !important; display: flex !important; align-items: center !important; gap: 8px !important; transition: 0.3s !important; font-size: 13px !important; border: 0 !important; }
+.steam-btn:hover { transform: scale(1.03) !important; box-shadow: 0 0 15px rgba(71, 191, 255, 0.6) !important; }
+
+.inst-container { background: rgba(255, 255, 255, 0.03) !important; border: 1px solid var(--brand-color) !important; padding: 20px !important; margin: 15px 0 !important; border-radius: 4px !important; color: inherit !important; }
 .inst-title { color: var(--brand-color) !important; font-weight: bold !important; text-transform: uppercase !important; margin-bottom: 15px !important; display: flex !important; align-items: center !important; gap: 10px !important; font-size: 16px !important; }
 .inst-list { margin: 0 !important; padding: 0 !important; list-style: none !important; }
-.inst-list li { padding: 8px 0 8px 30px !important; position: relative !important; border-bottom: 1px solid rgba(255,255,255,0.05) !important; font-size: 14px !important; }
+.inst-list li { padding: 8px 0 8px 30px !important; position: relative !important; border-bottom: 1px solid rgba(255,255,255,0.05) !important; font-size: 14px !important; color: inherit !important; }
 .inst-list li:before { content: "\f058"; font-family: "Font Awesome 6 Free"; font-weight: 900; position: absolute; left: 0; color: var(--brand-color); }
 .inst-list li:last-child { border: 0 !important; }
 
-/* FIX MODO CLARO COMPONENTES */
-.light-theme .info-grid { background: rgba(0,0,0,0.05) !important; border-color: #ddd !important; }
-.light-theme .req-container { background: #f4f4f4 !important; border: 1px solid #ddd !important; }
-.light-theme .steam-buy-box { background: #f0f2f5 !important; border-color: #dcdcdc !important; }
-.light-theme .steam-text { color: #444 !important; }
-.light-theme .inst-container { background: #f9f9f9 !important; border-color: #ddd !important; }
-.light-theme .inst-list li { border-bottom-color: #eee !important; }
+/* --- 9. BOTONES DE DESCARGA --- */
+.dl-wrapper { text-align: center !important; margin: 30px 0 !important; display: flex !important; flex-direction: column !important; gap: 12px !important; align-items: center !important; }
+.btn-dl { display: flex !important; align-items: center !important; justify-content: center !important; gap: 10px !important; background: #28a745 !important; color: #fff !important; padding: 16px 30px !important; text-decoration: none !important; font-weight: bold !important; text-transform: uppercase !important; border-radius: 4px !important; width: 80% !important; max-width: 420px !important; box-shadow: 0px 4px 0px #1e7e34 !important; transition: 0.2s; }
+.btn-dl:hover { transform: translateY(2px); box-shadow: 0px 2px 0px #1e7e34 !important; }
+.btn-dl.torrent { background: #007bff !important; box-shadow: 0px 4px 0px #0056b3 !important; }
+.btn-dl.torrent:hover { box-shadow: 0px 2px 0px #0056b3 !important; }
 
-/* BOTONES DE DESCARGA */
-.dl-wrapper { 
-    text-align: center !important; 
-    margin: 20px 0 !important; 
-    display: flex !important; 
-    flex-direction: column !important; 
-    gap: 12px !important; 
-    align-items: center !important; 
-}
-.btn-dl { 
-    display: flex !important; 
-    align-items: center !important; 
-    justify-content: center !important; 
-    gap: 10px !important; 
-    background: #28a745 !important; 
-    color: #fff !important; 
-    padding: 16px 30px !important; 
-    text-decoration: none !important; 
-    font-weight: bold !important; 
-    text-transform: uppercase !important; 
-    border-radius: 4px !important; 
-    width: 80% !important; 
-    max-width: 420px !important; 
-    box-shadow: 0px 4px 0px #1e7e34 !important; 
-    transition: 0.2s;
-}
-.btn-dl:hover {
-    transform: translateY(2px);
-    box-shadow: 0px 2px 0px #1e7e34 !important;
-}
-
-/* --- 8. BUSCADOR SIDEBAR & PUBLICIDAD --- */
+/* --- 10. BUSCADOR SIDEBAR & PUBLICIDAD --- */
 .sidebar { width: 340px; padding-right: 20px; box-sizing: border-box; }
 .sidebar-search { margin-bottom: 20px; width: 100%; }
+.sidebar-search form { display: flex; background: #000000 !important; border: 2px solid #333 !important; padding: 2px; position: relative; width: 100%; }
+.sidebar-search input { border: 0; background: transparent !important; color: #ffffff !important; width: 100%; padding: 10px 15px; outline: none; font-size: 13px; }
+.sidebar-search button { background: #222 !important; border: 0; color: #fff !important; padding: 0 15px; cursor: pointer; }
+.sidebar-box { width: 100%; height: 250px; background: #111111 !important; border: 2px solid #333333 !important; display: flex; align-items: center; justify-content: center; color: #555555 !important; font-weight: bold; border-radius: 4px; transition: 0.3s; }
 
-.sidebar-search form { 
-    display: flex; background: #000000 !important; border: 2px solid #333 !important; 
-    padding: 2px; position: relative; width: 100%;
-}
-.sidebar-search input { 
-    border: 0; background: transparent !important; color: #ffffff !important; 
-    width: 100%; padding: 10px 15px; outline: none; font-size: 13px;
-}
-.sidebar-search button { 
-    background: #222 !important; border: 0; color: #fff !important; padding: 0 15px; cursor: pointer;
-}
-
-.sidebar-box {
-    width: 100%; height: 250px; background: #111111 !important;
-    border: 2px solid #333333 !important; display: flex;
-    align-items: center; justify-content: center; color: #555555 !important;
-    font-weight: bold; border-radius: 4px; transition: 0.3s;
-}
-
-/* Estilo Claro (Override) */
-html.light-theme .sidebar-search form, .light-theme .sidebar-search form { 
-    background: #ffffff !important; border: 2px solid #dddddd !important; 
-}
-html.light-theme .sidebar-search input, .light-theme .sidebar-search input { color: #111111 !important; }
-html.light-theme .sidebar-search button, .light-theme .sidebar-search button { background: #f0f0f0 !important; color: #333333 !important; }
-html.light-theme .sidebar-search button:hover, .light-theme .sidebar-search button:hover {
-    background: var(--brand-color) !important; color: #ffffff !important;
-}
-html.light-theme .sidebar-box, .light-theme .sidebar-box {
-    background: #ffffff !important; border: 2px solid #dddddd !important; color: #888888 !important;
-}
-
-/* --- 9. MENÚ LATERAL --- */
+/* --- 11. MENÚ LATERAL (SIDE DRAWER) --- */
 #side-drawer { position: fixed; top: 0; left: -300px; width: 280px; height: 100%; background: #000; border-right: 2px solid var(--brand-color); z-index: 10001; transition: 0.4s; padding: 20px; box-sizing: border-box; overflow-y: auto; }
 body.drawer-open #side-drawer { left: 0; }
 #drawer-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10000; display: none; }
@@ -262,58 +202,34 @@ body.drawer-open #drawer-overlay { display: block; }
 #side-drawer .has-children ul { display: none; position: static; background: rgba(255,255,255,0.03); padding-left: 20px; width: 100%; }
 #side-drawer .has-children.active > ul { display: flex; flex-direction: column; }
 
-/* --- 10. ETIQUETAS Y PAGINACIÓN --- */
-.post-labels { 
-    display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; 
-}
-.post-tag { 
-    font-size: 11px; text-transform: uppercase; 
-    background: rgba(255,255,255,0.1); padding: 5px 10px; 
-    border-radius: 4px; color: #ccc !important; font-weight: bold; 
-    transition: all 0.3s ease; text-decoration: none !important;
-}
+/* --- 12. ETIQUETAS Y PAGINACIÓN --- */
+.post-labels { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.post-tag { font-size: 11px; text-transform: uppercase; background: rgba(255,255,255,0.1); padding: 5px 10px; border-radius: 4px; color: #ccc !important; font-weight: bold; transition: all 0.3s ease; text-decoration: none !important; }
 .post-tag:hover { background: var(--brand-color); color: #fff !important; }
 
-#blog-pager { 
-    clear: both; width: 100%; display: flex; justify-content: center; align-items: center; gap: 8px;
-    margin: 40px auto 20px auto; padding: 20px 0; 
-    border-top: 1px solid rgba(255,255,255,0.1); 
-}
-.showpageNum, .showpagePoint { 
-    display: inline-flex; align-items: center; justify-content: center;
-    width: 40px; height: 40px; border-radius: 6px; 
-    color: #fff !important; font-weight: bold; font-size: 15px; 
-    text-decoration: none !important; transition: all 0.2s ease; 
-    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
-}
-.showpageNum:hover { 
-    background: var(--brand-color); border-color: var(--brand-color);
-    transform: translateY(-3px); box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-}
-.showpagePoint { 
-    background: var(--brand-color); border-color: var(--brand-color);
-    cursor: default; box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-}
+#blog-pager { clear: both; width: 100%; display: flex; justify-content: center; align-items: center; gap: 8px; margin: 40px auto 20px auto; padding: 20px 0; border-top: 1px solid rgba(255,255,255,0.1); }
+.showpageNum, .showpagePoint { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 6px; color: #fff !important; font-weight: bold; font-size: 15px; text-decoration: none !important; transition: all 0.2s ease; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); }
+.showpageNum:hover { background: var(--brand-color); border-color: var(--brand-color); transform: translateY(-3px); box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+.showpagePoint { background: var(--brand-color); border-color: var(--brand-color); cursor: default; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
 
-/* --- 12. COMENTARIOS --- */
-#comments {
-    margin: 40px 0;
-    padding: 20px;
-    border: 1px solid var(--brand-color);
-    background: rgba(255,255,255,0.02);
-    border-radius: 4px;
-}
-#comments h4 {
-    font-size: 18px;
-    text-transform: uppercase;
-    color: var(--brand-color);
-    margin-bottom: 20px;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-    padding-bottom: 10px;
-}
+/* --- 13. DISQUS CONTAINER --- */
+#comments { margin: 40px 0; padding: 20px; border: 1px solid var(--brand-color); background: rgba(255,255,255,0.02); border-radius: 4px; }
+#comments h4 { font-size: 18px; text-transform: uppercase; color: var(--brand-color); margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; }
+
+/* --- 14. MODO CLARO OVERRIDES --- */
+.light-theme .info-grid { background: rgba(0,0,0,0.05) !important; border-color: #ddd !important; }
+.light-theme .req-container { background: #f4f4f4 !important; border: 1px solid #ddd !important; }
+.light-theme .steam-buy-box { background: #f0f2f5 !important; border-color: #dcdcdc !important; }
+.light-theme .steam-text { color: #444 !important; }
+.light-theme .inst-container { background: #f9f9f9 !important; border-color: #ddd !important; }
+.light-theme .inst-list li { border-bottom-color: #eee !important; }
 .light-theme #comments { background: #f9f9f9; border-color: #ddd; color: #333 !important; }
+.light-theme .sidebar-search form { background: #ffffff !important; border: 2px solid #dddddd !important; }
+.light-theme .sidebar-search input { color: #111111 !important; }
+.light-theme .sidebar-search button { background: #f0f0f0 !important; color: #333333 !important; }
+.light-theme .sidebar-box { background: #ffffff !important; border: 2px solid #dddddd !important; color: #888888 !important; }
 
-/* --- 11. MEDIA QUERIES --- */
+/* --- 15. MEDIA QUERIES --- */
 @media screen and (max-width: 768px) {
     #header { height: 200px; }
     h1#blog-title { font-size: 20pt; top: 50px; width: 100%; text-align: center; left: 0; }

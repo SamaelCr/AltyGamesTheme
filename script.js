@@ -44,10 +44,10 @@ function loadFeatured(json) {
 }
 
 function loadMainGrid(json) {
-  var entries = json.feed.entry || [];
+  var entries = json.feed.entry ||[];
   var url = window.location.href;
   var currentPage = url.indexOf("PageNo=") != -1 ? parseInt(url.split("PageNo=")[1]) : 1;
-  var filteredEntries = entries.filter(e => !(e.category || []).some(l => l.term === featured_label));
+  var filteredEntries = entries.filter(e => !(e.category ||[]).some(l => l.term === featured_label));
   var start = (currentPage - 1) * posts_per_page;
   var end = start + posts_per_page;
   var pageEntries = filteredEntries.slice(start, end);
@@ -118,4 +118,15 @@ $(document).ready(function() {
     e.preventDefault(); // Evita que navegue
     $(this).parent().toggleClass('active');
   });
+
+  /* 4. REUBICACIÓN TÍTULO DE BLOGGER AUTOMÁTICAMENTE */
+  if($('body').hasClass('item-view') || window.location.href.indexOf('.html') > -1) {
+    var pageTitleText = document.title.split(' - ')[0]; 
+    var postTitleHTML = '<h2 class="section-title" style="text-align:center; border:0; margin-top:0;">' + pageTitleText + '</h2>';
+    var firstImg = $('.post-body-container img').first();
+    if(firstImg.length) {
+        if(firstImg.parent('a').length) { firstImg.parent('a').after(postTitleHTML); } 
+        else { firstImg.after(postTitleHTML); }
+    }
+  }
 });
