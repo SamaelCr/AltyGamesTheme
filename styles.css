@@ -1,6 +1,6 @@
 /**
 * Theme Name: Devil Survivor 2 (Restoration Final)
-* Version: 10.4 - Stylized Comments Added
+* Version: 10.5 - Pro Comments & Layout Fix
 * GitHub: SamaelCr/AltyGamesTheme
 */
 
@@ -295,21 +295,9 @@ body.drawer-open #drawer-overlay { display: block; }
     cursor: default; box-shadow: 0 4px 10px rgba(0,0,0,0.5);
 }
 
-/* Modo Claro: Etiquetas y Paginación */
-html.light-theme .post-tag { background: #f0f0f0; color: #666 !important; }
-html.light-theme .post-tag:hover { background: var(--brand-color); color: #fff !important; }
-
-html.light-theme #blog-pager { border-top-color: #eaeaea; }
-html.light-theme .showpageNum { background: #fff; border-color: #ddd; color: #333 !important; }
-html.light-theme .showpageNum:hover { 
-    background: var(--brand-color); border-color: var(--brand-color); color: #fff !important; 
-    box-shadow: 0 4px 10px rgba(8, 96, 202, 0.3); 
-}
-html.light-theme .showpagePoint { color: #fff !important; box-shadow: 0 4px 10px rgba(8, 96, 202, 0.3); }
-
 /* --- 12. COMENTARIOS --- */
 #comments {
-    margin: 40px 20px 20px 20px;
+    margin: 40px 0;
     padding: 20px;
     border: 1px solid var(--brand-color);
     background: rgba(255,255,255,0.02);
@@ -324,7 +312,6 @@ html.light-theme .showpagePoint { color: #fff !important; box-shadow: 0 4px 10px
     padding-bottom: 10px;
 }
 .light-theme #comments { background: #f9f9f9; border-color: #ddd; color: #333 !important; }
-.light-theme #comments h4 { border-bottom-color: #eee; }
 
 /* --- 11. MEDIA QUERIES --- */
 @media screen and (max-width: 768px) {
