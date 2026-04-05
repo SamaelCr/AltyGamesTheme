@@ -201,7 +201,7 @@ a { color: $(brand.color); }
               </b:includable>
               <b:includable id='post' var='post'>
                 <article class='post hentry' itemprop='blogPost' itemscope='itemscope' itemtype='http://schema.org/BlogPosting'>
-                  <h2 class='section-title'><data:post.title/></h2>
+                  <!-- El título se maneja dentro de la entrada para permitir el orden: Imagen -> Titulo -->
                   <div class='post-body entry-content' expr:id='"post-body-" + data:post.id' itemprop='articleBody'>
                     <data:post.body/>
                     <div style='clear: both;'/>
