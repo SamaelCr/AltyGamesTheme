@@ -213,35 +213,30 @@ a { color: $(brand.color); }
                   </div>
                 </article>
               </b:includable>
-              <!-- MODULO DE COMENTARIOS MEJORADO -->
+              <!-- SECCIÓN DISQUS -->
               <b:includable id='comment_picker' var='post'>
                 <div class='comments' id='comments'>
-                  <h4>Comentarios</h4>
-                  <div class='comments-content'>
-                    <b:if cond='data:post.commentSource == 1'>
-                      <b:include data='post' name='iframe_comments'/>
-                    <b:else/>
-                      <b:if cond='data:post.showThreadedComments'>
-                        <b:include data='post' name='threaded_comments'/>
-                      <b:else/>
-                        <b:include data='post' name='comments'/>
-                      </b:if>
-                    </b:if>
-                  </div>
+                  <h4>Comunidad</h4>
+                  <div id='disqus_thread'/>
+                  <script type='text/javascript'>
+                    //<![CDATA[
+                    var disqus_shortname = 'altygames'; 
+                    var disqus_config = function () {
+                      this.page.url = "<data:post.url.canonical/>";
+                      this.page.identifier = "<data:post.id/>";
+                    };
+                    (function() {
+                      var d = document, s = d.createElement('script');
+                      s.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+                      s.setAttribute('data-timestamp', +new Date());
+                      (d.head || d.body).appendChild(s);
+                    })();
+                    //]]>
+                  </script>
                 </div>
               </b:includable>
-              <b:includable id='iframe_comments' var='post'>
-                <script expr:src='data:post.commentSrc' type='text/javascript'/>
-                <div class='cmt_iframe_holder' expr:data-href='data:post.url' expr:data-viewtype='data:post.viewType'/>
-              </b:includable>
-              <b:includable id='threaded_comments' var='post'>
-                <data:post.commentHtml/>
-              </b:includable>
-              <b:includable id='comments' var='post'>
-                <data:post.commentHtml/>
-              </b:includable>
-              <!-- Includables vacíos para evitar errores -->
-              <b:includable id='backlinkDeleteIcon' var='backlink'/><b:includable id='backlinks' var='post'/><b:includable id='comment-form' var='post'/><b:includable id='commentDeleteIcon' var='comment'/><b:includable id='comment_count_picker' var='post'/><b:includable id='feedLinks'/><b:includable id='feedLinksBody' var='links'/><b:includable id='mobile-index-post' var='post'/><b:includable id='mobile-main' var='top'/><b:includable id='mobile-nextprev'/><b:includable id='mobile-post' var='post'/><b:includable id='nextprev'/><b:includable id='postQuickEdit' var='post'/><b:includable id='shareButtons' var='post'/><b:includable id='status-message'/><b:includable id='threaded-comment-form' var='post'/><b:includable id='threaded_comment_js' var='post'/>
+              <!-- Includables vacíos -->
+              <b:includable id='backlinkDeleteIcon' var='backlink'/><b:includable id='backlinks' var='post'/><b:includable id='comment-form' var='post'/><b:includable id='commentDeleteIcon' var='comment'/><b:includable id='comment_count_picker' var='post'/><b:includable id='comments' var='post'/><b:includable id='feedLinks'/><b:includable id='feedLinksBody' var='links'/><b:includable id='iframe_comments' var='post'/><b:includable id='mobile-index-post' var='post'/><b:includable id='mobile-main' var='top'/><b:includable id='mobile-nextprev'/><b:includable id='mobile-post' var='post'/><b:includable id='nextprev'/><b:includable id='postQuickEdit' var='post'/><b:includable id='shareButtons' var='post'/><b:includable id='status-message'/><b:includable id='threaded-comment-form' var='post'/><b:includable id='threaded_comment_js' var='post'/><b:includable id='threaded_comments' var='post'/>
             </b:widget>
           </b:section>
       </b:if>
