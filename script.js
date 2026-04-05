@@ -74,7 +74,7 @@ function loadMainGrid(json) {
 }
 
 $(document).ready(function() {
-  /* 1. LÓGICA DE SUBMENÚS (Guion bajo _) */
+  /* 1. LÓGICA DE SUBMENÚS */
   $('.dark_menu li').each(function() {
     var $link = $(this).find('a').first();
     var text = $link.text().trim();
@@ -105,24 +105,21 @@ $(document).ready(function() {
   });
 
   /* 3. PANEL LATERAL (SIDE DRAWER) */
-  // Clonamos el menú ya procesado (con hijos) al Drawer
   var menuHTML = $('.menujohanes .dark_menu').html();
   $('#drawer-content').html('<ul class="dark_menu">' + menuHTML + '</ul>');
 
-  // Abrir/Cerrar
   $('#menu-toggle').on('click', function() { $('body').addClass('drawer-open'); });
   $('#drawer-close, #drawer-overlay').on('click', function() { $('body').removeClass('drawer-open'); });
 
-  // Lógica de expansión para hijos en móvil
   $('#side-drawer .has-children > a').on('click', function(e) {
-    e.preventDefault(); // Evita que navegue
+    e.preventDefault();
     $(this).parent().toggleClass('active');
   });
 
   /* 4. REUBICACIÓN TÍTULO DE BLOGGER AUTOMÁTICAMENTE */
   if($('body').hasClass('item-view') || window.location.href.indexOf('.html') > -1) {
     var pageTitleText = document.title.split(' - ')[0]; 
-    var postTitleHTML = '<h2 class="section-title" style="text-align:center; border:0; margin-top:0;">' + pageTitleText + '</h2>';
+    var postTitleHTML = '<h2 class="section-title" style="text-align:center; border:0; margin-top:20px; color:var(--brand-color)!important;">' + pageTitleText + '</h2>';
     var firstImg = $('.post-body-container img').first();
     if(firstImg.length) {
         if(firstImg.parent('a').length) { firstImg.parent('a').after(postTitleHTML); } 
