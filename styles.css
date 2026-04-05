@@ -1,6 +1,6 @@
 /**
 * Theme Name: Devil Survivor 2 (Restoration Final)
-* Version: 10.2 - Fixed Color Contrast & Title Injection
+* Version: 10.3 - Redundancy Fixed & Theme Sync
 * GitHub: SamaelCr/AltyGamesTheme
 */
 
@@ -142,21 +142,21 @@ ul.dark_menu li:hover > ul { display: flex; }
 .post-card h2 { margin: 5px 0 3px 0; font-size: 14px; line-height: 1.3; font-weight: bold; height: 38px; overflow: hidden; }
 .post-card h2 a { color: inherit; text-decoration: none !important; border: 0 !important; }
 
-/* --- 7. FICHA, REQUISITOS Y TEXTO --- */
+/* --- 7. FICHA Y REQUISITOS --- */
 .post-body-container { width: 100%; color: #fff !important; }
 .light-theme .post-body-container { color: #111 !important; }
 
-/* FIX: Asegurar que el texto de descripción cambie con el tema */
-.post-body-container p, .post-body-container span, .post-body-container div { color: inherit !important; }
+/* Estilos de párrafos y contenedores para sincronizar con el modo claro/oscuro */
+.post-body-container p, .post-body-container span, .post-body-container div:not(.steam-buy-box):not(.steam-btn) { color: inherit !important; }
 
 .post-main-img { width: 100%; height: auto; border-radius: 4px; border-bottom: 4px solid var(--brand-color); margin-bottom: 20px; box-shadow: 5px 5px 0px rgba(0,0,0,0.5); }
 .post-sub-title { background: var(--brand-color) !important; color: #fff !important; padding: 12px 15px !important; text-transform: uppercase !important; font-weight: bold !important; font-size: 18px !important; margin: 25px 0 15px 0 !important; border-left: 5px solid #fff !important; display: block !important; }
 
-/* SECCIÓN STEAM (FORZADO) */
-.steam-buy-box { background: #171a21 !important; border: 1px solid #2a475e !important; display: flex !important; align-items: center !important; justify-content: space-between !important; padding: 15px 25px !important; margin: 20px 0 !important; border-radius: 4px !important; box-shadow: 0 4px 10px rgba(0,0,0,0.3) !important; }
-.steam-text { color: #acb2b8 !important; font-size: 13px !important; font-weight: bold !important; text-transform: uppercase !important; border: 0 !important; }
-.steam-btn { background: linear-gradient(to right, #47bfff 5%, #1a44c2 95%) !important; color: #fff !important; padding: 10px 20px !important; text-decoration: none !important; font-weight: bold !important; border-radius: 3px !important; display: flex !important; align-items: center !important; gap: 8px !important; transition: 0.3s !important; font-size: 13px !important; border: 0 !important; box-shadow: none !important; }
-.steam-btn:hover { transform: scale(1.03) !important; box-shadow: 0 0 15px rgba(71, 191, 255, 0.5) !important; }
+/* SECCIÓN STEAM */
+.steam-buy-box { background: #171a21 !important; border: 1px solid #2a475e !important; display: flex !important; align-items: center !important; justify-content: space-between !important; padding: 15px 25px !important; margin: 20px 0 !important; border-radius: 4px !important; }
+.steam-text { color: #acb2b8 !important; font-size: 13px !important; font-weight: bold !important; text-transform: uppercase !important; }
+.steam-btn { background: linear-gradient(to right, #47bfff 5%, #1a44c2 95%) !important; color: #fff !important; padding: 10px 20px !important; text-decoration: none !important; font-weight: bold !important; border-radius: 3px !important; display: flex !important; align-items: center !important; gap: 8px !important; transition: 0.3s !important; font-size: 13px !important; border: 0 !important; }
+.steam-btn:hover { transform: scale(1.03) !important; box-shadow: 0 0 15px rgba(71, 191, 255, 0.6) !important; }
 
 .info-grid { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 10px !important; background: rgba(255,255,255,0.05) !important; padding: 15px !important; border: 1px solid #333 !important; margin: 15px 0 !important; border-radius: 4px !important; }
 .info-item b { color: var(--brand-color) !important; text-transform: uppercase !important; font-size: 12px !important; }

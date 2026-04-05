@@ -245,14 +245,12 @@ a { color: $(brand.color); }
 /* SCRIPT PARA REUBICAR TÍTULO DE BLOGGER AUTOMÁTICAMENTE */
 $(document).ready(function() {
     if($('body').hasClass('item-view') || window.location.href.indexOf('.html') > -1) {
-        var pageTitleText = document.title.split(' - ')[0]; // Toma solo el nombre del juego
+        var pageTitleText = document.title.split(' - ')[0]; // Solo nombre del juego
         var postTitleHTML = '<h2 class="section-title" style="text-align:center; border:0; margin-top:0;">' + pageTitleText + '</h2>';
-        // Buscamos la primera imagen y ponemos el título debajo de ella
         var firstImg = $('.post-body-container img').first();
-        if(firstImg.parent('a').length) {
-            firstImg.parent('a').after(postTitleHTML);
-        } else {
-            firstImg.after(postTitleHTML);
+        if(firstImg.length) {
+            if(firstImg.parent('a').length) { firstImg.parent('a').after(postTitleHTML); } 
+            else { firstImg.after(postTitleHTML); }
         }
     }
 });
