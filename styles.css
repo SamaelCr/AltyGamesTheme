@@ -1,6 +1,6 @@
 /**
 * Theme Name: Devil Survivor 2 (Restoration Final)
-* Version: 10.3 - Redundancy Fixed & Theme Sync
+* Version: 10.4 - Stylized Comments Added
 * GitHub: SamaelCr/AltyGamesTheme
 */
 
@@ -145,8 +145,6 @@ ul.dark_menu li:hover > ul { display: flex; }
 /* --- 7. FICHA Y REQUISITOS --- */
 .post-body-container { width: 100%; color: #fff !important; }
 .light-theme .post-body-container { color: #111 !important; }
-
-/* Estilos de párrafos y contenedores para sincronizar con el modo claro/oscuro */
 .post-body-container p, .post-body-container span, .post-body-container div:not(.steam-buy-box):not(.steam-btn) { color: inherit !important; }
 
 .post-main-img { width: 100%; height: auto; border-radius: 4px; border-bottom: 4px solid var(--brand-color); margin-bottom: 20px; box-shadow: 5px 5px 0px rgba(0,0,0,0.5); }
@@ -308,6 +306,25 @@ html.light-theme .showpageNum:hover {
     box-shadow: 0 4px 10px rgba(8, 96, 202, 0.3); 
 }
 html.light-theme .showpagePoint { color: #fff !important; box-shadow: 0 4px 10px rgba(8, 96, 202, 0.3); }
+
+/* --- 12. COMENTARIOS --- */
+#comments {
+    margin: 40px 20px 20px 20px;
+    padding: 20px;
+    border: 1px solid var(--brand-color);
+    background: rgba(255,255,255,0.02);
+    border-radius: 4px;
+}
+#comments h4 {
+    font-size: 18px;
+    text-transform: uppercase;
+    color: var(--brand-color);
+    margin-bottom: 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding-bottom: 10px;
+}
+.light-theme #comments { background: #f9f9f9; border-color: #ddd; color: #333 !important; }
+.light-theme #comments h4 { border-bottom-color: #eee; }
 
 /* --- 11. MEDIA QUERIES --- */
 @media screen and (max-width: 768px) {
