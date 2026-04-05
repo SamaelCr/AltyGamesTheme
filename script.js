@@ -102,6 +102,11 @@ $(document).ready(function() {
       localStorage.setItem('theme', 'light');
       themeBtn.find('i').attr('class', 'fa-solid fa-moon');
     }
+    
+    // FIX: Obligar a Disqus a recargarse para que detecte el nuevo color de fondo
+    if (typeof DISQUS !== 'undefined') {
+        DISQUS.reset({ reload: true });
+    }
   });
 
   /* 3. PANEL LATERAL (SIDE DRAWER) */
