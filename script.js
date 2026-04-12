@@ -74,36 +74,32 @@ function loadMainGrid(json) {
 }
 
 $(document).ready(function() {
-  /* 1. LÓGICA DE SUBMENÚS (SISTEMA INFALIBLE MÚLTIPLES HIJOS) */
-  var $ultimoPadre = null;
-  
-  $('.dark_menu > li').each(function() {
-    var $li = $(this);
-    var $link = $li.children('a').first();
-    
-    if ($link.length > 0) {
-      var text = $link.text().trim();
-      
-      if (text.indexOf('_') === 0) {
-        // Es un hijo, buscar si tenemos un padre registrado
-        if ($ultimoPadre) {
-          // Verificar si el padre ya tiene la cajita ul creada
-          var $submenu = $ultimoPadre.children('ul');
-          if ($submenu.length === 0) {
-            $submenu = $('<ul></ul>');
-            $ultimoPadre.append($submenu).addClass('has-children');
-          }
-          // Limpiar nombre y agrupar
-          $link.text(text.substring(1).trim());
-          $li.detach().appendTo($submenu);
+  /* 1. LÓGICA DE SUBMENÚS (SISTEMA DE MAPEO PREVIO V3) */
+  var items = $('.dark_menu li').get();
+  var currentParent = null;
+
+  items.forEach(function(item) {
+    var $li = $(item);
+    var $link = $li.find('a').first();
+    var text = $link.text().trim();
+
+    if (text.startsWith('_')) {
+      // Es un hijo, lo movemos al último padre detectado
+      if (currentParent) {
+        var $ul = currentParent.find('ul');
+        if (!$ul.length) {
+          $ul = $('<ul></ul>').appendTo(currentParent);
+          currentParent.addClass('has-children');
         }
-      } else {
-        // Es un elemento normal (nuevo padre)
-        $ultimoPadre = $li;
+        $link.text(text.substring(1).trim());
+        $li.appendTo($ul);
       }
+    } else {
+      // Es un padre potencial
+      currentParent = $li;
     }
   });
-  
+
   $('.dark_menu').addClass('menu-ready');
 
   /* 2. TOGGLE TEMA */
@@ -133,12 +129,14 @@ $(document).ready(function() {
   $('#drawer-content').html('<ul class="dark_menu">' + menuHTML + '</ul>');
   $('#menu-toggle').on('click', function() { $('body').addClass('drawer-open'); });
   $('#drawer-close, #drawer-overlay').on('click', function() { $('body').removeClass('drawer-open'); });
-  $('#side-drawer .has-children > a').on('click', function(e) {
+  
+  // Delegación de eventos para el menú móvil
+  $(document).on('click', '#side-drawer .has-children > a', function(e) {
     e.preventDefault();
     $(this).parent().toggleClass('active');
   });
 
-  /* 4. REUBICACIÓN TÍTULO DE BLOGGER AUTOMÁTICAMENTE (Excluyendo páginas especiales) */
+  /* 4. REUBICACIÓN TÍTULO DE BLOGGER AUTOMÁTICAMENTE */
   if(($('body').hasClass('item-view') || window.location.href.indexOf('.html') > -1) && window.location.href.indexOf('search.html') === -1 && window.location.href.indexOf('categories.html') === -1) {
     var pageTitleText = document.title.split(' - ')[0]; 
     var postTitleHTML = '<h2 class="section-title" style="text-align:center; border:0; margin-top:20px; color:var(--brand-color)!important;">' + pageTitleText + '</h2>';
@@ -149,7 +147,7 @@ $(document).ready(function() {
     }
   }
 
-  /* 5. INYECCIÓN ABSOLUTA PARA PÁGINA DE BÚSQUEDA (Bypass de caché) */
+  /* 5. INYECCIÓN ABSOLUTA PARA PÁGINA DE BÚSQUEDA */
   if (window.location.href.indexOf('/p/search.html') > -1) {
       $('body').addClass('is-search-page');
       var cacheBuster = new Date().getTime();
