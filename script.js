@@ -131,4 +131,12 @@ $(document).ready(function() {
         else { firstImg.after(postTitleHTML); }
     }
   }
+
+  /* 5. INYECCIÓN ABSOLUTA PARA PÁGINA DE BÚSQUEDA (Bypass de caché) */
+  if (window.location.href.indexOf('/p/search.html') > -1) {
+      $('body').addClass('is-search-page');
+      var cacheBuster = new Date().getTime(); // Destruye la caché al 100%
+      $('head').append('<link rel="stylesheet" href="https://raw.githack.com/SamaelCr/AltyGamesTheme/main/pages/search/search.css?v=' + cacheBuster + '">');
+      $('head').append('<script src="https://raw.githack.com/SamaelCr/AltyGamesTheme/main/pages/search/search.js?v=' + cacheBuster + '"></script>');
+  }
 });

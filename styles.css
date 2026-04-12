@@ -253,3 +253,6 @@ body.drawer-open #drawer-overlay { display: block; }
 }
 
 .fleft { text-align: center; padding: 15px; border: 1px solid var(--brand-color); background: rgba(0,0,0,0.8); color: #999; max-width: 1120px; width: 95%; margin: 10px auto; }
+
+/* --- 16. PAGE SPECIFIC OVERRIDES --- */
+body.is-search-page #comments { display: none !important; }
