@@ -29,6 +29,12 @@
 <link href='https://raw.githack.com/SamaelCr/AltyGamesTheme/main/styles.css' rel='stylesheet' type='text/css'/>
 <script src='https://raw.githack.com/SamaelCr/AltyGamesTheme/main/script.js' type='text/javascript'/>
 
+<!-- CARGA EXCLUSIVA: SOLO SE ACTIVA SI ESTAMOS EN LA PÁGINA DE BÚSQUEDA -->
+<b:if cond='data:blog.url contains "/p/search.html"'>
+  <link href='https://raw.githack.com/SamaelCr/AltyGamesTheme/main/pages/search/search.css' rel='stylesheet' type='text/css'/>
+  <script src='https://raw.githack.com/SamaelCr/AltyGamesTheme/main/pages/search/search.js' type='text/javascript'/>
+</b:if>
+
 <!-- OPCIÓN 2: STATICALLY (DESARROLLO SEMI-PRO) 
 <link href='https://cdn.statically.io/gh/SamaelCr/AltyGamesTheme/main/styles.css' rel='stylesheet' type='text/css'/>
 <script src='https://cdn.statically.io/gh/SamaelCr/AltyGamesTheme/main/script.js' type='text/javascript'/>
@@ -265,7 +271,8 @@ a { color: $(brand.color); }
     </div>
     <div class='sidebar'>
       <div class='sidebar-search'>
-        <form expr:action='data:blog.homepageUrl + "search"' method='get'>
+        <!-- FORMULARIO REDIRIGIDO A TU NUEVA PÁGINA -->
+        <form expr:action='data:blog.homepageUrl + "p/search.html"' method='get'>
           <input name='q' placeholder='search' type='text'/>
           <button type='submit'><i class='fa-solid fa-magnifying-glass'/></button>
         </form>

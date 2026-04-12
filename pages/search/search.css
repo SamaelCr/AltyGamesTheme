@@ -1,0 +1,108 @@
+/* --- BÚSQUEDA ESTILO YOUTUBE --- */
+.yt-search-wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 10px;
+    margin-bottom: 30px;
+}
+
+.yt-search-bar {
+    width: 100%;
+    max-width: 700px;
+    display: flex;
+    background: #111;
+    border: 2px solid #333;
+    border-radius: 30px;
+    overflow: hidden;
+    margin-bottom: 40px;
+    transition: 0.3s;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+}
+
+.yt-search-bar:focus-within {
+    border-color: var(--brand-color);
+    box-shadow: 0 0 15px rgba(8, 96, 202, 0.4);
+}
+
+.yt-search-bar input {
+    flex: 1;
+    background: transparent !important;
+    border: 0;
+    color: #fff !important;
+    padding: 16px 25px;
+    font-size: 16px;
+    outline: none;
+    font-family: inherit;
+}
+
+.yt-search-bar button {
+    background: #222 !important;
+    border: 0;
+    border-left: 1px solid #333;
+    color: #fff !important;
+    padding: 0 30px;
+    cursor: pointer;
+    font-size: 18px;
+    transition: background 0.3s;
+}
+
+.yt-search-bar button:hover {
+    background: var(--brand-color) !important;
+}
+
+/* Mensajes de estado (cargando, sin resultados) */
+.search-message {
+    text-align: center;
+    color: #888;
+    font-size: 18px;
+    margin-top: 50px;
+    width: 100%;
+    font-weight: bold;
+}
+.search-message i {
+    font-size: 50px;
+    margin-bottom: 15px;
+    color: var(--brand-color);
+}
+
+/* Grid de resultados (Reutiliza tu sistema base) */
+.yt-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+    width: 100%;
+}
+
+/* --- MODO CLARO OVERRIDES --- */
+.light-theme .yt-search-bar {
+    background: #fff;
+    border-color: #ddd;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+.light-theme .yt-search-bar input {
+    color: #111 !important;
+}
+.light-theme .yt-search-bar button {
+    background: #f4f4f4 !important;
+    border-color: #ddd;
+    color: #333 !important;
+}
+.light-theme .yt-search-bar button:hover {
+    background: var(--brand-color) !important;
+    color: #fff !important;
+}
+.light-theme .search-message {
+    color: #555;
+}
+
+/* Responsive */
+@media screen and (max-width: 768px) {
+    .yt-grid {
+        grid-template-columns: 1fr;
+    }
+    .yt-search-bar {
+        width: 100%;
+    }
+}
