@@ -79,7 +79,11 @@ $(document).ready(function() {
     var $link = $(this).find('a').first();
     var text = $link.text().trim();
     if (text.indexOf('_') === 0) {
-      var $parent = $(this).prevAll().filter(function() { return $(this).find('a').first().text().trim().indexOf('_') !== 0; }).first();
+      // El script busca el elemento anterior más cercano que NO sea un hijo (no empiece con _)
+      var $parent = $(this).prevAll().filter(function() { 
+          return $(this).find('a').first().text().trim().indexOf('_') !== 0; 
+      }).first();
+      
       if ($parent.length) {
         if (!$parent.find('ul').length) { $parent.append('<ul></ul>').addClass('has-children'); }
         $link.text(text.replace('_', ''));
