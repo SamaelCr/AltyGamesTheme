@@ -74,29 +74,40 @@ function loadMainGrid(json) {
 }
 
 $(document).ready(function() {
-  /* 1. LÓGICA DE SUBMENÚS (SISTEMA DE MAPEO PREVIO V3) */
-  var items = $('.dark_menu li').get();
+  /* 1. LÓGICA DE SUBMENÚS (SISTEMA DE MAPEO PREVIO V3) - CORREGIDA */
   var currentParent = null;
 
-  items.forEach(function(item) {
-    var $li = $(item);
-    var $link = $li.find('a').first();
-    var text = $link.text().trim();
+  // Seleccionamos SOLO los <li> principales (hijos directos de la lista original)
+  $('.dark_menu > li').each(function() {
+    var $li = $(this);
+    var $link = $li.find('> a').first();
+    
+    if ($link.length) {
+      var text = $link.text().trim();
 
-    if (text.startsWith('_')) {
-      // Es un hijo, lo movemos al último padre detectado
-      if (currentParent) {
-        var $ul = currentParent.find('ul');
-        if (!$ul.length) {
-          $ul = $('<ul></ul>').appendTo(currentParent);
-          currentParent.addClass('has-children');
+      if (text.startsWith('_')) {
+        // Es un hijo, lo agregamos al padre activo
+        if (currentParent) {
+          // Buscamos si el padre ya tiene la etiqueta <ul>
+          var $ul = currentParent.children('ul');
+          
+          if ($ul.length === 0) {
+            // Si no existe, la creamos y la agregamos al padre
+            $ul = $('<ul></ul>');
+            currentParent.append($ul);
+            currentParent.addClass('has-children');
+          }
+          
+          // Limpiamos el "_" del texto
+          $link.text(text.substring(1).trim());
+          
+          // Movemos el elemento hijo adentro del <ul> de forma segura
+          $ul.append($li);
         }
-        $link.text(text.substring(1).trim());
-        $li.appendTo($ul);
+      } else {
+        // Es un enlace normal, por lo tanto es un "padre potencial"
+        currentParent = $li;
       }
-    } else {
-      // Es un padre potencial
-      currentParent = $li;
     }
   });
 
