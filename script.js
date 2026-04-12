@@ -132,7 +132,7 @@ $(document).ready(function() {
     }
   }
 
-  /* 5. INYECCIÓN ABSOLUTA PARA PÁGINA DE BÚSQUEDA */
+  /* 5. INYECCIÓN ABSOLUTA PARA PÁGINA DE BÚSQUEDA (Bypass de caché) */
   if (window.location.href.indexOf('/p/search.html') > -1) {
       $('body').addClass('is-search-page');
       var cacheBuster = new Date().getTime();
@@ -144,7 +144,6 @@ $(document).ready(function() {
   if (window.location.href.indexOf('/p/categories.html') > -1) {
       $('body').addClass('is-category-page');
       var cbCat = new Date().getTime();
-      // Inyectamos también search.css porque categorías reutiliza sus estilos de tarjetas horizontales
       $('head').append('<link rel="stylesheet" href="https://raw.githack.com/SamaelCr/AltyGamesTheme/main/pages/search/search.css?v=' + cbCat + '">');
       $('head').append('<link rel="stylesheet" href="https://raw.githack.com/SamaelCr/AltyGamesTheme/main/pages/categories/categories.css?v=' + cbCat + '">');
       $('head').append('<script src="https://raw.githack.com/SamaelCr/AltyGamesTheme/main/pages/categories/categories.js?v=' + cbCat + '"></script>');

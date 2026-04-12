@@ -90,6 +90,15 @@ ul.dark_menu li a {
     text-decoration: none !important; border: 0 !important; 
 }
 
+/* INDICADOR DE SUBMENU (Desktop) */
+ul.dark_menu li.has-children > a { padding-right: 28px; }
+ul.dark_menu li.has-children > a::after { 
+    content: "\f078"; font-family: "Font Awesome 6 Free"; font-weight: 900; 
+    font-size: 9px; position: absolute; right: 12px; top: 52%; transform: translateY(-50%); 
+    opacity: 0.7; transition: 0.3s;
+}
+ul.dark_menu li.has-children:hover > a::after { opacity: 1; transform: translateY(-50%) scale(1.1); }
+
 /* SUBMENU BRIDGE */
 ul.dark_menu li ul { 
     display: none; position: absolute; left: -45px; 
@@ -188,7 +197,7 @@ ul.dark_menu li:hover > ul { display: flex; }
 
 /* --- 10. BUSCADOR SIDEBAR & PUBLICIDAD --- */
 .sidebar { width: 340px; padding-right: 20px; box-sizing: border-box; }
-.sidebar-search { margin-bottom: 20px; width: 100%; transition: 0.3s; }
+.sidebar-search { margin-bottom: 20px; width: 100%; }
 .sidebar-search form { display: flex; background: #000000 !important; border: 2px solid #333 !important; padding: 2px; position: relative; width: 100%; }
 .sidebar-search input { border: 0; background: transparent !important; color: #ffffff !important; width: 100%; padding: 10px 15px; outline: none; font-size: 13px; }
 .sidebar-search button { background: #222 !important; border: 0; color: #fff !important; padding: 0 15px; cursor: pointer; }
@@ -202,7 +211,15 @@ body.drawer-open #drawer-overlay { display: block; }
 .drawer-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 1px solid #333; padding-bottom: 10px; color: var(--brand-color); font-weight: bold; }
 #side-drawer ul.dark_menu { display: flex !important; flex-direction: column !important; margin: 0 !important; padding: 0 !important; opacity: 1 !important; float: none !important; }
 #side-drawer ul.dark_menu li { margin-bottom: 5px; width: 100%; min-width: 0 !important; position: relative; list-style: none !important;}
-#side-drawer ul.dark_menu li a { text-align: left; padding: 15px; font-size: 14px; border-bottom: 1px solid rgba(255,255,255,0.05); text-decoration: none !important; color: #fff !important; display: block; }
+#side-drawer ul.dark_menu li a { text-align: left; padding: 15px; font-size: 14px; border-bottom: 1px solid rgba(255,255,255,0.05); text-decoration: none !important; color: #fff !important; display: block; position: relative; }
+
+/* INDICADOR DE SUBMENU (Side Drawer) */
+#side-drawer ul.dark_menu li.has-children > a::after { 
+    content: "\f054"; font-family: "Font Awesome 6 Free"; font-weight: 900; 
+    font-size: 12px; position: absolute; right: 20px; top: 50%; transform: translateY(-50%); 
+    transition: 0.3s; color: var(--brand-color);
+}
+#side-drawer ul.dark_menu li.has-children.active > a::after { transform: translateY(-50%) rotate(90deg); }
 
 /* --- 12. ETIQUETAS Y PAGINACIÓN --- */
 .post-labels { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
@@ -256,6 +273,8 @@ body.drawer-open #drawer-overlay { display: block; }
 
 /* --- 16. PAGE SPECIFIC OVERRIDES --- */
 body.is-search-page #comments,
-body.is-search-page .sidebar-search { 
+body.is-search-page .sidebar-search,
+body.is-category-page #comments,
+body.is-category-page .sidebar-search { 
     display: none !important; 
 }
