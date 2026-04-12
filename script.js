@@ -74,23 +74,36 @@ function loadMainGrid(json) {
 }
 
 $(document).ready(function() {
-  /* 1. LÓGICA DE SUBMENÚS */
-  $('.dark_menu li').each(function() {
-    var $link = $(this).find('a').first();
-    var text = $link.text().trim();
-    if (text.indexOf('_') === 0) {
-      // El script busca el elemento anterior más cercano que NO sea un hijo (no empiece con _)
-      var $parent = $(this).prevAll().filter(function() { 
-          return $(this).find('a').first().text().trim().indexOf('_') !== 0; 
-      }).first();
+  /* 1. LÓGICA DE SUBMENÚS (SISTEMA INFALIBLE MÚLTIPLES HIJOS) */
+  var $ultimoPadre = null;
+  
+  $('.dark_menu > li').each(function() {
+    var $li = $(this);
+    var $link = $li.children('a').first();
+    
+    if ($link.length > 0) {
+      var text = $link.text().trim();
       
-      if ($parent.length) {
-        if (!$parent.find('ul').length) { $parent.append('<ul></ul>').addClass('has-children'); }
-        $link.text(text.replace('_', ''));
-        $(this).detach().appendTo($parent.find('ul'));
+      if (text.indexOf('_') === 0) {
+        // Es un hijo, buscar si tenemos un padre registrado
+        if ($ultimoPadre) {
+          // Verificar si el padre ya tiene la cajita ul creada
+          var $submenu = $ultimoPadre.children('ul');
+          if ($submenu.length === 0) {
+            $submenu = $('<ul></ul>');
+            $ultimoPadre.append($submenu).addClass('has-children');
+          }
+          // Limpiar nombre y agrupar
+          $link.text(text.substring(1).trim());
+          $li.detach().appendTo($submenu);
+        }
+      } else {
+        // Es un elemento normal (nuevo padre)
+        $ultimoPadre = $li;
       }
     }
   });
+  
   $('.dark_menu').addClass('menu-ready');
 
   /* 2. TOGGLE TEMA */
