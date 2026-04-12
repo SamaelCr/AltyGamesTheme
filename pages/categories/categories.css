@@ -1,0 +1,44 @@
+/* --- PAGINA DE CATEGORIAS DINAMICA --- */
+.cat-header {
+    width: 100%;
+    margin-bottom: 30px;
+    padding: 20px;
+    background: rgba(8, 96, 202, 0.1);
+    border: 2px dashed var(--brand-color);
+    text-align: center;
+    box-shadow: 5px 5px 0px rgba(0,0,0,0.5);
+}
+
+.cat-header h1 {
+    margin: 0;
+    font-size: 28px;
+    text-transform: uppercase;
+    color: var(--brand-color);
+    text-shadow: 3px 3px 0px #000;
+}
+
+.cat-header span {
+    color: #888;
+    font-size: 14px;
+    display: block;
+    margin-top: 5px;
+}
+
+/* Reutilizamos el grid/lista de la página de búsqueda para consistencia */
+.cat-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    width: 100%;
+}
+
+/* Ocultar Disqus y Sidebar Search */
+body.is-category-page #comments,
+body.is-category-page .sidebar-search {
+    display: none !important;
+}
+
+.light-theme .cat-header {
+    background: #f0f7ff;
+    border-color: var(--brand-color);
+}

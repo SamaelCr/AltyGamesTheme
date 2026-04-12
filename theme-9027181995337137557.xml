@@ -195,8 +195,8 @@ a { color: $(brand.color); }
                 <div class='blog-posts hfeed'>
                   <b:loop values='data:posts' var='post'>
                     <b:include data='post' name='post'/>
-                    <!-- AQUÍ EVITAMOS QUE CARGUE DISQUS SI ESTAMOS EN LA BÚSQUEDA -->
-                    <b:if cond='data:blog.url contains "search.html"'>
+                    <!-- AQUÍ EVITAMOS QUE CARGUE DISQUS SI ESTAMOS EN LA BÚSQUEDA O CATEGORÍAS -->
+                    <b:if cond='data:blog.url contains "search.html" or data:blog.url contains "categories.html"'>
                     <b:else/>
                         <b:include cond='data:blog.pageType in {"static_page","item"}' data='post' name='comment_picker'/>
                     </b:if>

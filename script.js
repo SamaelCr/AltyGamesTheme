@@ -121,8 +121,8 @@ $(document).ready(function() {
     $(this).parent().toggleClass('active');
   });
 
-  /* 4. REUBICACIÓN TÍTULO DE BLOGGER AUTOMÁTICAMENTE (Excluyendo página search) */
-  if(($('body').hasClass('item-view') || window.location.href.indexOf('.html') > -1) && window.location.href.indexOf('/p/search.html') === -1) {
+  /* 4. REUBICACIÓN TÍTULO DE BLOGGER AUTOMÁTICAMENTE (Excluyendo páginas especiales) */
+  if(($('body').hasClass('item-view') || window.location.href.indexOf('.html') > -1) && window.location.href.indexOf('search.html') === -1 && window.location.href.indexOf('categories.html') === -1) {
     var pageTitleText = document.title.split(' - ')[0]; 
     var postTitleHTML = '<h2 class="section-title" style="text-align:center; border:0; margin-top:20px; color:var(--brand-color)!important;">' + pageTitleText + '</h2>';
     var firstImg = $('.post-body-container img').first();
@@ -132,11 +132,21 @@ $(document).ready(function() {
     }
   }
 
-  /* 5. INYECCIÓN ABSOLUTA PARA PÁGINA DE BÚSQUEDA (Bypass de caché) */
+  /* 5. INYECCIÓN ABSOLUTA PARA PÁGINA DE BÚSQUEDA */
   if (window.location.href.indexOf('/p/search.html') > -1) {
       $('body').addClass('is-search-page');
-      var cacheBuster = new Date().getTime(); // Destruye la caché al 100%
+      var cacheBuster = new Date().getTime();
       $('head').append('<link rel="stylesheet" href="https://raw.githack.com/SamaelCr/AltyGamesTheme/main/pages/search/search.css?v=' + cacheBuster + '">');
       $('head').append('<script src="https://raw.githack.com/SamaelCr/AltyGamesTheme/main/pages/search/search.js?v=' + cacheBuster + '"></script>');
+  }
+
+  /* 6. INYECCIÓN ABSOLUTA PARA PÁGINA DE CATEGORÍAS */
+  if (window.location.href.indexOf('/p/categories.html') > -1) {
+      $('body').addClass('is-category-page');
+      var cbCat = new Date().getTime();
+      // Inyectamos también search.css porque categorías reutiliza sus estilos de tarjetas horizontales
+      $('head').append('<link rel="stylesheet" href="https://raw.githack.com/SamaelCr/AltyGamesTheme/main/pages/search/search.css?v=' + cbCat + '">');
+      $('head').append('<link rel="stylesheet" href="https://raw.githack.com/SamaelCr/AltyGamesTheme/main/pages/categories/categories.css?v=' + cbCat + '">');
+      $('head').append('<script src="https://raw.githack.com/SamaelCr/AltyGamesTheme/main/pages/categories/categories.js?v=' + cbCat + '"></script>');
   }
 });
