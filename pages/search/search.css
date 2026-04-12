@@ -1,4 +1,4 @@
-/* --- BÚSQUEDA ESTILO YOUTUBE --- */
+/* --- BÚSQUEDA ESTILO YOUTUBE (PIXEL ART) --- */
 .yt-search-wrapper {
     width: 100%;
     display: flex;
@@ -14,16 +14,16 @@
     display: flex;
     background: #111;
     border: 2px solid #333;
-    border-radius: 30px;
+    border-radius: 4px; /* Menos curvo, más retro */
     overflow: hidden;
     margin-bottom: 40px;
     transition: 0.3s;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    box-shadow: 5px 5px 0px rgba(0,0,0,0.8); /* Sombra dura Pixel Art */
 }
 
 .yt-search-bar:focus-within {
     border-color: var(--brand-color);
-    box-shadow: 0 0 15px rgba(8, 96, 202, 0.4);
+    box-shadow: 5px 5px 0px var(--brand-color);
 }
 
 .yt-search-bar input {
@@ -40,7 +40,7 @@
 .yt-search-bar button {
     background: #222 !important;
     border: 0;
-    border-left: 1px solid #333;
+    border-left: 2px solid #333;
     color: #fff !important;
     padding: 0 30px;
     cursor: pointer;
@@ -50,6 +50,7 @@
 
 .yt-search-bar button:hover {
     background: var(--brand-color) !important;
+    border-left-color: var(--brand-color);
 }
 
 /* Mensajes de estado (cargando, sin resultados) */
@@ -67,47 +68,125 @@
     color: var(--brand-color);
 }
 
-/* Grid de resultados (Reutiliza tu sistema base) */
-.yt-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
+/* Contenedor de la lista horizontal */
+.yt-list-container {
+    display: flex;
+    flex-direction: column;
     gap: 25px;
     width: 100%;
 }
 
-/* --- MODO CLARO OVERRIDES --- */
-.light-theme .yt-search-bar {
-    background: #fff;
-    border-color: #ddd;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+/* Tarjeta individual (Diseño YouTube + Pixel Art) */
+.yt-list-card {
+    display: flex;
+    gap: 20px;
+    background: #111;
+    border: 2px solid #333;
+    box-shadow: 5px 5px 0px #000;
+    padding: 15px;
+    transition: 0.2s;
+    border-radius: 0; /* Bordes cuadrados retro */
 }
-.light-theme .yt-search-bar input {
-    color: #111 !important;
+
+.yt-list-card:hover {
+    border-color: var(--brand-color);
+    transform: translate(-3px, -3px);
+    box-shadow: 8px 8px 0px var(--brand-color);
 }
-.light-theme .yt-search-bar button {
-    background: #f4f4f4 !important;
-    border-color: #ddd;
-    color: #333 !important;
+
+/* Miniatura a la izquierda */
+.yt-list-thumb {
+    width: 340px;
+    flex-shrink: 0;
+    aspect-ratio: 16/9;
+    overflow: hidden;
+    border: 2px solid #222;
+    box-shadow: 4px 4px 0px #000;
 }
-.light-theme .yt-search-bar button:hover {
-    background: var(--brand-color) !important;
+
+.yt-list-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s;
+}
+
+.yt-list-card:hover .yt-list-thumb img {
+    transform: scale(1.05);
+}
+
+/* Contenido a la derecha (Titulo, descripción, etiquetas) */
+.yt-list-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.yt-list-title {
+    margin: 0 0 10px 0;
+    font-size: 22px;
+    font-weight: bold;
+    line-height: 1.3;
+}
+
+.yt-list-title a {
     color: #fff !important;
-}
-.light-theme .search-message {
-    color: #555;
+    text-decoration: none !important;
 }
 
-/* Responsive */
+.yt-list-title a:hover {
+    color: var(--brand-color) !important;
+}
+
+/* Sinopsis extraida dinamicamente */
+.yt-list-snippet {
+    font-size: 14px;
+    color: #aaa;
+    line-height: 1.6;
+    margin-bottom: 15px;
+    flex: 1; /* Empuja las etiquetas hacia abajo */
+}
+
+/* Sobrescribiendo el estilo de las etiquetas para que sean Pixel Art */
+.yt-list-card .post-labels {
+    margin-top: auto;
+}
+.yt-list-card .post-tag {
+    border: 2px solid #444;
+    box-shadow: 3px 3px 0px #000;
+    border-radius: 0;
+    background: #222;
+    color: #ddd !important;
+    transition: 0.1s;
+}
+.yt-list-card .post-tag:hover {
+    background: var(--brand-color);
+    border-color: var(--brand-color);
+    box-shadow: 2px 2px 0px #fff;
+    color: #fff !important;
+    transform: translate(1px, 1px);
+}
+
+/* --- MODO CLARO OVERRIDES --- */
+.light-theme .yt-search-bar { background: #fff; border-color: #ccc; box-shadow: 5px 5px 0px rgba(0,0,0,0.1); }
+.light-theme .yt-search-bar input { color: #111 !important; }
+.light-theme .yt-search-bar button { background: #f4f4f4 !important; border-color: #ccc; color: #333 !important; }
+.light-theme .yt-search-bar button:hover { background: var(--brand-color) !important; color: #fff !important; border-color: var(--brand-color); }
+.light-theme .search-message { color: #555; }
+
+.light-theme .yt-list-card { background: #fff; border-color: #ddd; box-shadow: 5px 5px 0px rgba(0,0,0,0.1); }
+.light-theme .yt-list-card:hover { border-color: var(--brand-color); box-shadow: 8px 8px 0px var(--brand-color); }
+.light-theme .yt-list-title a { color: #111 !important; }
+.light-theme .yt-list-snippet { color: #555; }
+.light-theme .yt-list-thumb { border-color: #ddd; box-shadow: 4px 4px 0px rgba(0,0,0,0.1); }
+
+.light-theme .yt-list-card .post-tag { background: #f0f0f0; border-color: #ccc; box-shadow: 3px 3px 0px rgba(0,0,0,0.1); color: #333 !important; }
+.light-theme .yt-list-card .post-tag:hover { background: var(--brand-color); color: #fff !important; box-shadow: 2px 2px 0px #111; border-color: var(--brand-color); }
+
+/* Responsive para Móviles */
 @media screen and (max-width: 768px) {
-    .yt-grid {
-        grid-template-columns: 1fr;
-    }
-    .yt-search-bar {
-        width: 100%;
-    }
-}
-
-/* OCULTAR DISQUS EN ESTA PÁGINA (Doble seguridad) */
-#comments {
-    display: none !important;
+    .yt-list-card { flex-direction: column; gap: 15px; }
+    .yt-list-thumb { width: 100%; aspect-ratio: auto; height: 200px; }
+    .yt-search-bar { width: 100%; }
 }

@@ -40,24 +40,37 @@ function renderYTSearch(json) {
 
     // Si no hay resultados
     if (!json || !json.feed || !json.feed.entry || json.feed.entry.length === 0) {
-        $container.html('<div class="search-message"><i class="fa-regular fa-face-frown"></i><br>No se encontraron resultados.</div>');
+        $container.html('<div class="search-message"><i class="fa-regular fa-face-frown"></i><br>No se encontraron resultados para "'+$('#yt-search-input').val()+'".</div>');
         return;
     }
 
-    // Dibujar los resultados respetando tu diseño
-    html += '<div class="yt-grid">';
+    // Dibujar los resultados respetando el nuevo diseño horizontal
+    html += '<div class="yt-list-container">';
     for (var i = 0; i < json.feed.entry.length; i++) {
         var entry = json.feed.entry[i];
         var title = entry.title.$t;
         var url = entry.link.find(l => l.rel == 'alternate').href;
-        var thumb = getSmartThumb(entry); // Usa la función de tu script.js base
-        var labels = getLabels(entry);    // Usa la función de tu script.js base
+        var thumb = getSmartThumb(entry); 
+        var labels = getLabels(entry);    
+        
+        // Extracción y limpieza del texto para la descripción (Snippet)
+        var rawSnippet = entry.summary ? entry.summary.$t : (entry.content ? entry.content.$t : "");
+        var cleanSnippet = rawSnippet.replace(/(<([^>]+)>)/ig,"").trim(); // Remueve etiquetas HTML
+        var snippet = cleanSnippet.length > 200 ? cleanSnippet.substring(0, 200) + "..." : cleanSnippet;
 
-        html += '<div class="post-card">';
-        html += '<div class="post-thumb-wrap"><a href="'+url+'"><img class="post-thumb" src="'+thumb+'"/></a></div>';
-        html += '<h2><a href="'+url+'">'+title+'</a></h2>';
+        html += '<div class="yt-list-card">';
+        
+        // Imagen izquierda
+        html += '<div class="yt-list-thumb"><a href="'+url+'"><img src="'+thumb+'"/></a></div>';
+        
+        // Contenido derecha
+        html += '<div class="yt-list-content">';
+        html += '<h2 class="yt-list-title"><a href="'+url+'">'+title+'</a></h2>';
+        html += '<div class="yt-list-snippet">'+snippet+'</div>';
         html += labels;
-        html += '</div>';
+        html += '</div>'; // Fin contenido
+        
+        html += '</div>'; // Fin tarjeta
     }
     html += '</div>';
     
