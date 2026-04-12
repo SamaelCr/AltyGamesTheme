@@ -30,7 +30,8 @@
 <script src='https://raw.githack.com/SamaelCr/AltyGamesTheme/main/script.js' type='text/javascript'/>
 
 <!-- CARGA EXCLUSIVA: SOLO SE ACTIVA SI ESTAMOS EN LA PÁGINA DE BÚSQUEDA -->
-<b:if cond='data:blog.url contains "/p/search.html"'>
+<b:if cond='data:blog.url contains "search"'>
+  <!-- El ?v=1.1 fuerza a saltar el caché para que veas los cambios ya -->
   <link href='https://raw.githack.com/SamaelCr/AltyGamesTheme/main/pages/search/search.css' rel='stylesheet' type='text/css'/>
   <script src='https://raw.githack.com/SamaelCr/AltyGamesTheme/main/pages/search/search.js' type='text/javascript'/>
 </b:if>
@@ -201,7 +202,8 @@ a { color: $(brand.color); }
                 <div class='blog-posts hfeed'>
                   <b:loop values='data:posts' var='post'>
                     <b:include data='post' name='post'/>
-                    <b:include cond='data:blog.pageType in {"static_page","item"}' data='post' name='comment_picker'/>
+                    <!-- AQUÍ EVITAMOS QUE CARGUE DISQUS SI ESTAMOS EN LA BÚSQUEDA -->
+                    <b:include cond='data:blog.pageType in {"static_page","item"} and data:blog.url not contains "search"' data='post' name='comment_picker'/>
                   </b:loop>
                 </div>
               </b:includable>
