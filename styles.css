@@ -144,28 +144,27 @@ ul.dark_menu li ul li { display: block; width: 100%; }
 
 #featured-ajax-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px; margin-bottom: 40px; width: 100%; }
 
-/* GRID PRINCIPAL: Alineación forzada de items */
+/* GRID PRINCIPAL: Alineación forzada */
 .latest-grid-container { 
     display: grid !important; 
     grid-template-columns: repeat(3, 1fr) !important; 
     gap: 30px 25px !important; 
     width: 100% !important;
-    align-items: start;
 }
 
-/* TARJETA: Altura total bloqueada para simetría */
+/* TARJETA: Altura TOTAL fija para evitar huecos */
 .post-card { 
     display: flex; 
     flex-direction: column; 
-    height: 360px; /* Altura fija para que todas las filas nazcan en el mismo punto */
+    height: 420px !important; /* Altura suficiente para todo */
     margin-bottom: 10px;
-    position: relative;
+    overflow: hidden;
 }
 
 .post-thumb-wrap { 
     width: 100%; 
     height: 160px; 
-    flex-shrink: 0; /* Evita que la imagen se encoja */
+    flex-shrink: 0; 
     overflow: hidden; 
     border-radius: 4px; 
     margin-bottom: 12px; 
@@ -176,7 +175,7 @@ ul.dark_menu li ul li { display: block; width: 100%; }
 .post-card:hover .post-thumb-wrap { border-color: var(--brand-color); }
 .post-thumb { width: 100%; height: 100%; object-fit: cover; }
 
-/* TÍTULO: Bloqueado a 2 líneas */
+/* TÍTULO: Bloqueado a 2 líneas siempre */
 .post-card h2 { 
     margin: 0 0 10px 0; 
     font-size: 15px; 
@@ -262,18 +261,17 @@ body.drawer-open #drawer-overlay { display: block; }
 #side-drawer ul.dark_menu li.has-children.active > a::after { transform: translateY(-50%) rotate(90deg); }
 
 /* --- 12. ETIQUETAS Y PAGINACIÓN --- */
-/* ETIQUETAS: Altura fija con scroll invisible si hay demasiadas */
+/* ETIQUETAS: Altura bloqueada con scroll invisible */
 .post-labels { 
     display: flex; 
     flex-wrap: wrap; 
     gap: 6px; 
-    margin-top: auto; /* Empuja las etiquetas al fondo de la tarjeta */
-    height: 100px; 
+    height: 140px; /* Altura fija para que la tarjeta no crezca */
     overflow-y: auto; 
-    scrollbar-width: none; /* Firefox: oculta scroll */
+    scrollbar-width: none; 
     align-content: start;
 }
-.post-labels::-webkit-scrollbar { display: none; } /* Chrome/Safari: oculta scroll */
+.post-labels::-webkit-scrollbar { display: none; }
 
 .post-tag { 
     font-size: 10px; 
@@ -285,7 +283,6 @@ body.drawer-open #drawer-overlay { display: block; }
     font-weight: bold; 
     transition: all 0.2s ease; 
     text-decoration: none !important;
-    white-space: nowrap;
 }
 .post-tag:hover { background: var(--brand-color); color: #fff !important; }
 
@@ -315,7 +312,7 @@ html.light-theme .showpageNum, .light-theme .showpageNum { background: #e0e0e0 !
 html.light-theme .showpageNum:hover, .light-theme .showpageNum:hover { background: var(--brand-color) !important; color: #fff !important; border-color: var(--brand-color) !important; }
 html.light-theme .showpagePoint, .light-theme .showpagePoint { background: var(--brand-color) !important; color: #fff !important; border-color: var(--brand-color) !important; }
 
-.light-theme .post-tag { background: #eee !important; color: #444 !important; border: 1px solid #ddd; }
+.light-theme .post-tag { background: #f0f0f0 !important; color: #555 !important; border: 1px solid #ddd !important; }
 .light-theme .post-tag:hover { background: var(--brand-color) !important; color: #fff !important; }
 
 /* --- 15. MEDIA QUERIES --- */
@@ -331,8 +328,8 @@ html.light-theme .showpagePoint, .light-theme .showpagePoint { background: var(-
     .sidebar { width: 100%; border-top: 1px solid var(--brand-color); margin-top: 20px; padding: 20px 15px; }
     #featured-ajax-grid, .latest-grid-container, .info-grid, .req-grid { grid-template-columns: 1fr !important; }
     .steam-buy-box { flex-direction: column; gap: 10px; text-align: center; }
-    .post-card { height: auto; min-height: 380px; }
-    .post-labels { height: auto; }
+    .post-card { height: auto !important; }
+    .post-labels { height: auto !important; }
 }
 
 .fleft { text-align: center; padding: 15px; border: 1px solid var(--brand-color); background: rgba(0,0,0,0.8); color: #999; max-width: 1120px; width: 95%; margin: 10px auto; }
