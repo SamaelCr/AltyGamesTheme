@@ -92,7 +92,9 @@ function loadMainGrid(json, currentPage) {
           phtml += "<a class='showpageNum' href='"+base_url+"&PageNo="+totalPages+"'>"+totalPages+"</a>";
       }
       
-      if (currentPage < totalPages) phtml += "<a class='showpageNum' href='"+base_url+"&PageNo="+(currentPage+1)+"'>&gt;</a>";
+      if (currentPage < totalPages) {
+          phtml += "<a class='showpageNum' href='"+base_url+"&PageNo="+(currentPage+1)+"'>&gt;</a>";
+      }
       
       document.getElementById("blog-pager").innerHTML = phtml;
   } else {
@@ -200,7 +202,7 @@ $(document).ready(function() {
       var currentPage = parseInt(urlParams.get('PageNo')) || 1;
       var startIndex = ((currentPage - 1) * posts_per_page) + 1;
 
-      // A. Carga del Grid Destacado (JSONP para compatibilidad total)
+      // A. Carga del Grid Destacado (JSONP para evitar bloqueos)
       $.ajax({
           url: "/feeds/posts/summary/-/Destacado?alt=json-in-script",
           type: "GET",
@@ -212,8 +214,8 @@ $(document).ready(function() {
       $('#main-ajax-grid').html('<div style="grid-column:1/-1; text-align:center; padding:20px; color:var(--brand-color);">Cargando juegos...</div>');
       
       $.ajax({
-          // La ruta /-/-Destacado es el estándar más fiable para openSearch$totalResults
-          url: "/feeds/posts/summary/-/-" + featured_label + "?alt=json-in-script&start-index=" + startIndex + "&max-results=" + posts_per_page,
+          // La ruta /-/-Destacado es la que devuelve el openSearch$totalResults correcto
+          url: "/feeds/posts/summary/-/-" + encodeURIComponent(featured_label) + "?alt=json-in-script&start-index=" + startIndex + "&max-results=" + posts_per_page,
           type: "GET",
           dataType: "jsonp",
           success: function(json) {
