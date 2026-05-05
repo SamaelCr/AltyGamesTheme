@@ -12,13 +12,10 @@ function getSmartThumb(entry) {
       var match = content.match(/<img[^>]+src="([^">]+)"/);
       thumb = match ? match[1] : "https://via.placeholder.com/400x250?text=No+Image";
     }
-    // Optimización de resolución para Blogger/Google
     if (thumb.indexOf("googleusercontent.com") != -1 || thumb.indexOf("bp.blogspot.com") != -1) {
       thumb = thumb.replace(/\/s[0-9]+.*?\//, "/s1600/").replace(/=s[0-9]+.*/, "=s1600");
     }
-  } catch (e) {
-    thumb = "https://via.placeholder.com/400x250?text=Error+Thumbnail";
-  }
+  } catch (e) { thumb = "https://via.placeholder.com/400x250?text=Error+Thumbnail"; }
   return thumb;
 }
 
@@ -26,133 +23,104 @@ function getLabels(entry) {
   var html = '<div class="post-labels">';
   try {
     if (entry.category) {
-      for (var i = 0; i < entry.category.length; i++) {
-        if (entry.category[i].term !== featured_label) {
-          html += '<span class="post-tag">' + entry.category[i].term + '</span>';
+      entry.category.forEach(function(cat) {
+        if (cat.term !== featured_label) {
+          html += '<span class="post-tag">' + cat.term + '</span>';
         }
-      }
+      });
     }
   } catch (e) { console.warn("Error en labels"); }
   html += '</div>';
   return html;
 }
 
-/* HELPER PARA JSONP (Resistente) */
+/* HELPER JSONP GLOBAL */
 function getJSONP(url, callback) {
-  var callbackName = 'callback_' + Math.round(100000 * Math.random());
+  var callbackName = 'cb_' + Math.random().toString(36).substring(7);
   window[callbackName] = function(data) {
     callback(data);
     delete window[callbackName];
-    var scriptTag = document.getElementById(callbackName);
-    if (scriptTag) scriptTag.remove();
+    var s = document.getElementById(callbackName);
+    if (s) s.remove();
   };
   var script = document.createElement('script');
   script.id = callbackName;
-  // Blogger requiere alt=json-in-script para activar JSONP
-  var separator = url.indexOf('?') >= 0 ? '&' : '?';
-  script.src = url + separator + 'alt=json-in-script&callback=' + callbackName;
+  var sep = url.indexOf('?') >= 0 ? '&' : '?';
+  script.src = url + sep + 'alt=json-in-script&callback=' + callbackName;
   document.body.appendChild(script);
 }
 
 function loadFeatured(json) {
   var html = "";
-  if(!json.feed || !json.feed.entry) return;
-  var entries = json.feed.entry;
-  for (var i = 0; i < entries.length; i++) {
-    var entry = entries[i];
+  if (!json.feed || !json.feed.entry) return;
+  json.feed.entry.forEach(function(entry) {
     var title = entry.title.$t;
     var url = "#";
     try {
-        for (var k = 0; k < entry.link.length; k++) {
-          if (entry.link[k].rel == 'alternate') { url = entry.link[k].href; break; }
-        }
-    } catch(e) { url = "#"; }
+      entry.link.forEach(function(l) { if (l.rel == 'alternate') url = l.href; });
+    } catch (e) {}
     var thumb = getSmartThumb(entry);
     var labels = getLabels(entry);
     html += '<div class="post-card"><div class="post-thumb-wrap"><a href="'+url+'"><img class="post-thumb" src="'+thumb+'" style="height:210px"/></a></div><h2><a href="'+url+'">'+title+'</a></h2>'+labels+'</div>';
-  }
+  });
   var grid = document.getElementById("featured-ajax-grid");
-  if(grid) grid.innerHTML = html;
+  if (grid) grid.innerHTML = html;
 }
 
 function loadMainGrid(json, currentPage, totalFeatured) {
-  var entries = (json.feed && json.feed.entry) ? json.feed.entry : [];
-  var totalAll = (json.feed && json.feed.openSearch$totalResults) ? parseInt(json.feed.openSearch$totalResults.$t) : 0;
-  
-  currentPage = currentPage || 1;
-  totalFeatured = totalFeatured || 0;
-  var totalMain = totalAll - totalFeatured;
+  if (!json.feed) return;
+  var entries = json.feed.entry || [];
+  var totalAll = json.feed.openSearch$totalResults ? parseInt(json.feed.openSearch$totalResults.$t) : 0;
+  var totalMain = totalAll - (totalFeatured || 0);
   var html = "";
   
-  // Filtrar para no repetir destacados en el grid principal
   var filteredEntries = entries.filter(function(e) {
-    var labels = e.category || [];
-    for(var j=0; j<labels.length; j++) {
-        if(labels[j].term === featured_label) return false;
-    }
-    return true;
-  });
+    return !(e.category || []).some(function(l) { return l.term === featured_label; });
+  }).slice(0, posts_per_page);
 
-  var pageEntries = filteredEntries.slice(0, posts_per_page);
   var mainGrid = document.getElementById("main-ajax-grid");
   if (!mainGrid) return;
 
-  if (pageEntries.length === 0) {
-      mainGrid.innerHTML = "<div style='grid-column:1/-1; text-align:center; padding:20px; color:var(--brand-color); font-weight:bold;'>No hay más juegos para mostrar.</div>";
-      return;
+  if (filteredEntries.length === 0) {
+    mainGrid.innerHTML = "<div style='grid-column:1/-1; text-align:center; padding:20px; color:var(--brand-color);'>No hay más juegos.</div>";
+    return;
   }
 
-  for (var i = 0; i < pageEntries.length; i++) {
-    var entry = pageEntries[i];
+  filteredEntries.forEach(function(entry) {
     var title = entry.title.$t;
     var postUrl = "#";
-    try {
-        for (var k = 0; k < entry.link.length; k++) {
-          if (entry.link[k].rel == 'alternate') { postUrl = entry.link[k].href; break; }
-        }
-    } catch(e) { postUrl = "#"; }
+    try { entry.link.forEach(function(l) { if (l.rel == 'alternate') postUrl = l.href; }); } catch (e) {}
     var thumb = getSmartThumb(entry);
     var labels = getLabels(entry);
     html += '<div class="post-card"><div class="post-thumb-wrap"><a href="'+postUrl+'"><img class="post-thumb" src="'+thumb+'"/></a></div><h2><a href="'+postUrl+'">'+title+'</a></h2>'+labels+'</div>';
-  }
+  });
   mainGrid.innerHTML = html;
   
-  // Paginación
   var totalPages = Math.ceil(totalMain / posts_per_page);
-  var phtml = "";
-  var base_url = window.location.href.split("?")[0] + "?max-results=" + posts_per_page;
-  
   if (totalPages > 1) {
-      if (currentPage > 1) phtml += "<a class='showpageNum' href='"+base_url+"&PageNo="+(currentPage-1)+"'>&lt;</a>";
-      var startPage = Math.max(1, currentPage - 2);
-      var endPage = Math.min(totalPages, currentPage + 2);
-      if (startPage > 1) {
-          phtml += "<a class='showpageNum' href='"+base_url+"&PageNo=1'>1</a>";
-          if (startPage > 2) phtml += "<span class='showpagePoint' style='background:transparent;border:0;box-shadow:none'>...</span>";
-      }
-      for (var j = startPage; j <= endPage; j++) {
-        if (j == currentPage) phtml += "<span class='showpagePoint'>"+j+"</span>";
-        else phtml += "<a class='showpageNum' href='"+base_url+"&PageNo="+j+"'>"+j+"</a>";
-      }
-      if (endPage < totalPages) {
-          if (endPage < totalPages - 1) phtml += "<span class='showpagePoint' style='background:transparent;border:0;box-shadow:none'>...</span>";
-          phtml += "<a class='showpageNum' href='"+base_url+"&PageNo="+totalPages+"'>"+totalPages+"</a>";
-      }
-      if (currentPage < totalPages) {
-          phtml += "<a class='showpageNum' href='"+base_url+"&PageNo="+(currentPage+1)+"'>&gt;</a>";
-      }
-      var pagerContainer = document.getElementById("blog-pager");
-      if(pagerContainer) pagerContainer.innerHTML = phtml;
+    var phtml = "";
+    var base_url = window.location.href.split("?")[0] + "?max-results=" + posts_per_page;
+    if (currentPage > 1) phtml += "<a class='showpageNum' href='"+base_url+"&PageNo="+(currentPage-1)+"'>&lt;</a>";
+    for (var j = Math.max(1, currentPage - 2); j <= Math.min(totalPages, currentPage + 2); j++) {
+      if (j == currentPage) phtml += "<span class='showpagePoint'>"+j+"</span>";
+      else phtml += "<a class='showpageNum' href='"+base_url+"&PageNo="+j+"'>"+j+"</a>";
+    }
+    if (currentPage < totalPages) phtml += "<a class='showpageNum' href='"+base_url+"&PageNo="+(currentPage+1)+"'>&gt;</a>";
+    var pager = document.getElementById("blog-pager");
+    if (pager) pager.innerHTML = phtml;
   }
 }
 
+/* INICIO DE LÓGICA DOM */
 document.addEventListener("DOMContentLoaded", function() {
-  /* 1. LÓGICA DE SUBMENÚS */
+  
+  /* 1. SISTEMA DE MENÚ (Submenús por prefijo _) */
   var currentParent = null;
   var currentUl = null;
   var menuItems = document.querySelectorAll('.dark_menu > li');
-  menuItems.forEach(function(el) {
-    var link = el.querySelector('a');
+  
+  menuItems.forEach(function(li) {
+    var link = li.querySelector('a');
     if (link) {
       var text = link.textContent.trim();
       if (text.startsWith('_')) {
@@ -163,19 +131,20 @@ document.addEventListener("DOMContentLoaded", function() {
             currentParent.classList.add('has-children');
           }
           link.textContent = text.substring(1).trim();
-          currentUl.appendChild(el);
+          currentUl.appendChild(li);
         }
       } else {
-        currentParent = el;
-        currentUl = null; 
+        currentParent = li;
+        currentUl = null;
       }
     }
   });
 
-  var darkMenu = document.querySelector('.dark_menu');
-  if(darkMenu) darkMenu.classList.add('menu-ready');
+  // Forzar visibilidad del menú tras procesar
+  var darkMenus = document.querySelectorAll('.dark_menu');
+  darkMenus.forEach(function(m) { m.classList.add('menu-ready'); m.style.opacity = "1"; });
 
-  /* 2. TOGGLE TEMA */
+  /* 2. MODO CLARO / OSCURO */
   var themeBtn = document.getElementById('theme-toggle');
   var htmlEl = document.documentElement;
   if (themeBtn) {
@@ -184,102 +153,51 @@ document.addEventListener("DOMContentLoaded", function() {
       if (htmlEl.classList.contains('light-theme')) {
         htmlEl.classList.remove('light-theme');
         localStorage.setItem('theme', 'dark');
-        if(icon) icon.className = 'fa-solid fa-sun';
+        if (icon) icon.className = 'fa-solid fa-sun';
       } else {
         htmlEl.classList.add('light-theme');
         localStorage.setItem('theme', 'light');
-        if(icon) icon.className = 'fa-solid fa-moon';
-      }
-      if (typeof DISQUS !== 'undefined') {
-          setTimeout(function() { DISQUS.reset({ reload: true }); }, 200); 
+        if (icon) icon.className = 'fa-solid fa-moon';
       }
     });
   }
 
   /* 3. PANEL LATERAL */
-  var sourceMenu = document.querySelector('.menujohanes .dark_menu');
-  var drawerContent = document.getElementById('drawer-content');
-  if (sourceMenu && drawerContent) {
-    drawerContent.innerHTML = '<ul class="dark_menu">' + sourceMenu.innerHTML + '</ul>';
+  var menuData = document.querySelector('.menujohanes .dark_menu');
+  var drawer = document.getElementById('drawer-content');
+  if (menuData && drawer) {
+    drawer.innerHTML = '<ul class="dark_menu">' + menuData.innerHTML + '</ul>';
+    // Re-aplicar visibilidad al clon
+    drawer.querySelectorAll('.dark_menu').forEach(function(m) { m.style.opacity = "1"; });
   }
 
-  var menuToggle = document.getElementById('menu-toggle');
-  if (menuToggle) {
-    menuToggle.addEventListener('click', function() { document.body.classList.add('drawer-open'); });
+  var btnToggle = document.getElementById('menu-toggle');
+  if (btnToggle) {
+    btnToggle.onclick = function() { document.body.classList.add('drawer-open'); };
   }
-
+  
   ['drawer-close', 'drawer-overlay'].forEach(function(id) {
     var el = document.getElementById(id);
-    if(el) el.addEventListener('click', function() { document.body.classList.remove('drawer-open'); });
+    if (el) el.onclick = function() { document.body.classList.remove('drawer-open'); };
   });
 
-  document.addEventListener('click', function(e) {
-    var target = e.target.closest('#side-drawer .has-children > a');
-    if (target) {
-      e.preventDefault();
-      target.parentElement.classList.toggle('active');
-    }
-  });
+  /* 4. CARGA AJAX */
+  var mainGrid = document.getElementById('main-ajax-grid');
+  if (mainGrid && !document.body.classList.contains('is-search-page')) {
+    var params = new URLSearchParams(window.location.search);
+    var page = parseInt(params.get('PageNo')) || 1;
+    var start = ((page - 1) * posts_per_page) + 1;
 
-  /* 4. REUBICACIÓN TÍTULO */
-  if((document.body.classList.contains('item-view') || window.location.href.indexOf('.html') > -1) && window.location.href.indexOf('search.html') === -1 && window.location.href.indexOf('categories.html') === -1) {
-    var pageTitleText = document.title.split(' - ')[0]; 
-    var postTitleHTML = '<h2 class="section-title" style="text-align:center; border:0; margin-top:20px; color:var(--brand-color)!important;">' + pageTitleText + '</h2>';
-    var firstImg = document.querySelector('.post-body-container img');
-    if(firstImg) {
-        var firstAnchor = firstImg.closest('a');
-        (firstAnchor || firstImg).insertAdjacentHTML('afterend', postTitleHTML);
-    }
-  }
+    mainGrid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:40px;">Cargando contenido...</div>';
 
-  /* 5 & 6. INYECCIÓN PÁGINAS ESPECIALES */
-  if (window.location.href.indexOf('/p/search.html') > -1 || window.location.href.indexOf('/p/categories.html') > -1) {
-      var isCat = window.location.href.indexOf('/p/categories.html') > -1;
-      if(isCat) document.body.classList.add('is-category-page');
-      else document.body.classList.add('is-search-page');
+    getJSONP("/feeds/posts/summary/-/Destacado?max-results=0", function(data) {
+      var totalF = (data.feed && data.feed.openSearch$totalResults) ? parseInt(data.feed.openSearch$totalResults.$t) : 0;
       
-      var cb = new Date().getTime();
-      var styles = ['/pages/search/search.css'];
-      if(isCat) styles.push('/pages/categories/categories.css');
+      getJSONP("/feeds/posts/summary/-/Destacado?max-results=2", loadFeatured);
       
-      styles.forEach(function(path){
-          var l = document.createElement('link'); l.rel = 'stylesheet';
-          l.href = 'https://raw.githack.com/SamaelCr/AltyGamesTheme/main' + path + '?v=' + cb;
-          document.head.appendChild(l);
+      getJSONP("/feeds/posts/summary?start-index="+start+"&max-results="+(posts_per_page + totalF), function(json) {
+        loadMainGrid(json, page, totalF);
       });
-
-      var s = document.createElement('script');
-      s.src = 'https://raw.githack.com/SamaelCr/AltyGamesTheme/main/pages/' + (isCat ? 'categories/categories.js' : 'search/search.js') + '?v=' + cb;
-      document.head.appendChild(s);
-  }
-
-  /* 7. CARGA AJAX PRINCIPAL */
-  var mainGridContainer = document.getElementById('main-ajax-grid');
-  if (mainGridContainer && !document.body.classList.contains('is-category-page') && !document.body.classList.contains('is-search-page')) {
-      var urlParams = new URLSearchParams(window.location.search);
-      var currentPage = parseInt(urlParams.get('PageNo')) || 1;
-      var startIndex = ((currentPage - 1) * posts_per_page) + 1;
-      
-      mainGridContainer.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:20px; color:var(--brand-color);">Cargando juegos...</div>';
-
-      // 1. Obtener conteo de destacados
-      getJSONP("/feeds/posts/summary/-/Destacado?max-results=0", function(dataFeatured) {
-          var totalFeatured = (dataFeatured.feed && dataFeatured.feed.openSearch$totalResults) ? parseInt(dataFeatured.feed.openSearch$totalResults.$t) : 0;
-          
-          // 2. Cargar los destacados visibles (Top 2)
-          if(totalFeatured > 0) {
-            getJSONP("/feeds/posts/summary/-/Destacado?max-results=2", function(jsonFeatured) { 
-                loadFeatured(jsonFeatured); 
-            });
-          } else {
-            var fGrid = document.getElementById("featured-ajax-grid");
-            if(fGrid) fGrid.innerHTML = "<div style='grid-column:1/-1; opacity:0.5'>No hay destacados.</div>";
-          }
-
-          // 3. Cargar el grid principal (ajustando startIndex para saltar duplicados si fuera necesario)
-          getJSONP("/feeds/posts/summary?start-index=" + startIndex + "&max-results=" + (posts_per_page + totalFeatured), function(jsonMain) {
-            loadMainGrid(jsonMain, currentPage, totalFeatured);
-          });
-      });
+    });
   }
 });
