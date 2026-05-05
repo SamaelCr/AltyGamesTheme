@@ -44,20 +44,29 @@ function loadFeatured(json) {
 }
 
 /* FIX: Ahora recibe la página actual, construye el DOM directamente y maneja resultados vacíos */
-function loadMainGrid(json, currentPage) {
+function loadMainGrid(json, currentPage, totalFeatured) {
   var entries = json.feed.entry ||[];
-  var totalResults = json.feed.openSearch$totalResults ? parseInt(json.feed.openSearch$totalResults.$t) : 0;
+  var totalAll = json.feed.openSearch$totalResults ? parseInt(json.feed.openSearch$totalResults.$t) : 0;
+  
+  // El total de la cuadrícula es el total del blog menos los que son destacados
+  var totalMain = totalAll - totalFeatured;
+  
   var html = "";
   
-  // Si no hay entradas en esta página, mostramos un mensaje
-  if (entries.length === 0) {
+  // Filtramos los que tengan la etiqueta de destacado en el cliente para evitar errores de API
+  var filteredEntries = entries.filter(e => !(e.category ||[]).some(l => l.term === featured_label));
+  
+  // Solo mostramos hasta posts_per_page
+  var pageEntries = filteredEntries.slice(0, posts_per_page);
+
+  if (pageEntries.length === 0) {
       document.getElementById("main-ajax-grid").innerHTML = "<div style='grid-column:1/-1; text-align:center; padding:20px; color:var(--brand-color); font-weight:bold;'>No hay más juegos para mostrar en esta página.</div>";
       document.getElementById("blog-pager").innerHTML = "";
       return;
   }
 
-  for (var i = 0; i < entries.length; i++) {
-    var entry = entries[i];
+  for (var i = 0; i < pageEntries.length; i++) {
+    var entry = pageEntries[i];
     var title = entry.title.$t;
     var postUrl = entry.link.find(l => l.rel == 'alternate').href;
     var thumb = getSmartThumb(entry);
@@ -67,7 +76,7 @@ function loadMainGrid(json, currentPage) {
   document.getElementById("main-ajax-grid").innerHTML = html;
   
   /* LÓGICA DE PAGINACIÓN ADAPTADA AL TOTAL DEL SERVIDOR */
-  var totalPages = Math.ceil(totalResults / posts_per_page);
+  var totalPages = Math.ceil(totalMain / posts_per_page);
   var phtml = "";
   var base_url = window.location.href.split("?")[0] + "?max-results=" + posts_per_page;
   
@@ -194,7 +203,7 @@ $(document).ready(function() {
   }
 
   /* =========================================================================
-     7. NUEVO SISTEMA DE CARGA AJAX (PAGINACIÓN SERVER-SIDE REAL) - FIX TOTAL
+     7. NUEVO SISTEMA DE CARGA AJAX (PAGINACIÓN ESTABLE)
      ========================================================================= */
   if ($('#main-ajax-grid').length) {
       
@@ -202,27 +211,32 @@ $(document).ready(function() {
       var currentPage = parseInt(urlParams.get('PageNo')) || 1;
       var startIndex = ((currentPage - 1) * posts_per_page) + 1;
 
-      // A. Carga del Grid Destacado (JSONP para evitar bloqueos)
+      // Primero obtenemos el número de destacados para calcular bien el total
       $.ajax({
-          url: "/feeds/posts/summary/-/Destacado?alt=json-in-script",
+          url: "/feeds/posts/summary/-/Destacado?alt=json-in-script&max-results=0",
           type: "GET",
           dataType: "jsonp",
-          success: function(json) { loadFeatured(json); }
-      });
+          success: function(dataFeatured) {
+              var totalFeatured = dataFeatured.feed.openSearch$totalResults ? parseInt(dataFeatured.feed.openSearch$totalResults.$t) : 0;
 
-      // B. Carga del Grid Principal (Filtrado negativo por ruta para total exacto)
-      $('#main-ajax-grid').html('<div style="grid-column:1/-1; text-align:center; padding:20px; color:var(--brand-color);">Cargando juegos...</div>');
-      
-      $.ajax({
-          // La ruta /-/-Destacado es la que devuelve el openSearch$totalResults correcto
-          url: "/feeds/posts/summary/-/-" + encodeURIComponent(featured_label) + "?alt=json-in-script&start-index=" + startIndex + "&max-results=" + posts_per_page,
-          type: "GET",
-          dataType: "jsonp",
-          success: function(json) {
-              loadMainGrid(json, currentPage);
-          },
-          error: function() {
-              $('#main-ajax-grid').html('<div style="grid-column:1/-1; text-align:center; padding:20px; color:red;">Error de conexión con el servidor.</div>');
+              // Cargamos los destacados reales para el grid superior
+              $.ajax({
+                  url: "/feeds/posts/summary/-/Destacado?alt=json-in-script&max-results=2",
+                  type: "GET",
+                  dataType: "jsonp",
+                  success: function(json) { loadFeatured(json); }
+              });
+
+              // Cargamos el grid principal (pedimos 11 para tener margen por si hay destacados)
+              $('#main-ajax-grid').html('<div style="grid-column:1/-1; text-align:center; padding:20px; color:var(--brand-color);">Cargando juegos...</div>');
+              $.ajax({
+                  url: "/feeds/posts/summary?alt=json-in-script&start-index=" + startIndex + "&max-results=" + (posts_per_page + 2),
+                  type: "GET",
+                  dataType: "jsonp",
+                  success: function(json) {
+                      loadMainGrid(json, currentPage, totalFeatured);
+                  }
+              });
           }
       });
   }
