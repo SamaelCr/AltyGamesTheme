@@ -1,32 +1,41 @@
-document.addEventListener("DOMContentLoaded", function() {
-    var urlParams = new URLSearchParams(window.location.search);
-    var query = urlParams.get('q');
-    var searchInput = document.getElementById('yt-search-input');
-    var resultsContainer = document.getElementById('yt-search-results');
-    var searchForm = document.getElementById('yt-search-form');
+/* search.js - AltyGames Vanilla */
+(function() {
+    function initSearch() {
+        var urlParams = new URLSearchParams(window.location.search);
+        var query = urlParams.get('q');
+        var searchInput = document.getElementById('yt-search-input');
+        var resultsContainer = document.getElementById('yt-search-results');
+        var searchForm = document.getElementById('yt-search-form');
 
-    if (query && query.trim() !== "") {
-        if (searchInput) searchInput.value = query;
-        performYTSearch(query);
-    } else {
-        if (resultsContainer) {
-            resultsContainer.innerHTML = '<div class="search-message"><i class="fa-solid fa-magnifying-glass"></i><br>Ingresa un término para comenzar la búsqueda.</div>';
+        if (query && query.trim() !== "") {
+            if (searchInput) searchInput.value = query;
+            performYTSearch(query);
+        } else {
+            if (resultsContainer) {
+                resultsContainer.innerHTML = '<div class="search-message"><i class="fa-solid fa-magnifying-glass"></i><br>Ingresa un término para comenzar la búsqueda.</div>';
+            }
+        }
+
+        if (searchForm) {
+            searchForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                if (!searchInput) return;
+                var val = searchInput.value.trim();
+                if(val) {
+                    var newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?q=' + encodeURIComponent(val);
+                    window.history.pushState({path:newurl}, '', newurl);
+                    performYTSearch(val);
+                }
+            });
         }
     }
 
-    if (searchForm) {
-        searchForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            if (!searchInput) return;
-            var val = searchInput.value.trim();
-            if(val) {
-                var newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?q=' + encodeURIComponent(val);
-                window.history.pushState({path:newurl}, '', newurl);
-                performYTSearch(val);
-            }
-        });
+    if (document.readyState === "complete" || document.readyState === "interactive") {
+        initSearch();
+    } else {
+        document.addEventListener("DOMContentLoaded", initSearch);
     }
-});
+})();
 
 function performYTSearch(query) {
     var container = document.getElementById('yt-search-results');
@@ -43,7 +52,7 @@ function performYTSearch(query) {
     } else {
         var script = document.createElement('script');
         script.src = feedUrl + '&alt=json-in-script&callback=renderYTSearch';
-        document.body.appendChild(script);
+        document.head.appendChild(script);
     }
 }
 
@@ -68,7 +77,6 @@ window.renderYTSearch = function(json) {
             var entry = entries[i];
             var title = entry.title.$t;
             var url = "#";
-            
             if (entry.link) {
                 for (var k = 0; k < entry.link.length; k++) {
                     if (entry.link[k].rel == 'alternate') { 
@@ -77,10 +85,8 @@ window.renderYTSearch = function(json) {
                     }
                 }
             }
-
             var thumb = typeof getSmartThumb === 'function' ? getSmartThumb(entry) : ""; 
             var labels = typeof getLabels === 'function' ? getLabels(entry) : "";    
-            
             var rawSnippet = entry.summary ? entry.summary.$t : (entry.content ? entry.content.$t : "");
             var cleanSnippet = rawSnippet.replace(/<!--[\s\S]*?-->/g, "").replace(/(<([^>]+)>)/ig,"").trim();
             var snippet = cleanSnippet.length > 200 ? cleanSnippet.substring(0, 200) + "..." : cleanSnippet;
@@ -99,6 +105,5 @@ window.renderYTSearch = function(json) {
         }
     }
     html += '</div>';
-    
     if (container) container.innerHTML = html;
 }

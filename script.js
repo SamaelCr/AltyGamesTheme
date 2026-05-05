@@ -53,7 +53,7 @@ function getJSONP(url, callback) {
 
 function loadFeatured(json) {
   var html = "";
-  if(!json.feed.entry) return;
+  if(!json.feed || !json.feed.entry) return;
   for (var i = 0; i < json.feed.entry.length; i++) {
     var entry = json.feed.entry[i];
     var title = entry.title.$t;
@@ -73,8 +73,8 @@ function loadFeatured(json) {
 
 /* FIX: Ahora recibe la página actual, construye el DOM directamente y maneja resultados vacíos */
 function loadMainGrid(json, currentPage, totalFeatured) {
-  var entries = json.feed.entry ||[];
-  var totalAll = json.feed.openSearch$totalResults ? parseInt(json.feed.openSearch$totalResults.$t) : 0;
+  var entries = (json.feed && json.feed.entry) ? json.feed.entry : [];
+  var totalAll = (json.feed && json.feed.openSearch$totalResults) ? parseInt(json.feed.openSearch$totalResults.$t) : 0;
   
   currentPage = currentPage || 1;
   totalFeatured = totalFeatured || 0;
@@ -208,7 +208,8 @@ document.addEventListener("DOMContentLoaded", function() {
     var firstImg = document.querySelector('.post-body-container img');
     if(firstImg) {
         var firstAnchor = firstImg.closest('a');
-        (firstAnchor || firstImg).insertAdjacentHTML('afterend', postTitleHTML);
+        if (firstAnchor) firstAnchor.insertAdjacentHTML('afterend', postTitleHTML);
+        else firstImg.insertAdjacentHTML('afterend', postTitleHTML);
     }
   }
 
@@ -224,18 +225,18 @@ document.addEventListener("DOMContentLoaded", function() {
       document.head.appendChild(scriptS);
   }
 
-  /* 6. INYECCIÓN ABSOLUTA PARA PÁGINA DE CATEGORÍAS */
+  /* 6. INYECCIÓN ABSOLUTA PARA PÁGINA DE CATEGORÍAS (FIX: Carga Search CSS también) */
   if (window.location.href.indexOf('/p/categories.html') > -1) {
       document.body.classList.add('is-category-page');
       var cbCat = new Date().getTime();
-      // CARGAR SEARCH.CSS PORQUE CATEGORIES LO NECESITA PARA EL GRID
-      var linkC1 = document.createElement('link'); linkC1.rel = 'stylesheet';
-      linkC1.href = 'https://raw.githack.com/SamaelCr/AltyGamesTheme/main/pages/search/search.css?v=' + cbCat;
-      document.head.appendChild(linkC1);
+      // CARGAR SEARCH.CSS (ESTILOS BASE DE LISTA)
+      var linkC_base = document.createElement('link'); linkC_base.rel = 'stylesheet';
+      linkC_base.href = 'https://raw.githack.com/SamaelCr/AltyGamesTheme/main/pages/search/search.css?v=' + cbCat;
+      document.head.appendChild(linkC_base);
       // CARGAR CATEGORIES.CSS
-      var linkC2 = document.createElement('link'); linkC2.rel = 'stylesheet';
-      linkC2.href = 'https://raw.githack.com/SamaelCr/AltyGamesTheme/main/pages/categories/categories.css?v=' + cbCat;
-      document.head.appendChild(linkC2);
+      var linkC = document.createElement('link'); linkC.rel = 'stylesheet';
+      linkC.href = 'https://raw.githack.com/SamaelCr/AltyGamesTheme/main/pages/categories/categories.css?v=' + cbCat;
+      document.head.appendChild(linkC);
       // CARGAR CATEGORIES.JS
       var scriptC = document.createElement('script');
       scriptC.src = 'https://raw.githack.com/SamaelCr/AltyGamesTheme/main/pages/categories/categories.js?v=' + cbCat;
