@@ -228,7 +228,7 @@ body.drawer-open #drawer-overlay { display: block; }
 .post-tag:hover { background: var(--brand-color); color: #fff !important; }
 
 #blog-pager { clear: both; width: 100%; display: flex; justify-content: center; align-items: center; gap: 8px; margin: 40px auto 20px auto; padding: 20px 0; border-top: 1px solid rgba(255,255,255,0.1); }
-.showpageNum, .showpagePoint { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 6px; color: #fff !important; font-weight: bold; font-size: 15px; text-decoration: none !important; transition: all 0.2s ease; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); }
+.showpageNum, .showpagePoint { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 6px; color: #fff !important; font-weight: bold; font-size: 15px; text-decoration: none !important; transition: all 0.2s ease; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); }
 .showpageNum:hover { background: var(--brand-color); border-color: var(--brand-color); transform: translateY(-3px); box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
 .showpagePoint { background: var(--brand-color); border-color: var(--brand-color); cursor: default; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
 
@@ -255,10 +255,10 @@ body.drawer-open #drawer-overlay { display: block; }
 .light-theme .sidebar-search button { background: #f0f0f0 !important; color: #333333 !important; }
 .light-theme .sidebar-box { background: #ffffff !important; border: 2px solid #dddddd !important; color: #888888 !important; }
 
-/* FIX PAGINACIÓN MODO CLARO */
-.light-theme .showpageNum { background: #f0f0f0 !important; color: #333 !important; border-color: #ddd !important; }
-.light-theme .showpageNum:hover { background: var(--brand-color) !important; color: #fff !important; }
-.light-theme .showpagePoint { background: var(--brand-color) !important; color: #fff !important; }
+/* FIX PAGINACIÓN MODO CLARO (FORZADO DINÁMICO) */
+html.light-theme .showpageNum, .light-theme .showpageNum { background: #e0e0e0 !important; color: #111 !important; border: 1px solid #ccc !important; }
+html.light-theme .showpageNum:hover, .light-theme .showpageNum:hover { background: var(--brand-color) !important; color: #fff !important; border-color: var(--brand-color) !important; }
+html.light-theme .showpagePoint, .light-theme .showpagePoint { background: var(--brand-color) !important; color: #fff !important; border-color: var(--brand-color) !important; }
 
 /* --- 15. MEDIA QUERIES --- */
 @media screen and (max-width: 768px) {
