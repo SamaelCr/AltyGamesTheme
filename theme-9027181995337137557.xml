@@ -2,10 +2,81 @@
 <!DOCTYPE html>
 <html b:css='false' b:default-jumplink-target='_blank' b:layoutsVersion='3' b:responsive='true' xmlns='http://www.w3.org/1999/xhtml' xmlns:b='http://www.google.com/2005/gml/b' xmlns:data='http://www.google.com/2005/gml/data' xmlns:expr='http://www.google.com/2005/gml/expr'>
 <head>
-<b:if cond='data:blog.url == data:blog.homepageUrl'><title><data:blog.pageTitle/></title></b:if>
-<b:if cond='data:blog.pageType == &quot;item&quot;'><title><data:blog.pageName/></title></b:if>
+<!-- SEO DINÁMICO DE TÍTULOS -->
+<b:if cond='data:blog.url == data:blog.homepageUrl'>
+<title><data:blog.pageTitle/></title>
+<b:else/>
+<b:if cond='data:blog.pageType == &quot;item&quot;'>
+<title><data:blog.pageName/> - <data:blog.title/></title>
+<b:else/>
+<title><data:blog.pageName/> | <data:blog.title/></title>
+</b:if>
+</b:if>
+
 <meta content='width=device-width,initial-scale=1' name='viewport'/>
 <meta content='blogger' name='generator'/>
+
+<!-- META DESCRIPCIÓN OPTIMIZADA -->
+<b:if cond='data:blog.metaDescription'>
+<meta expr:content='data:blog.metaDescription' name='description'/>
+<b:else/>
+<b:if cond='data:blog.pageType == &quot;item&quot;'>
+<meta expr:content='data:blog.pageName + &quot; descarga la versión completa para PC. Requisitos, tráiler y guía de instalación en &quot; + data:blog.title' name='description'/>
+<b:else/>
+<meta expr:content='data:blog.title + &quot; - Descarga los mejores juegos para PC, guías, requisitos y novedades del mundo gaming.&quot;' name='description'/>
+</b:if>
+</b:if>
+
+<!-- CANONICAL Y PRECONNECT -->
+<link expr:href='data:blog.canonicalUrl' rel='canonical'/>
+<link href='https://cdnjs.cloudflare.com' rel='preconnect'/>
+<link href='https://raw.githack.com' rel='preconnect'/>
+<link href='https://blogger.googleusercontent.com' rel='preconnect'/>
+
+<!-- OPEN GRAPH (RRSS) -->
+<meta expr:content='data:blog.pageName ?: data:blog.title' property='og:title'/>
+<meta expr:content='data:blog.canonicalUrl' property='og:url'/>
+<meta expr:content='data:blog.title' property='og:site_name'/>
+<b:if cond='data:blog.postImageUrl'>
+<meta expr:content='data:blog.postImageUrl' property='og:image'/>
+</b:if>
+<meta content='website' property='og:type'/>
+
+<!-- DATOS ESTRUCTURADOS JSON-LD (GOOGLE SEARCH) -->
+<script type='application/ld+json'>
+{
+  &quot;@context&quot;: &quot;https://schema.org&quot;,
+  &quot;@type&quot;: &quot;WebSite&quot;,
+  &quot;url&quot;: &quot;<data:blog.homepageUrl/>&quot;,
+  &quot;name&quot;: &quot;<data:blog.title/>&quot;,
+  &quot;potentialAction&quot;: {
+    &quot;@type&quot;: &quot;SearchAction&quot;,
+    &quot;target&quot;: &quot;<data:blog.homepageUrl/>p/search.html?q={search_term_string}&quot;,
+    &quot;query-input&quot;: &quot;required name=search_term_string&quot;
+  }
+}
+</script>
+
+<b:if cond='data:blog.pageType == &quot;item&quot;'>
+<script type='application/ld+json'>
+{
+  &quot;@context&quot;: &quot;https://schema.org&quot;,
+  &quot;@type&quot;: &quot;SoftwareApplication&quot;,
+  &quot;name&quot;: &quot;<data:blog.pageName/>&quot;,
+  &quot;operatingSystem&quot;: &quot;Windows&quot;,
+  &quot;applicationCategory&quot;: &quot;GameApplication&quot;,
+  &quot;publisher&quot;: {
+    &quot;@type&quot;: &quot;Organization&quot;,
+    &quot;name&quot;: &quot;<data:blog.title/>&quot;
+  },
+  &quot;offers&quot;: {
+    &quot;@type&quot;: &quot;Offer&quot;,
+    &quot;price&quot;: &quot;0&quot;,
+    &quot;priceCurrency&quot;: &quot;USD&quot;
+  }
+}
+</script>
+</b:if>
 
 <!-- LIBRERÍAS EXTERNAS -->
 <link href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css' rel='stylesheet'/>
@@ -25,8 +96,8 @@
 <!-- 2. CARGA DE ASSETS (VERSION VANILLA 3.40) -->
 
 <!-- OPCIÓN 1: GITHACK (DESARROLLO - ACTUALIZACIÓN AL INSTANTE) -->
-<link href='https://raw.githack.com/SamaelCr/AltyGamesTheme/main/styles.css?v=3.20' rel='stylesheet' type='text/css'/>
-<script src='https://raw.githack.com/SamaelCr/AltyGamesTheme/main/script.js?v=3.40' type='text/javascript'/>
+<link href='https://raw.githack.com/SamaelCr/AltyGamesTheme/main/styles.css?v=4.00' rel='stylesheet' type='text/css'/>
+<script src='https://raw.githack.com/SamaelCr/AltyGamesTheme/main/script.js?v=4.40' type='text/javascript'/>
 
 <!-- OPCIÓN 2: STATICALLY (DESARROLLO SEMI-PRO) 
 <link href='https://cdn.statically.io/gh/SamaelCr/AltyGamesTheme/main/styles.css' rel='stylesheet' type='text/css'/>

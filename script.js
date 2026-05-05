@@ -80,7 +80,8 @@ function loadFeatured(json) {
       } catch(e) { url = "#"; }
       var thumb = getSmartThumb(entry);
       var labels = getLabels(entry);
-      html += '<div class="post-card"><div class="post-thumb-wrap"><a href="'+url+'"><img class="post-thumb" src="'+thumb+'" style="height:210px"/></a></div><h2><a href="'+url+'">'+title+'</a></h2>'+labels+'</div>';
+      /* SEO OPTIMIZATION: ADDED ALT AND TITLE TO IMG */
+      html += '<div class="post-card"><div class="post-thumb-wrap"><a href="'+url+'"><img class="post-thumb" src="'+thumb+'" alt="'+title+'" title="'+title+'" style="height:210px"/></a></div><h2><a href="'+url+'">'+title+'</a></h2>'+labels+'</div>';
     } catch (err) {
       console.warn("Error procesando entrada destacada individual:", err);
     }
@@ -129,7 +130,8 @@ function loadMainGrid(json, currentPage, totalFeatured) {
         } catch(e) { postUrl = "#"; }
         var thumb = getSmartThumb(entry);
         var labels = getLabels(entry);
-        html += '<div class="post-card"><div class="post-thumb-wrap"><a href="'+postUrl+'"><img class="post-thumb" src="'+thumb+'"/></a></div><h2><a href="'+postUrl+'">'+title+'</a></h2>'+labels+'</div>';
+        /* SEO OPTIMIZATION: ADDED ALT AND TITLE TO IMG */
+        html += '<div class="post-card"><div class="post-thumb-wrap"><a href="'+postUrl+'"><img class="post-thumb" src="'+thumb+'" alt="'+title+'" title="'+title+'"/></a></div><h2><a href="'+postUrl+'">'+title+'</a></h2>'+labels+'</div>';
       } catch (err) {
         console.warn("Error procesando entrada del grid principal individual:", err);
       }
