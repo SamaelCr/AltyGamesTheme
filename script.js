@@ -76,6 +76,7 @@ function loadMainGrid(json) {
 $(document).ready(function() {
   /* 1. LÓGICA DE SUBMENÚS (SISTEMA DE MAPEO PREVIO V3) - CORREGIDA */
   var currentParent = null;
+  var currentUl = null; // FIX: Variable para mantener el <ul> activo en memoria
 
   // Seleccionamos SOLO los <li> principales (hijos directos de la lista original)
   $('.dark_menu > li').each(function() {
@@ -88,25 +89,24 @@ $(document).ready(function() {
       if (text.startsWith('_')) {
         // Es un hijo, lo agregamos al padre activo
         if (currentParent) {
-          // Buscamos si el padre ya tiene la etiqueta <ul>
-          var $ul = currentParent.children('ul');
           
-          if ($ul.length === 0) {
-            // Si no existe, la creamos y la agregamos al padre
-            $ul = $('<ul></ul>');
-            currentParent.append($ul);
+          // Si no existe un <ul> en memoria para este padre, lo creamos
+          if (!currentUl) {
+            currentUl = $('<ul></ul>');
+            currentParent.append(currentUl);
             currentParent.addClass('has-children');
           }
           
           // Limpiamos el "_" del texto
           $link.text(text.substring(1).trim());
           
-          // Movemos el elemento hijo adentro del <ul> de forma segura
-          $ul.append($li);
+          // Movemos el elemento hijo adentro del <ul> usando la referencia en memoria
+          currentUl.append($li);
         }
       } else {
         // Es un enlace normal, por lo tanto es un "padre potencial"
         currentParent = $li;
+        currentUl = null; // Reiniciamos el contenedor <ul> para el próximo padre
       }
     }
   });
