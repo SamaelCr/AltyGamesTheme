@@ -43,12 +43,19 @@ function loadFeatured(json) {
   document.getElementById("featured-ajax-grid").innerHTML = html;
 }
 
-/* FIX: Ahora recibe la página actual y construye el DOM directamente sin filtrar en el cliente */
+/* FIX: Ahora recibe la página actual, construye el DOM directamente y maneja resultados vacíos */
 function loadMainGrid(json, currentPage) {
   var entries = json.feed.entry ||[];
-  var totalResults = parseInt(json.feed.openSearch$totalResults.$t); // Total exacto que nos da el servidor de Blogger
+  var totalResults = json.feed.openSearch$totalResults ? parseInt(json.feed.openSearch$totalResults.$t) : 0;
   var html = "";
   
+  // Si no hay entradas en esta página, mostramos un mensaje
+  if (entries.length === 0) {
+      document.getElementById("main-ajax-grid").innerHTML = "<div style='grid-column:1/-1; text-align:center; padding:20px; color:var(--brand-color); font-weight:bold;'>No hay más juegos para mostrar en esta página.</div>";
+      document.getElementById("blog-pager").innerHTML = "";
+      return;
+  }
+
   for (var i = 0; i < entries.length; i++) {
     var entry = entries[i];
     var title = entry.title.$t;
@@ -64,29 +71,33 @@ function loadMainGrid(json, currentPage) {
   var phtml = "";
   var base_url = window.location.href.split("?")[0] + "?max-results=" + posts_per_page;
   
-  if (currentPage > 1) phtml += "<a class='showpageNum' href='"+base_url+"&PageNo="+(currentPage-1)+"'>&lt;</a>";
-  
-  var startPage = Math.max(1, currentPage - 2);
-  var endPage = Math.min(totalPages, currentPage + 2);
-  
-  if (startPage > 1) {
-      phtml += "<a class='showpageNum' href='"+base_url+"&PageNo=1'>1</a>";
-      if (startPage > 2) phtml += "<span class='showpagePoint' style='background:transparent;border:0;box-shadow:none'>...</span>";
+  if (totalPages > 1) {
+      if (currentPage > 1) phtml += "<a class='showpageNum' href='"+base_url+"&PageNo="+(currentPage-1)+"'>&lt;</a>";
+      
+      var startPage = Math.max(1, currentPage - 2);
+      var endPage = Math.min(totalPages, currentPage + 2);
+      
+      if (startPage > 1) {
+          phtml += "<a class='showpageNum' href='"+base_url+"&PageNo=1'>1</a>";
+          if (startPage > 2) phtml += "<span class='showpagePoint' style='background:transparent;border:0;box-shadow:none'>...</span>";
+      }
+      
+      for (var j = startPage; j <= endPage; j++) {
+        if (j == currentPage) phtml += "<span class='showpagePoint'>"+j+"</span>";
+        else phtml += "<a class='showpageNum' href='"+base_url+"&PageNo="+j+"'>"+j+"</a>";
+      }
+      
+      if (endPage < totalPages) {
+          if (endPage < totalPages - 1) phtml += "<span class='showpagePoint' style='background:transparent;border:0;box-shadow:none'>...</span>";
+          phtml += "<a class='showpageNum' href='"+base_url+"&PageNo="+totalPages+"'>"+totalPages+"</a>";
+      }
+      
+      if (currentPage < totalPages) phtml += "<a class='showpageNum' href='"+base_url+"&PageNo="+(currentPage+1)+"'>&gt;</a>";
+      
+      document.getElementById("blog-pager").innerHTML = phtml;
+  } else {
+      document.getElementById("blog-pager").innerHTML = "";
   }
-  
-  for (var j = startPage; j <= endPage; j++) {
-    if (j == currentPage) phtml += "<span class='showpagePoint'>"+j+"</span>";
-    else phtml += "<a class='showpageNum' href='"+base_url+"&PageNo="+j+"'>"+j+"</a>";
-  }
-  
-  if (endPage < totalPages) {
-      if (endPage < totalPages - 1) phtml += "<span class='showpagePoint' style='background:transparent;border:0;box-shadow:none'>...</span>";
-      phtml += "<a class='showpageNum' href='"+base_url+"&PageNo="+totalPages+"'>"+totalPages+"</a>";
-  }
-  
-  if (currentPage < totalPages) phtml += "<a class='showpageNum' href='"+base_url+"&PageNo="+(currentPage+1)+"'>&gt;</a>";
-  
-  document.getElementById("blog-pager").innerHTML = phtml;
 }
 
 $(document).ready(function() {
@@ -181,7 +192,7 @@ $(document).ready(function() {
   }
 
   /* =========================================================================
-     7. NUEVO SISTEMA DE CARGA AJAX (PAGINACIÓN SERVER-SIDE REAL)
+     7. NUEVO SISTEMA DE CARGA AJAX (PAGINACIÓN SERVER-SIDE REAL) - FIX CORS
      ========================================================================= */
   if ($('body').hasClass('index-view') || window.location.href === window.location.origin + '/' || window.location.href.indexOf('?max-results') > -1) {
       
@@ -189,33 +200,36 @@ $(document).ready(function() {
       var currentPage = url.indexOf("PageNo=") != -1 ? parseInt(url.split("PageNo=")[1]) : 1;
       if (isNaN(currentPage)) currentPage = 1;
 
-      // A. Carga del Grid Destacado (solo lo traemos, el HTML se encarga de mostrarlo)
+      // A. Carga del Grid Destacado (usando JSONP para evitar bloqueos CORS)
       if ($('#featured-ajax-grid').length) {
           $.ajax({
-              url: "/feeds/posts/summary/-/Destacado?alt=json&max-results=2",
+              url: "/feeds/posts/summary/-/Destacado?alt=json-in-script&max-results=2",
               type: "GET",
-              dataType: "json",
+              dataType: "jsonp", // <-- CRÍTICO PARA BLOGGER
               success: function(json) { loadFeatured(json); }
           });
       }
 
-      // B. Carga del Grid Principal con Offset y exclusión de etiqueta (MAGIA)
+      // B. Carga del Grid Principal con Exclusión mediante operador de búsqueda
       if ($('#main-ajax-grid').length) {
-          // Calculamos el OFFSET para Blogger
+          // Calculamos el OFFSET
           var startIndex = ((currentPage - 1) * posts_per_page) + 1;
           
-          // Agregamos un "-" antes de la etiqueta para decirle a Blogger "EXCLUYE ESTA ETIQUETA"
-          var excludeLabel = encodeURIComponent("-" + featured_label); 
+          // Operador nativo de búsqueda de Blogger para excluir: -label:NombreEtiqueta
+          var queryExclude = encodeURIComponent("-label:" + featured_label); 
           
           $('#main-ajax-grid').html('<div style="grid-column:1/-1; text-align:center; padding:20px; color:var(--brand-color);">Cargando juegos...</div>');
           
           $.ajax({
-              // Ruta dinámica: /feeds/posts/summary/-/-Destacado?start-index=10&max-results=9
-              url: "/feeds/posts/summary/-/" + excludeLabel + "?alt=json&start-index=" + startIndex + "&max-results=" + posts_per_page,
+              // Agregamos orderby=published para mantener orden cronológico
+              url: "/feeds/posts/summary?alt=json-in-script&orderby=published&q=" + queryExclude + "&start-index=" + startIndex + "&max-results=" + posts_per_page,
               type: "GET",
-              dataType: "json",
+              dataType: "jsonp", // <-- CRÍTICO PARA BLOGGER
               success: function(json) {
                   loadMainGrid(json, currentPage);
+              },
+              error: function() {
+                  $('#main-ajax-grid').html('<div style="grid-column:1/-1; text-align:center; padding:20px; color:red;">Error de conexión con el servidor.</div>');
               }
           });
       }
