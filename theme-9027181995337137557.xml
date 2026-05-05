@@ -27,7 +27,7 @@
 
 <!-- OPCIÓN 1: GITHACK (DESARROLLO - ACTUALIZACIÓN AL INSTANTE) -->
 <link href='https://raw.githack.com/SamaelCr/AltyGamesTheme/main/styles.css?v=2.80' rel='stylesheet' type='text/css'/>
-<script src='https://raw.githack.com/SamaelCr/AltyGamesTheme/main/script.js?v=2.15' type='text/javascript'/>
+<script src='https://raw.githack.com/SamaelCr/AltyGamesTheme/main/script.js?v=2.25' type='text/javascript'/>
 
 <!-- OPCIÓN 2: STATICALLY (DESARROLLO SEMI-PRO) 
 <link href='https://cdn.statically.io/gh/SamaelCr/AltyGamesTheme/main/styles.css' rel='stylesheet' type='text/css'/>

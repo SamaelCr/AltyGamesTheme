@@ -1,386 +1,237 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE html>
-<html b:css='false' b:default-jumplink-target='_blank' b:layoutsVersion='3' b:responsive='true' xmlns='http://www.w3.org/1999/xhtml' xmlns:b='http://www.google.com/2005/gml/b' xmlns:data='http://www.google.com/2005/gml/data' xmlns:expr='http://www.google.com/2005/gml/expr'>
-<head>
-<b:if cond='data:blog.url == data:blog.homepageUrl'><title><data:blog.pageTitle/></title></b:if>
-<b:if cond='data:blog.pageType == &quot;item&quot;'><title><data:blog.pageName/></title></b:if>
-<meta content='width=device-width,initial-scale=1' name='viewport'/>
-<meta content='blogger' name='generator'/>
+var posts_per_page = 9;
+var featured_label = "Destacado";
 
-<!-- LIBRERÍAS EXTERNAS -->
-<link href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css' rel='stylesheet'/>
-<script src='https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js' type='text/javascript'/>
-
-<!-- 1. ANTI-FLICKER TEMA -->
-<script type='text/javascript'>
-//<![CDATA[
-(function() {
-  var t = localStorage.getItem('theme');
-  if (t === 'light' || t === null) {
-    document.documentElement.classList.add('light-theme');
+/* MOTOR IMÁGENES HQ */
+function getSmartThumb(entry) {
+  var thumb = "";
+  if (entry.media$thumbnail) { thumb = entry.media$thumbnail.url; } 
+  else {
+    var content = entry.content ? entry.content.$t : (entry.summary ? entry.summary.$t : "");
+    var match = content.match(/<img[^>]+src="([^">]+)"/);
+    thumb = match ? match[1] : "https://via.placeholder.com/400x250?text=No+Image";
   }
-})();
-//]]>
-</script>
-
-<!-- 2. CARGA DE ASSETS (3 OPCIONES DE CDN) -->
-
-<!-- OPCIÓN 1: GITHACK (DESARROLLO - ACTUALIZACIÓN AL INSTANTE) -->
-<link href='https://raw.githack.com/SamaelCr/AltyGamesTheme/main/styles.css?v=2.80' rel='stylesheet' type='text/css'/>
-<script src='https://raw.githack.com/SamaelCr/AltyGamesTheme/main/script.js?v=2.25' type='text/javascript'/>
-
-<!-- OPCIÓN 2: STATICALLY (DESARROLLO SEMI-PRO) 
-<link href='https://cdn.statically.io/gh/SamaelCr/AltyGamesTheme/main/styles.css' rel='stylesheet' type='text/css'/>
-<script src='https://cdn.statically.io/gh/SamaelCr/AltyGamesTheme/main/script.js' type='text/javascript'/>
--->
-
-<!-- OPCIÓN 3: JSDELIVR (PRODUCCIÓN - MÁXIMA VELOCIDAD) 
-<link href='https://cdn.jsdelivr.net/gh/SamaelCr/AltyGamesTheme@main/styles.css' rel='stylesheet' type='text/css'/>
-<script src='https://cdn.jsdelivr.net/gh/SamaelCr/AltyGamesTheme@main/script.js' type='text/javascript'/>
--->
-
-<b:skin><![CDATA[
-/*
------------------------------------------------
-Theme Name: Devil Survivor 2 (Restoration Final)
-Design by: AltyGames
------------------------------------------------
-<Group description="Fondo" selector="body">
-  <Variable name="body.background" description="Imagen de fondo" type="background" color="$(body.bg)" default="$(color) url(https://1.bp.blogspot.com/-d7NByOREYKU/VpTJ7zJgvUI/AAAAAAAACTw/X6HasrYaVs4/s000/bg_body.gif) repeat fixed top center" value="$(color) url(https://blogger.googleusercontent.com/img/a/AVvXsEhKEsbKEhO9djX2GX9-nNeeQUZhsK4OBbXc-kLgND37iEzP4Qfzai9TzigmMDQwZzwwZobcn_LX_RLhzTQZjk8EA4W9Tq5XY9vywmQBMekWL4jcGaE9OGm6vUPkdtCKTgXq6jshMne2Sw3W_teOykvjCavbR5FECmqHN0n-PK6zLHZ2_9OiSQ5z5Y50Bec=s1600) repeat scroll top left"/>
-</Group>
-<Group description="AltyGames: Colores" selector="body">
-  <Variable name="brand.color" description="Color Principal" type="color" default="#0860ca" value="#0860ca"/>
-  <Variable name="hover.color" description="Color de Hover (Menu)" type="color" default="#0860ca" value="#0860ca"/>
-  <Variable name="title.color" description="Color de Titulos" type="color" default="#357ebd" value="#357ebd"/>
-  <Variable name="body.bg" description="Color de fondo sólido" type="color" default="#000000" value="#000000"/>
-</Group>
-*/
-
-:root {
-  --brand-color: $(brand.color) !important;
-  --hover-color: $(hover.color) !important;
-  --title-color: $(title.color) !important;
+  if (thumb.indexOf("googleusercontent.com") != -1 || thumb.indexOf("bp.blogspot.com") != -1) {
+    thumb = thumb.replace(/\/s[0-9]+.*?\//, "/s1600/").replace(/=s[0-9]+.*/, "=s1600");
+  }
+  return thumb;
 }
 
-body { background: $(body.background) !important; background-color: $(body.bg) !important; }
-
-/* FIX ICONOS: Forzado de nitidez y color blanco */
-.tool-btn i { color: #ffffff !important; opacity: 1 !important; visibility: visible !important; }
-
-/* FIX MENU: Submenú accesible y hover */
-ul.dark_menu li:hover:before { background: $(hover.color) !important; }
-ul.dark_menu li ul { top: 100% !important; padding-top: 5px !important; }
-
-/* FIX REDES SOCIALES */
-.jorib li a { background-color: $(brand.color) !important; color: #ffffff !important; border: 3px solid #ffffff !important; }
-.jorib li a:hover { background-color: #ffffff !important; color: $(brand.color) !important; border-color: $(brand.color) !important; }
-
-/* FIX VISIBILIDAD MODO CLARO GENERALES */
-.light-theme .info-grid, .light-theme .info-grid *, .light-theme .req-container, .light-theme .req-container * { color: #111111 !important; }
-.light-theme .info-grid { background: rgba(0,0,0,0.05) !important; border-color: #ddd !important; }
-.light-theme .req-container { background: #f4f4f4 !important; border: 1px solid #ddd !important; }
-
-/* =========================================
-   FIX: SIDEBAR Y ANUNCIOS (MODO OSCURO/CLARO) BYPASS CACHE
-   ========================================= */
-.sidebar-box {
-    width: 100%; height: 250px; background: #111111 !important;
-    border: 2px solid #333333 !important; display: flex;
-    align-items: center; justify-content: center; color: #555555 !important;
-    font-weight: bold; border-radius: 4px; transition: 0.3s;
+function getLabels(entry) {
+  var html = '<div class="post-labels">';
+  if (entry.category) {
+    for (var i = 0; i < entry.category.length; i++) {
+      if (entry.category[i].term !== featured_label) {
+        html += '<span class="post-tag">' + entry.category[i].term + '</span>';
+      }
+    }
+  }
+  html += '</div>';
+  return html;
 }
-html.light-theme .sidebar-search form { background: #ffffff !important; border: 2px solid #dddddd !important; }
-html.light-theme .sidebar-search input { color: #111111 !important; }
-html.light-theme .sidebar-search button { background: #f0f0f0 !important; color: #333333 !important; }
-html.light-theme .sidebar-search button:hover { background: $(brand.color) !important; color: #ffffff !important; }
-html.light-theme .sidebar-box { background: #ffffff !important; border: 2px solid #dddddd !important; color: #888888 !important; }
 
-.post-body img { max-width: 100%; height: auto; }
-.post-body { line-height: 1.6; font-size: 16px; color: inherit; }
-a { color: $(brand.color); }
-]]></b:skin>
-</head>
+function loadFeatured(json) {
+  var html = "";
+  if(!json.feed.entry) return;
+  for (var i = 0; i < json.feed.entry.length; i++) {
+    var entry = json.feed.entry[i];
+    var title = entry.title.$t;
+    var url = entry.link.find(l => l.rel == 'alternate').href;
+    var thumb = getSmartThumb(entry);
+    var labels = getLabels(entry);
+    html += '<div class="post-card"><div class="post-thumb-wrap"><a href="'+url+'"><img class="post-thumb" src="'+thumb+'" style="height:210px"/></a></div><h2><a href="'+url+'">'+title+'</a></h2>'+labels+'</div>';
+  }
+  document.getElementById("featured-ajax-grid").innerHTML = html;
+}
 
-<body>
-<!-- ESTRUCTURA MENÚ LATERAL -->
-<div id='side-drawer'>
-  <div class='drawer-header'>
-    <span>MENÚ</span>
-    <div id='drawer-close'><i class='fa-solid fa-xmark'/></div>
-  </div>
-  <div id='drawer-content'/>
-</div>
-<div id='drawer-overlay'/>
+/* FIX: Ahora recibe la página actual, construye el DOM directamente y maneja resultados vacíos */
+function loadMainGrid(json, currentPage) {
+  var entries = json.feed.entry ||[];
+  var totalResults = json.feed.openSearch$totalResults ? parseInt(json.feed.openSearch$totalResults.$t) : 0;
+  var html = "";
+  
+  // Si no hay entradas en esta página, mostramos un mensaje
+  if (entries.length === 0) {
+      document.getElementById("main-ajax-grid").innerHTML = "<div style='grid-column:1/-1; text-align:center; padding:20px; color:var(--brand-color); font-weight:bold;'>No hay más juegos para mostrar en esta página.</div>";
+      document.getElementById("blog-pager").innerHTML = "";
+      return;
+  }
 
-<div id='wrapper'>
-  <!-- HEADER -->
-  <div id='header'>
-    <div class='header-inner'>
-      <b:section class='blognames' id='blognames' maxwidgets='1' showaddelement='no'>
-        <b:widget id='Header1' locked='true' title='AltyGames (cabecera)' type='Header' version='1'>
-          <b:widget-settings>
-            <b:widget-setting name='displayUrl'>https://blogger.googleusercontent.com/img/a/AVvXsEghd-V12AIsPlu3hXmHw8uR22fj1Z5WG_e8-uJCzCIP-G_kxCcgygHxw0YEegz4nrVmSJ_uuM7gpe70fP6nGLILPTvXeElbQQSaZhKPOUSKVT5IpUylK5OWnxobSGpXiu8WzNJbja_DQPqGP_tFsFYT7xO2Y2Wnu8HTRj0toPwKrVNeokssd6gg_Av8wDE=s1600</b:widget-setting>
-            <b:widget-setting name='displayHeight'>900</b:widget-setting>
-            <b:widget-setting name='sectionWidth'>150</b:widget-setting>
-            <b:widget-setting name='useImage'>true</b:widget-setting>
-            <b:widget-setting name='shrinkToFit'>false</b:widget-setting>
-            <b:widget-setting name='imagePlacement'>BEHIND</b:widget-setting>
-            <b:widget-setting name='displayWidth'>1600</b:widget-setting>
-          </b:widget-settings>
-          <b:includable id='main'>
-            <b:if cond='data:useImage'><style type='text/css'>#header { background-image: url(&quot;<data:sourceUrl/>&quot;); }</style></b:if>
-            <h1 id='blog-title'><a expr:href='data:blog.homepageUrl'><data:title/></a></h1>
-          </b:includable>
-          <b:includable id='description'>
-  <div class='descriptionwrapper'>
-    <p class='description'><span><data:description/></span></p>
-  </div>
-</b:includable>
-          <b:includable id='title'>
-  <b:tag cond='data:blog.url != data:blog.homepageUrl' expr:href='data:blog.homepageUrl' name='a'>
-    <data:title/>
-  </b:tag>
-</b:includable>
-        </b:widget>
-      </b:section>
-      <div class='jorib'>
-        <b:section id='Social' maxwidgets='1' showaddelement='yes'>
-          <b:widget id='LinkList2' locked='false' title='Redes Sociales' type='LinkList' version='1'>
-            <b:widget-settings>
-              <b:widget-setting name='shownum'>2</b:widget-setting>
-              <b:widget-setting name='sorting'>NONE</b:widget-setting>
-              <b:widget-setting name='text-0'>facebook</b:widget-setting>
-              <b:widget-setting name='link-0'>https://www.facebook.com/?locale=es_LA</b:widget-setting>
-            </b:widget-settings>
-            <b:includable id='main'>
-              <ul class='jorib'>
-                <b:loop values='data:links' var='link'>
-                  <li>
-                    <a expr:href='data:link.target'>
-                      <b:if cond='data:link.name contains &quot;facebook&quot;'><i class='fa-brands fa-facebook-f'/></b:if>
-                      <b:if cond='data:link.name contains &quot;twitter&quot;'><i class='fa-brands fa-twitter'/></b:if>
-                      <b:if cond='data:link.name contains &quot;discord&quot;'><i class='fa-brands fa-discord'/></b:if>
-                      <b:if cond='data:link.name contains &quot;instagram&quot;'><i class='fa-brands fa-instagram'/></b:if>
-                      <b:if cond='data:link.name contains &quot;youtube&quot;'><i class='fa-brands fa-youtube'/></b:if>
-                    </a>
-                  </li>
-                </b:loop>
-              </ul>
-            </b:includable>
-          </b:widget>
-        </b:section>
-      </div>
-    </div>
-  </div> 
+  for (var i = 0; i < entries.length; i++) {
+    var entry = entries[i];
+    var title = entry.title.$t;
+    var postUrl = entry.link.find(l => l.rel == 'alternate').href;
+    var thumb = getSmartThumb(entry);
+    var labels = getLabels(entry);
+    html += '<div class="post-card"><div class="post-thumb-wrap"><a href="'+postUrl+'"><img class="post-thumb" src="'+thumb+'"/></a></div><h2><a href="'+postUrl+'">'+title+'</a></h2>'+labels+'</div>';
+  }
+  document.getElementById("main-ajax-grid").innerHTML = html;
+  
+  /* LÓGICA DE PAGINACIÓN ADAPTADA AL TOTAL DEL SERVIDOR */
+  var totalPages = Math.ceil(totalResults / posts_per_page);
+  var phtml = "";
+  var base_url = window.location.href.split("?")[0] + "?max-results=" + posts_per_page;
+  
+  if (totalPages > 1) {
+      if (currentPage > 1) phtml += "<a class='showpageNum' href='"+base_url+"&PageNo="+(currentPage-1)+"'>&lt;</a>";
+      
+      var startPage = Math.max(1, currentPage - 2);
+      var endPage = Math.min(totalPages, currentPage + 2);
+      
+      if (startPage > 1) {
+          phtml += "<a class='showpageNum' href='"+base_url+"&PageNo=1'>1</a>";
+          if (startPage > 2) phtml += "<span class='showpagePoint' style='background:transparent;border:0;box-shadow:none'>...</span>";
+      }
+      
+      for (var j = startPage; j <= endPage; j++) {
+        if (j == currentPage) phtml += "<span class='showpagePoint'>"+j+"</span>";
+        else phtml += "<a class='showpageNum' href='"+base_url+"&PageNo="+j+"'>"+j+"</a>";
+      }
+      
+      if (endPage < totalPages) {
+          if (endPage < totalPages - 1) phtml += "<span class='showpagePoint' style='background:transparent;border:0;box-shadow:none'>...</span>";
+          phtml += "<a class='showpageNum' href='"+base_url+"&PageNo="+totalPages+"'>"+totalPages+"</a>";
+      }
+      
+      if (currentPage < totalPages) phtml += "<a class='showpageNum' href='"+base_url+"&PageNo="+(currentPage+1)+"'>&gt;</a>";
+      
+      document.getElementById("blog-pager").innerHTML = phtml;
+  } else {
+      document.getElementById("blog-pager").innerHTML = "";
+  }
+}
 
-  <!-- NAVEGACIÓN -->
-  <div class='menujohanes'>
-    <b:section id='Navigation' maxwidgets='1' showaddelement='yes'>
-      <b:widget id='LinkList1' locked='false' title='Navegacion' type='LinkList' version='1'>
-        <b:widget-settings>
-          <b:widget-setting name='shownum'>10</b:widget-setting>
-          <b:widget-setting name='link-3'>https://altygames.blogspot.com/p/categories.html?cat=Accion</b:widget-setting>
-          <b:widget-setting name='sorting'>NONE</b:widget-setting>
-          <b:widget-setting name='link-4'>https://https://altygames.blogspot.com/p/categories.html?cat=2D</b:widget-setting>
-          <b:widget-setting name='text-1'>CATEGORIAS</b:widget-setting>
-          <b:widget-setting name='link-1'>#</b:widget-setting>
-          <b:widget-setting name='text-0'>HOME</b:widget-setting>
-          <b:widget-setting name='link-2'>https://altygames.blogspot.com/p/categories.html?cat=Plataformas</b:widget-setting>
-          <b:widget-setting name='text-3'>_Accion</b:widget-setting>
-          <b:widget-setting name='link-0'>/</b:widget-setting>
-          <b:widget-setting name='text-2'>_Plataformas</b:widget-setting>
-          <b:widget-setting name='text-4'>_2D</b:widget-setting>
-        </b:widget-settings>
-        <b:includable id='main'>
-          <ul class='dark_menu'>
-            <b:loop values='data:links' var='link'>
-              <li><a expr:href='data:link.target'><data:link.name/></a></li>
-            </b:loop>
-          </ul>
-        </b:includable>
-      </b:widget>
-    </b:section>
-    <div class='nav-tools'>
-      <div class='tool-btn' id='menu-toggle'><i class='fa-solid fa-bars'/></div>
-      <div class='tool-btn' id='theme-toggle'><i class='fa-solid fa-sun'/></div>
-      <b:section id='LupaConfig' maxwidgets='1' showaddelement='yes'>
-        <b:widget id='LinkList3' locked='false' title='Configuración Lupa' type='LinkList' version='2' visible='true'>
-          <b:widget-settings>
-            <b:widget-setting name='shownum'>1</b:widget-setting>
-            <b:widget-setting name='sorting'>NONE</b:widget-setting>
-            <b:widget-setting name='text-0'>search</b:widget-setting>
-            <b:widget-setting name='link-0'>https://altygames.blogspot.com/p/search.html</b:widget-setting>
-          </b:widget-settings>
-          <b:includable id='main'>
-            <b:loop values='data:links' var='link'>
-              <a class='tool-btn' expr:href='data:link.target'><i class='fa-solid fa-magnifying-glass'/></a>
-            </b:loop>
-          </b:includable>
-          <b:includable id='content'>
- <div class='widget-content'>
-   <ul>
-     <b:loop values='data:links' var='link'>
-       <li><a expr:href='data:link.target'><data:link.name/></a></li>
-     </b:loop>
-   </ul>
- </div>
-</b:includable>
-        </b:widget>
-      </b:section>
-    </div>
-  </div>
+$(document).ready(function() {
+  /* 1. LÓGICA DE SUBMENÚS (SISTEMA DE MAPEO PREVIO V3) - CORREGIDA */
+  var currentParent = null;
+  var currentUl = null;
 
-  <!-- CONTENIDO PRINCIPAL -->
-  <div id='casing'>
-    <div id='content-wrapper'>
-      <b:if cond='data:blog.pageType == &quot;index&quot;'>
-        <div class='section-title'><i class='fa-solid fa-star'/> DESTACADOS</div>
-        <div id='featured-ajax-grid'/>
-        
-        <div class='section-title'><i class='fa-solid fa-calendar-days'/> ÚLTIMAS PUBLICACIONES</div>
-        <div class='latest-grid-container' id='main-ajax-grid'/>
-        <div id='blog-pager'/>
-        
-      </b:if>
-      <b:if cond='data:blog.pageType in {&quot;item&quot;,&quot;static_page&quot;}'>
-          <b:section id='MainGrid' showaddelement='no'>
-            <b:widget id='Blog1' locked='true' title='Entradas del blog' type='Blog' version='1'>
-              <b:widget-settings>
-                <b:widget-setting name='showDateHeader'>false</b:widget-setting>
-                <b:widget-setting name='style.textcolor'>#ffffff</b:widget-setting>
-                <b:widget-setting name='showShareButtons'>true</b:widget-setting>
-                <b:widget-setting name='authorLabel'>By</b:widget-setting>
-                <b:widget-setting name='showCommentLink'>true</b:widget-setting>
-                <b:widget-setting name='style.urlcolor'>#ffffff</b:widget-setting>
-                <b:widget-setting name='showAuthor'>false</b:widget-setting>
-                <b:widget-setting name='style.linkcolor'>#ffffff</b:widget-setting>
-                <b:widget-setting name='style.unittype'>TextAndImage</b:widget-setting>
-                <b:widget-setting name='style.bgcolor'>#ffffff</b:widget-setting>
-                <b:widget-setting name='reactionsLabel'/>
-                <b:widget-setting name='showAuthorProfile'>false</b:widget-setting>
-                <b:widget-setting name='style.layout'>1x1</b:widget-setting>
-                <b:widget-setting name='showLabels'>true</b:widget-setting>
-                <b:widget-setting name='showLocation'>true</b:widget-setting>
-                <b:widget-setting name='showTimestamp'>true</b:widget-setting>
-                <b:widget-setting name='postsPerAd'>1</b:widget-setting>
-                <b:widget-setting name='showBacklinks'>false</b:widget-setting>
-                <b:widget-setting name='style.bordercolor'>#ffffff</b:widget-setting>
-                <b:widget-setting name='showInlineAds'>false</b:widget-setting>
-                <b:widget-setting name='showReactions'>false</b:widget-setting>
-              </b:widget-settings>
-              <b:includable id='main' var='top'>
-                <div class='blog-posts hfeed'>
-                  <b:loop values='data:posts' var='post'>
-                    <b:include data='post' name='post'/>
-                    <!-- AQUÍ EVITAMOS QUE CARGUE DISQUS SI ESTAMOS EN LA BÚSQUEDA O CATEGORÍAS -->
-                    <b:if cond='data:blog.url contains &quot;search.html&quot; or data:blog.url contains &quot;categories.html&quot;'>
-                    <b:else/>
-                        <b:include cond='data:blog.pageType in {&quot;static_page&quot;,&quot;item&quot;}' data='post' name='comment_picker'/>
-                    </b:if>
-                  </b:loop>
-                </div>
-              </b:includable>
-              <b:includable id='backlinkDeleteIcon' var='backlink'/>
-              <b:includable id='backlinks' var='post'/>
-              <b:includable id='comment-form' var='post'/>
-              <b:includable id='commentDeleteIcon' var='comment'/>
-              <b:includable id='comment_count_picker' var='post'/>
-              <b:includable id='comment_picker' var='post'>
-                <div class='comments' id='comments'>
-                  <h4>Comunidad</h4>
-                  <div id='disqus_thread'/>
-                  <script type='text/javascript'>
-                    var disqus_shortname = &#39;altygames&#39;; 
-                    var disqus_config = function () {
-                      this.page.url = &quot;<data:post.url.canonical/>&quot;;
-                      this.page.identifier = &quot;<data:post.id/>&quot;;
-                    };
-                    (function() {
-                      var d = document, s = d.createElement(&#39;script&#39;);
-                      s.async = true;
-                      s.src = &#39;https://&#39; + disqus_shortname + &#39;.disqus.com/embed.js&#39;;
-                      s.setAttribute(&#39;data-timestamp&#39;, +new Date());
-                      (d.head || d.body).appendChild(s);
-                    })();
-                  </script>
-                </div>
-              </b:includable>
-              <b:includable id='comments' var='post'>
-                <div class='comments' id='comments'>
-                  <h4>Comentarios</h4>
-                  <div class='comments-content'>
-                    <data:post.commentHtml/>
-                  </div>
-                </div>
-              </b:includable>
-              <b:includable id='feedLinks'/>
-              <b:includable id='feedLinksBody' var='links'/>
-              <b:includable id='iframe_comments' var='post'>
-                <div class='comments' id='comments'>
-                   <h4>Comentarios</h4>
-                   <script expr:src='data:post.commentSrc' type='text/javascript'/>
-                   <div class='cmt_iframe_holder' expr:data-href='data:post.url' expr:data-viewtype='data:post.viewType'/>
-                </div>
-              </b:includable>
-              <b:includable id='mobile-index-post' var='post'/>
-              <b:includable id='mobile-main' var='top'/>
-              <b:includable id='mobile-nextprev'/>
-              <b:includable id='mobile-post' var='post'/>
-              <b:includable id='nextprev'/>
-              <b:includable id='post' var='post'>
-                <article class='post hentry' itemprop='blogPost' itemscope='itemscope' itemtype='http://schema.org/BlogPosting'>
-                  <div class='post-body entry-content' expr:id='&quot;post-body-&quot; + data:post.id' itemprop='articleBody'>
-                    <b:if cond='data:blog.pageType == &quot;item&quot;'>
-                        <div class='post-body-container'>
-                            <data:post.body/>
-                        </div>
-                    <b:else/>
-                        <data:post.body/>
-                    </b:if>
-                    <div style='clear: both;'/>
-                  </div>
-                </article>
-              </b:includable>
-              <b:includable id='postQuickEdit' var='post'/>
-              <b:includable id='shareButtons' var='post'/>
-              <b:includable id='status-message'/>
-              <b:includable id='threaded-comment-form' var='post'/>
-              <b:includable id='threaded_comment_js' var='post'/>
-              <b:includable id='threaded_comments' var='post'>
-                <div class='comments' id='comments'>
-                  <h4>Comentarios</h4>
-                  <div class='comments-content'>
-                    <data:post.commentHtml/>
-                  </div>
-                </div>
-              </b:includable>
-            </b:widget>
-          </b:section>
-      </b:if>
-    </div>
-    <div class='sidebar'>
-      <div class='sidebar-search'>
-        <!-- FORMULARIO REDIRIGIDO A TU NUEVA PÁGINA -->
-        <form expr:action='data:blog.homepageUrl + &quot;p/search.html&quot;' method='get'>
-          <input name='q' placeholder='search' type='text'/>
-          <button type='submit'><i class='fa-solid fa-magnifying-glass'/></button>
-        </form>
-      </div>
-      <b:section id='SidebarArea' showaddelement='yes'>
-        <b:widget id='HTML1' locked='false' title='Anuncio' type='HTML' version='1'>
-          <b:widget-settings>
-            <b:widget-setting name='content'/>
-          </b:widget-settings>
-          <b:includable id='main'>
-            <div class='widget-content'>
-              <div class='sidebar-box'>PUBLICIDAD</div>
-            </div>
-          </b:includable>
-        </b:widget>
-      </b:section>
-    </div>
-  </div>
-  <div class='fleft'><p>- Copyright &#169; 2026 <data:blog.title/> - Restoration by AltyGames -</p></div>
-</div>
-</body>
-</html>
+  $('.dark_menu > li').get().forEach(function(el) {
+    var $li = $(el);
+    var $link = $li.find('> a').first();
+    
+    if ($link.length) {
+      var text = $link.text().trim();
+
+      if (text.startsWith('_')) {
+        if (currentParent) {
+          if (!currentUl) {
+            currentUl = $('<ul></ul>');
+            currentParent.append(currentUl);
+            currentParent.addClass('has-children');
+          }
+          $link.text(text.substring(1).trim());
+          currentUl.append($li);
+        }
+      } else {
+        currentParent = $li;
+        currentUl = null; 
+      }
+    }
+  });
+
+  $('.dark_menu').addClass('menu-ready');
+
+  /* 2. TOGGLE TEMA */
+  const themeBtn = $('#theme-toggle');
+  const htmlEl = $('html');
+  themeBtn.on('click', function() {
+    if (htmlEl.hasClass('light-theme')) {
+      htmlEl.removeClass('light-theme');
+      localStorage.setItem('theme', 'dark');
+      themeBtn.find('i').attr('class', 'fa-solid fa-sun');
+    } else {
+      htmlEl.addClass('light-theme');
+      localStorage.setItem('theme', 'light');
+      themeBtn.find('i').attr('class', 'fa-solid fa-moon');
+    }
+
+    if (typeof DISQUS !== 'undefined') {
+        setTimeout(function() {
+            DISQUS.reset({ reload: true });
+        }, 200); 
+    }
+  });
+
+  /* 3. PANEL LATERAL (SIDE DRAWER) */
+  var menuHTML = $('.menujohanes .dark_menu').html();
+  $('#drawer-content').html('<ul class="dark_menu">' + menuHTML + '</ul>');
+  $('#menu-toggle').on('click', function() { $('body').addClass('drawer-open'); });
+  $('#drawer-close, #drawer-overlay').on('click', function() { $('body').removeClass('drawer-open'); });
+  
+  $(document).on('click', '#side-drawer .has-children > a', function(e) {
+    e.preventDefault();
+    $(this).parent().toggleClass('active');
+  });
+
+  /* 4. REUBICACIÓN TÍTULO DE BLOGGER AUTOMÁTICAMENTE */
+  if(($('body').hasClass('item-view') || window.location.href.indexOf('.html') > -1) && window.location.href.indexOf('search.html') === -1 && window.location.href.indexOf('categories.html') === -1) {
+    var pageTitleText = document.title.split(' - ')[0]; 
+    var postTitleHTML = '<h2 class="section-title" style="text-align:center; border:0; margin-top:20px; color:var(--brand-color)!important;">' + pageTitleText + '</h2>';
+    var firstImg = $('.post-body-container img').first();
+    if(firstImg.length) {
+        if(firstImg.parent('a').length) { firstImg.parent('a').after(postTitleHTML); } 
+        else { firstImg.after(postTitleHTML); }
+    }
+  }
+
+  /* 5. INYECCIÓN ABSOLUTA PARA PÁGINA DE BÚSQUEDA */
+  if (window.location.href.indexOf('/p/search.html') > -1) {
+      $('body').addClass('is-search-page');
+      var cacheBuster = new Date().getTime();
+      $('head').append('<link rel="stylesheet" href="https://raw.githack.com/SamaelCr/AltyGamesTheme/main/pages/search/search.css?v=' + cacheBuster + '">');
+      $('head').append('<script src="https://raw.githack.com/SamaelCr/AltyGamesTheme/main/pages/search/search.js?v=' + cacheBuster + '"></script>');
+  }
+
+  /* 6. INYECCIÓN ABSOLUTA PARA PÁGINA DE CATEGORÍAS */
+  if (window.location.href.indexOf('/p/categories.html') > -1) {
+      $('body').addClass('is-category-page');
+      var cbCat = new Date().getTime();
+      $('head').append('<link rel="stylesheet" href="https://raw.githack.com/SamaelCr/AltyGamesTheme/main/pages/search/search.css?v=' + cbCat + '">');
+      $('head').append('<link rel="stylesheet" href="https://raw.githack.com/SamaelCr/AltyGamesTheme/main/pages/categories/categories.css?v=' + cbCat + '">');
+      $('head').append('<script src="https://raw.githack.com/SamaelCr/AltyGamesTheme/main/pages/categories/categories.js?v=' + cbCat + '"></script>');
+  }
+
+  /* =========================================================================
+     7. NUEVO SISTEMA DE CARGA AJAX (PAGINACIÓN SERVER-SIDE REAL) - FIX CORS
+     ========================================================================= */
+  if ($('#main-ajax-grid').length) {
+      
+      var url = window.location.href;
+      var currentPage = url.indexOf("PageNo=") != -1 ? parseInt(url.split("PageNo=")[1]) : 1;
+      if (isNaN(currentPage)) currentPage = 1;
+
+      // A. Carga del Grid Destacado (usando JSONP para evitar bloqueos CORS)
+      if ($('#featured-ajax-grid').length) {
+          $.ajax({
+              url: "/feeds/posts/summary/-/Destacado?alt=json-in-script&max-results=2",
+              type: "GET",
+              dataType: "jsonp", 
+              success: function(json) { loadFeatured(json); }
+          });
+      }
+
+      // B. Carga del Grid Principal con Exclusión mediante operador de búsqueda
+      if ($('#main-ajax-grid').length) {
+          // Calculamos el OFFSET
+          var startIndex = ((currentPage - 1) * posts_per_page) + 1;
+          
+          // Operador nativo de búsqueda de Blogger para excluir: -label:NombreEtiqueta
+          var queryExclude = encodeURIComponent("-label:" + featured_label); 
+          
+          $('#main-ajax-grid').html('<div style="grid-column:1/-1; text-align:center; padding:20px; color:var(--brand-color);">Cargando juegos...</div>');
+          
+          $.ajax({
+              // Agregamos orderby=published para mantener orden cronológico
+              url: "/feeds/posts/summary?alt=json-in-script&orderby=published&q=" + queryExclude + "&start-index=" + startIndex + "&max-results=" + posts_per_page,
+              type: "GET",
+              dataType: "jsonp", 
+              success: function(json) {
+                  loadMainGrid(json, currentPage);
+              },
+              error: function() {
+                  $('#main-ajax-grid').html('<div style="grid-column:1/-1; text-align:center; padding:20px; color:red;">Error de conexión con el servidor.</div>');
+              }
+          });
+      }
+  }
+});
