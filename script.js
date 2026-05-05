@@ -192,46 +192,37 @@ $(document).ready(function() {
   }
 
   /* =========================================================================
-     7. NUEVO SISTEMA DE CARGA AJAX (PAGINACIÓN SERVER-SIDE REAL) - FIX CORS
+     7. SISTEMA DE CARGA AJAX (VERSION FINAL ESTABLE)
      ========================================================================= */
   if ($('#main-ajax-grid').length) {
       
-      var url = window.location.href;
-      var currentPage = url.indexOf("PageNo=") != -1 ? parseInt(url.split("PageNo=")[1]) : 1;
-      if (isNaN(currentPage)) currentPage = 1;
+      var urlParams = new URLSearchParams(window.location.search);
+      var currentPage = parseInt(urlParams.get('PageNo')) || 1;
+      var startIndex = ((currentPage - 1) * posts_per_page) + 1;
 
-      // A. Carga del Grid Destacado (usando JSONP para evitar bloqueos CORS)
-      if ($('#featured-ajax-grid').length) {
-          $.ajax({
-              url: "/feeds/posts/summary/-/Destacado?alt=json-in-script&max-results=2",
-              type: "GET",
-              dataType: "jsonp", 
-              success: function(json) { loadFeatured(json); }
-          });
-      }
+      // A. Carga del Grid Destacado
+      $.ajax({
+          url: "/feeds/posts/summary/-/Destacado?alt=json-in-script&max-results=2",
+          type: "GET",
+          dataType: "jsonp",
+          jsonpCallback: 'callback',
+          success: function(json) { loadFeatured(json); }
+      });
 
-      // B. Carga del Grid Principal con Exclusión mediante operador de búsqueda
-      if ($('#main-ajax-grid').length) {
-          // Calculamos el OFFSET
-          var startIndex = ((currentPage - 1) * posts_per_page) + 1;
-          
-          // Operador nativo de búsqueda de Blogger para excluir: -label:NombreEtiqueta
-          var queryExclude = encodeURIComponent("-label:" + featured_label); 
-          
-          $('#main-ajax-grid').html('<div style="grid-column:1/-1; text-align:center; padding:20px; color:var(--brand-color);">Cargando juegos...</div>');
-          
-          $.ajax({
-              // Agregamos orderby=published para mantener orden cronológico
-              url: "/feeds/posts/summary?alt=json-in-script&orderby=published&q=" + queryExclude + "&start-index=" + startIndex + "&max-results=" + posts_per_page,
-              type: "GET",
-              dataType: "jsonp", 
-              success: function(json) {
-                  loadMainGrid(json, currentPage);
-              },
-              error: function() {
-                  $('#main-ajax-grid').html('<div style="grid-column:1/-1; text-align:center; padding:20px; color:red;">Error de conexión con el servidor.</div>');
-              }
-          });
-      }
+      // B. Carga del Grid Principal con exclusión robusta
+      $('#main-ajax-grid').html('<div style="grid-column:1/-1; text-align:center; padding:20px; color:var(--brand-color);">Cargando juegos...</div>');
+      
+      $.ajax({
+          url: "/feeds/posts/summary?alt=json-in-script&q=" + encodeURIComponent("-label:" + featured_label) + "&start-index=" + startIndex + "&max-results=" + posts_per_page,
+          type: "GET",
+          dataType: "jsonp",
+          jsonpCallback: 'callback',
+          success: function(json) {
+              loadMainGrid(json, currentPage);
+          },
+          error: function() {
+              $('#main-ajax-grid').html('<div style="grid-column:1/-1; text-align:center; padding:20px; color:red;">Error al conectar con el servidor de juegos.</div>');
+          }
+      });
   }
 });
