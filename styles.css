@@ -143,22 +143,30 @@ ul.dark_menu li ul li { display: block; width: 100%; }
 }
 
 #featured-ajax-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px; margin-bottom: 40px; width: 100%; }
-
-/* GRID PRINCIPAL: Alineación forzada */
 .latest-grid-container { 
     display: grid !important; 
     grid-template-columns: repeat(3, 1fr) !important; 
-    gap: 30px 25px !important; 
+    gap: 35px 25px !important; 
     width: 100% !important;
 }
 
-/* TARJETA: Altura TOTAL fija para evitar huecos */
+/* TARJETA: Animación de levantamiento */
 .post-card { 
     display: flex; 
     flex-direction: column; 
-    height: 420px !important; /* Altura suficiente para todo */
-    margin-bottom: 10px;
-    overflow: hidden;
+    height: 400px !important; 
+    background: rgba(255,255,255,0.02);
+    padding: 10px;
+    border-radius: 8px;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    position: relative;
+    border: 1px solid transparent;
+}
+.post-card:hover { 
+    transform: translateY(-5px); 
+    background: rgba(255,255,255,0.05);
+    border-color: rgba(255,255,255,0.1);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
 }
 
 .post-thumb-wrap { 
@@ -173,11 +181,11 @@ ul.dark_menu li ul li { display: block; width: 100%; }
     transition: 0.3s;
 }
 .post-card:hover .post-thumb-wrap { border-color: var(--brand-color); }
-.post-thumb { width: 100%; height: 100%; object-fit: cover; }
+.post-thumb { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
+.post-card:hover .post-thumb { transform: scale(1.1); }
 
-/* TÍTULO: Bloqueado a 2 líneas siempre */
 .post-card h2 { 
-    margin: 0 0 10px 0; 
+    margin: 0 0 5px 0; 
     font-size: 15px; 
     line-height: 1.3; 
     font-weight: bold; 
@@ -261,15 +269,17 @@ body.drawer-open #drawer-overlay { display: block; }
 #side-drawer ul.dark_menu li.has-children.active > a::after { transform: translateY(-50%) rotate(90deg); }
 
 /* --- 12. ETIQUETAS Y PAGINACIÓN --- */
-/* ETIQUETAS: Altura bloqueada con scroll invisible */
+/* ETIQUETAS: Con máscara de desvanecimiento premium */
 .post-labels { 
     display: flex; 
     flex-wrap: wrap; 
     gap: 6px; 
-    height: 140px; /* Altura fija para que la tarjeta no crezca */
+    height: 145px; 
     overflow-y: auto; 
     scrollbar-width: none; 
     align-content: start;
+    -webkit-mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+    mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
 }
 .post-labels::-webkit-scrollbar { display: none; }
 
@@ -329,7 +339,7 @@ html.light-theme .showpagePoint, .light-theme .showpagePoint { background: var(-
     #featured-ajax-grid, .latest-grid-container, .info-grid, .req-grid { grid-template-columns: 1fr !important; }
     .steam-buy-box { flex-direction: column; gap: 10px; text-align: center; }
     .post-card { height: auto !important; }
-    .post-labels { height: auto !important; }
+    .post-labels { height: auto !important; -webkit-mask-image: none; mask-image: none; }
 }
 
 .fleft { text-align: center; padding: 15px; border: 1px solid var(--brand-color); background: rgba(0,0,0,0.8); color: #999; max-width: 1120px; width: 95%; margin: 10px auto; }
