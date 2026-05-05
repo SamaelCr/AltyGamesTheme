@@ -271,8 +271,8 @@ a { color: $(brand.color); }
                 <div class='blog-posts hfeed'>
                   <b:loop values='data:posts' var='post'>
                     <b:include data='post' name='post'/>
-                    <!-- AQUÍ EVITAMOS QUE CARGUE DISQUS SI ESTAMOS EN LA BÚSQUEDA O CATEGORÍAS -->
-                    <b:if cond='!data:blog.url contains &quot;search.html&quot; and !data:blog.url contains &quot;categories.html&quot;'>
+                    <!-- CORRECCIÓN DE SINTAXIS PARA OCULTAR DISQUS -->
+                    <b:if cond='!data:blog.url.contains(&quot;search.html&quot;) and !data:blog.url.contains(&quot;categories.html&quot;)'>
                         <b:include cond='data:blog.pageType in {&quot;static_page&quot;,&quot;item&quot;}' data='post' name='comment_picker'/>
                     </b:if>
                   </b:loop>
