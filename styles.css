@@ -143,21 +143,47 @@ ul.dark_menu li ul li { display: block; width: 100%; }
 }
 
 #featured-ajax-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px; margin-bottom: 40px; width: 100%; }
-.latest-grid-container { display: grid !important; grid-template-columns: repeat(3, 1fr) !important; gap: 25px !important; width: 100% !important; }
 
-/* FIX ALINEACIÓN: Altura fija en componentes clave */
-.post-card { display: flex; flex-direction: column; margin-bottom: 30px; position: relative; }
-.post-thumb-wrap { width: 100%; height: 160px; overflow: hidden; border-radius: 4px; margin-bottom: 12px; background: #222; border-bottom: 3px solid transparent; transition: 0.3s;}
+/* GRID PRINCIPAL: Alineación forzada de items */
+.latest-grid-container { 
+    display: grid !important; 
+    grid-template-columns: repeat(3, 1fr) !important; 
+    gap: 30px 25px !important; 
+    width: 100% !important;
+    align-items: start;
+}
+
+/* TARJETA: Altura total bloqueada para simetría */
+.post-card { 
+    display: flex; 
+    flex-direction: column; 
+    height: 360px; /* Altura fija para que todas las filas nazcan en el mismo punto */
+    margin-bottom: 10px;
+    position: relative;
+}
+
+.post-thumb-wrap { 
+    width: 100%; 
+    height: 160px; 
+    flex-shrink: 0; /* Evita que la imagen se encoja */
+    overflow: hidden; 
+    border-radius: 4px; 
+    margin-bottom: 12px; 
+    background: #222; 
+    border-bottom: 3px solid transparent; 
+    transition: 0.3s;
+}
 .post-card:hover .post-thumb-wrap { border-color: var(--brand-color); }
 .post-thumb { width: 100%; height: 100%; object-fit: cover; }
 
-/* Altura fija para el título (máximo 2 líneas) */
+/* TÍTULO: Bloqueado a 2 líneas */
 .post-card h2 { 
-    margin: 0 0 8px 0; 
+    margin: 0 0 10px 0; 
     font-size: 15px; 
     line-height: 1.3; 
     font-weight: bold; 
     height: 40px; 
+    flex-shrink: 0;
     overflow: hidden; 
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -236,17 +262,31 @@ body.drawer-open #drawer-overlay { display: block; }
 #side-drawer ul.dark_menu li.has-children.active > a::after { transform: translateY(-50%) rotate(90deg); }
 
 /* --- 12. ETIQUETAS Y PAGINACIÓN --- */
-/* FIX ALINEACIÓN: Altura fija para el contenedor de etiquetas (aprox 3 líneas) */
+/* ETIQUETAS: Altura fija con scroll invisible si hay demasiadas */
 .post-labels { 
     display: flex; 
     flex-wrap: wrap; 
-    gap: 5px; 
-    margin-top: 10px; 
-    height: 70px; 
-    overflow: hidden; 
-    align-content: flex-start;
+    gap: 6px; 
+    margin-top: auto; /* Empuja las etiquetas al fondo de la tarjeta */
+    height: 100px; 
+    overflow-y: auto; 
+    scrollbar-width: none; /* Firefox: oculta scroll */
+    align-content: start;
 }
-.post-tag { font-size: 10px; text-transform: uppercase; background: rgba(255,255,255,0.1); padding: 4px 8px; border-radius: 3px; color: #bbb !important; font-weight: bold; transition: all 0.2s ease; text-decoration: none !important; }
+.post-labels::-webkit-scrollbar { display: none; } /* Chrome/Safari: oculta scroll */
+
+.post-tag { 
+    font-size: 10px; 
+    text-transform: uppercase; 
+    background: rgba(255,255,255,0.08); 
+    padding: 4px 10px; 
+    border-radius: 4px; 
+    color: #aaa !important; 
+    font-weight: bold; 
+    transition: all 0.2s ease; 
+    text-decoration: none !important;
+    white-space: nowrap;
+}
 .post-tag:hover { background: var(--brand-color); color: #fff !important; }
 
 #blog-pager { clear: both; width: 100%; display: flex; justify-content: center; align-items: center; gap: 8px; margin: 40px auto 20px auto; padding: 20px 0; border-top: 1px solid rgba(255,255,255,0.1); }
@@ -254,14 +294,8 @@ body.drawer-open #drawer-overlay { display: block; }
 .showpageNum:hover { background: var(--brand-color); border-color: var(--brand-color); transform: translateY(-3px); box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
 .showpagePoint { background: var(--brand-color); border-color: var(--brand-color); cursor: default; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
 
-/* --- 13. DISQUS CONTAINER (IMPORTANTE) --- */
-#comments { 
-    margin: 40px 0; 
-    padding: 20px; 
-    border: 1px solid var(--brand-color); 
-    background: #0b0b0b !important; 
-    border-radius: 4px; 
-}
+/* --- 13. DISQUS CONTAINER --- */
+#comments { margin: 40px 0; padding: 20px; border: 1px solid var(--brand-color); background: #0b0b0b !important; border-radius: 4px; }
 #comments h4 { font-size: 18px; text-transform: uppercase; color: var(--brand-color); margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; }
 
 /* --- 14. MODO CLARO OVERRIDES --- */
@@ -281,7 +315,6 @@ html.light-theme .showpageNum, .light-theme .showpageNum { background: #e0e0e0 !
 html.light-theme .showpageNum:hover, .light-theme .showpageNum:hover { background: var(--brand-color) !important; color: #fff !important; border-color: var(--brand-color) !important; }
 html.light-theme .showpagePoint, .light-theme .showpagePoint { background: var(--brand-color) !important; color: #fff !important; border-color: var(--brand-color) !important; }
 
-/* FIX VISIBILIDAD ETIQUETAS MODO CLARO */
 .light-theme .post-tag { background: #eee !important; color: #444 !important; border: 1px solid #ddd; }
 .light-theme .post-tag:hover { background: var(--brand-color) !important; color: #fff !important; }
 
@@ -298,8 +331,8 @@ html.light-theme .showpagePoint, .light-theme .showpagePoint { background: var(-
     .sidebar { width: 100%; border-top: 1px solid var(--brand-color); margin-top: 20px; padding: 20px 15px; }
     #featured-ajax-grid, .latest-grid-container, .info-grid, .req-grid { grid-template-columns: 1fr !important; }
     .steam-buy-box { flex-direction: column; gap: 10px; text-align: center; }
-    /* Mobile: Permitimos que las etiquetas crezcan si es necesario */
-    .post-labels { height: auto; max-height: 120px; }
+    .post-card { height: auto; min-height: 380px; }
+    .post-labels { height: auto; }
 }
 
 .fleft { text-align: center; padding: 15px; border: 1px solid var(--brand-color); background: rgba(0,0,0,0.8); color: #999; max-width: 1120px; width: 95%; margin: 10px auto; }
