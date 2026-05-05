@@ -4,27 +4,33 @@ var featured_label = "Destacado";
 /* MOTOR IMÁGENES HQ */
 function getSmartThumb(entry) {
   var thumb = "";
-  if (entry.media$thumbnail) { thumb = entry.media$thumbnail.url; } 
-  else {
-    var content = entry.content ? entry.content.$t : (entry.summary ? entry.summary.$t : "");
-    var match = content.match(/<img[^>]+src="([^">]+)"/);
-    thumb = match ? match[1] : "https://via.placeholder.com/400x250?text=No+Image";
-  }
-  if (thumb.indexOf("googleusercontent.com") != -1 || thumb.indexOf("bp.blogspot.com") != -1) {
-    thumb = thumb.replace(/\/s[0-9]+.*?\//, "/s1600/").replace(/=s[0-9]+.*/, "=s1600");
+  try {
+    if (entry.media$thumbnail) { thumb = entry.media$thumbnail.url; } 
+    else {
+      var content = entry.content ? entry.content.$t : (entry.summary ? entry.summary.$t : "");
+      var match = content.match(/<img[^>]+src="([^">]+)"/);
+      thumb = match ? match[1] : "https://via.placeholder.com/400x250?text=No+Image";
+    }
+    if (thumb.indexOf("googleusercontent.com") != -1 || thumb.indexOf("bp.blogspot.com") != -1) {
+      thumb = thumb.replace(/\/s[0-9]+.*?\//, "/s1600/").replace(/=s[0-9]+.*/, "=s1600");
+    }
+  } catch (e) {
+    thumb = "https://via.placeholder.com/400x250?text=Error+Thumbnail";
   }
   return thumb;
 }
 
 function getLabels(entry) {
   var html = '<div class="post-labels">';
-  if (entry.category) {
-    for (var i = 0; i < entry.category.length; i++) {
-      if (entry.category[i].term !== featured_label) {
-        html += '<span class="post-tag">' + entry.category[i].term + '</span>';
+  try {
+    if (entry.category) {
+      for (var i = 0; i < entry.category.length; i++) {
+        if (entry.category[i].term !== featured_label) {
+          html += '<span class="post-tag">' + entry.category[i].term + '</span>';
+        }
       }
     }
-  }
+  } catch (e) { console.warn("Error en labels"); }
   html += '</div>';
   return html;
 }
@@ -35,10 +41,12 @@ function loadFeatured(json) {
   for (var i = 0; i < json.feed.entry.length; i++) {
     var entry = json.feed.entry[i];
     var title = entry.title.$t;
-    var url = "";
-    for (var k = 0; k < entry.link.length; k++) {
-      if (entry.link[k].rel == 'alternate') { url = entry.link[k].href; break; }
-    }
+    var url = "#";
+    try {
+        for (var k = 0; k < entry.link.length; k++) {
+          if (entry.link[k].rel == 'alternate') { url = entry.link[k].href; break; }
+        }
+    } catch(e) { url = "#"; }
     var thumb = getSmartThumb(entry);
     var labels = getLabels(entry);
     html += '<div class="post-card"><div class="post-thumb-wrap"><a href="'+url+'"><img class="post-thumb" src="'+thumb+'" style="height:210px"/></a></div><h2><a href="'+url+'">'+title+'</a></h2>'+labels+'</div>';
@@ -51,19 +59,12 @@ function loadMainGrid(json, currentPage, totalFeatured) {
   var entries = json.feed.entry ||[];
   var totalAll = json.feed.openSearch$totalResults ? parseInt(json.feed.openSearch$totalResults.$t) : 0;
   
-  // Seguridad para parámetros opcionales (evita NaN en categorías)
   currentPage = currentPage || 1;
   totalFeatured = totalFeatured || 0;
-  
-  // El total de la cuadrícula es el total del blog menos los que son destacados
   var totalMain = totalAll - totalFeatured;
-  
   var html = "";
   
-  // Filtramos los que tengan la etiqueta de destacado en el cliente para evitar errores de API
   var filteredEntries = entries.filter(e => !(e.category ||[]).some(l => l.term === featured_label));
-  
-  // Solo mostramos hasta posts_per_page
   var pageEntries = filteredEntries.slice(0, posts_per_page);
 
   if (pageEntries.length === 0) {
@@ -75,46 +76,41 @@ function loadMainGrid(json, currentPage, totalFeatured) {
   for (var i = 0; i < pageEntries.length; i++) {
     var entry = pageEntries[i];
     var title = entry.title.$t;
-    var postUrl = "";
-    for (var k = 0; k < entry.link.length; k++) {
-      if (entry.link[k].rel == 'alternate') { postUrl = entry.link[k].href; break; }
-    }
+    var postUrl = "#";
+    try {
+        for (var k = 0; k < entry.link.length; k++) {
+          if (entry.link[k].rel == 'alternate') { postUrl = entry.link[k].href; break; }
+        }
+    } catch(e) { postUrl = "#"; }
     var thumb = getSmartThumb(entry);
     var labels = getLabels(entry);
     html += '<div class="post-card"><div class="post-thumb-wrap"><a href="'+postUrl+'"><img class="post-thumb" src="'+thumb+'"/></a></div><h2><a href="'+postUrl+'">'+title+'</a></h2>'+labels+'</div>';
   }
   document.getElementById("main-ajax-grid").innerHTML = html;
   
-  /* LÓGICA DE PAGINACIÓN ADAPTADA AL TOTAL DEL SERVIDOR */
   var totalPages = Math.ceil(totalMain / posts_per_page);
   var phtml = "";
   var base_url = window.location.href.split("?")[0] + "?max-results=" + posts_per_page;
   
   if (totalPages > 1) {
       if (currentPage > 1) phtml += "<a class='showpageNum' href='"+base_url+"&PageNo="+(currentPage-1)+"'>&lt;</a>";
-      
       var startPage = Math.max(1, currentPage - 2);
       var endPage = Math.min(totalPages, currentPage + 2);
-      
       if (startPage > 1) {
           phtml += "<a class='showpageNum' href='"+base_url+"&PageNo=1'>1</a>";
           if (startPage > 2) phtml += "<span class='showpagePoint' style='background:transparent;border:0;box-shadow:none'>...</span>";
       }
-      
       for (var j = startPage; j <= endPage; j++) {
         if (j == currentPage) phtml += "<span class='showpagePoint'>"+j+"</span>";
         else phtml += "<a class='showpageNum' href='"+base_url+"&PageNo="+j+"'>"+j+"</a>";
       }
-      
       if (endPage < totalPages) {
           if (endPage < totalPages - 1) phtml += "<span class='showpagePoint' style='background:transparent;border:0;box-shadow:none'>...</span>";
           phtml += "<a class='showpageNum' href='"+base_url+"&PageNo="+totalPages+"'>"+totalPages+"</a>";
       }
-      
       if (currentPage < totalPages) {
           phtml += "<a class='showpageNum' href='"+base_url+"&PageNo="+(currentPage+1)+"'>&gt;</a>";
       }
-      
       document.getElementById("blog-pager").innerHTML = phtml;
   } else {
       document.getElementById("blog-pager").innerHTML = "";
@@ -129,10 +125,8 @@ $(document).ready(function() {
   $('.dark_menu > li').get().forEach(function(el) {
     var $li = $(el);
     var $link = $li.find('> a').first();
-    
     if ($link.length) {
       var text = $link.text().trim();
-
       if (text.startsWith('_')) {
         if (currentParent) {
           if (!currentUl) {
@@ -165,11 +159,8 @@ $(document).ready(function() {
       localStorage.setItem('theme', 'light');
       themeBtn.find('i').attr('class', 'fa-solid fa-moon');
     }
-
     if (typeof DISQUS !== 'undefined') {
-        setTimeout(function() {
-            DISQUS.reset({ reload: true });
-        }, 200); 
+        setTimeout(function() { DISQUS.reset({ reload: true }); }, 200); 
     }
   });
 
@@ -178,7 +169,6 @@ $(document).ready(function() {
   $('#drawer-content').html('<ul class="dark_menu">' + menuHTML + '</ul>');
   $('#menu-toggle').on('click', function() { $('body').addClass('drawer-open'); });
   $('#drawer-close, #drawer-overlay').on('click', function() { $('body').removeClass('drawer-open'); });
-  
   $(document).on('click', '#side-drawer .has-children > a', function(e) {
     e.preventDefault();
     $(this).parent().toggleClass('active');
@@ -212,40 +202,29 @@ $(document).ready(function() {
       $('head').append('<script src="https://raw.githack.com/SamaelCr/AltyGamesTheme/main/pages/categories/categories.js?v=' + cbCat + '"></script>');
   }
 
-  /* =========================================================================
-     7. NUEVO SISTEMA DE CARGA AJAX (PAGINACIÓN ESTABLE) - SOLO EN HOME
-     ========================================================================= */
+  /* 7. NUEVO SISTEMA DE CARGA AJAX */
   if ($('#main-ajax-grid').length && !$('body').hasClass('is-category-page') && !$('body').hasClass('is-search-page')) {
-      
       var urlParams = new URLSearchParams(window.location.search);
       var currentPage = parseInt(urlParams.get('PageNo')) || 1;
       var startIndex = ((currentPage - 1) * posts_per_page) + 1;
-
-      // Primero obtenemos el número de destacados para calcular bien el total
       $.ajax({
           url: "/feeds/posts/summary/-/Destacado?alt=json-in-script&max-results=0",
           type: "GET",
           dataType: "jsonp",
           success: function(dataFeatured) {
               var totalFeatured = (dataFeatured.feed && dataFeatured.feed.openSearch$totalResults) ? parseInt(dataFeatured.feed.openSearch$totalResults.$t) : 0;
-
-              // Cargamos los destacados reales para el grid superior
               $.ajax({
                   url: "/feeds/posts/summary/-/Destacado?alt=json-in-script&max-results=2",
                   type: "GET",
                   dataType: "jsonp",
                   success: function(json) { loadFeatured(json); }
               });
-
-              // Cargamos el grid principal
               $('#main-ajax-grid').html('<div style="grid-column:1/-1; text-align:center; padding:20px; color:var(--brand-color);">Cargando juegos...</div>');
               $.ajax({
                   url: "/feeds/posts/summary?alt=json-in-script&start-index=" + startIndex + "&max-results=" + (posts_per_page + totalFeatured),
                   type: "GET",
                   dataType: "jsonp",
-                  success: function(json) {
-                      loadMainGrid(json, currentPage, totalFeatured);
-                  }
+                  success: function(json) { loadMainGrid(json, currentPage, totalFeatured); }
               });
           }
       });

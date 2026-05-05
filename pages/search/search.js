@@ -47,34 +47,50 @@ function renderYTSearch(json) {
     // Dibujar los resultados respetando el nuevo diseño horizontal
     html += '<div class="yt-list-container">';
     for (var i = 0; i < json.feed.entry.length; i++) {
-        var entry = json.feed.entry[i];
-        var title = entry.title.$t;
-        var url = "";
-        for (var k = 0; k < entry.link.length; k++) {
-            if (entry.link[k].rel == 'alternate') { url = entry.link[k].href; break; }
-        }
-        var thumb = getSmartThumb(entry); 
-        var labels = getLabels(entry);    
-        
-        // Extracción y limpieza del texto para la descripción (Snippet)
-        var rawSnippet = entry.summary ? entry.summary.$t : (entry.content ? entry.content.$t : "");
-        // FIX: Eliminamos comentarios HTML y luego las etiquetas para evitar que se rompa el diseño
-        var cleanSnippet = rawSnippet.replace(/<!--[\s\S]*?-->/g, "").replace(/(<([^>]+)>)/ig,"").trim();
-        var snippet = cleanSnippet.length > 200 ? cleanSnippet.substring(0, 200) + "..." : cleanSnippet;
+        // BLOQUE DE SEGURIDAD: Evita que el fallo de una entrada oculte las demás
+        try {
+            var entry = json.feed.entry[i];
+            var title = entry.title.$t;
+            var url = "";
+            
+            // Obtención robusta de la URL
+            if (entry.link) {
+                for (var k = 0; k < entry.link.length; k++) {
+                    if (entry.link[k].rel == 'alternate') { 
+                        url = entry.link[k].href; 
+                        break; 
+                    }
+                }
+            }
+            if (!url) url = "#";
 
-        html += '<div class="yt-list-card">';
-        
-        // Imagen izquierda
-        html += '<div class="yt-list-thumb"><a href="'+url+'"><img src="'+thumb+'"/></a></div>';
-        
-        // Contenido derecha
-        html += '<div class="yt-list-content">';
-        html += '<h2 class="yt-list-title"><a href="'+url+'">'+title+'</a></h2>';
-        html += '<div class="yt-list-snippet">'+snippet+'</div>';
-        html += labels;
-        html += '</div>'; // Fin contenido
-        
-        html += '</div>'; // Fin tarjeta
+            var thumb = getSmartThumb(entry); 
+            var labels = getLabels(entry);    
+            
+            // Extracción y limpieza del texto para la descripción (Snippet)
+            var rawSnippet = entry.summary ? entry.summary.$t : (entry.content ? entry.content.$t : "");
+            
+            // FIX: Eliminamos comentarios HTML y luego las etiquetas para evitar que se rompa el diseño
+            var cleanSnippet = rawSnippet.replace(/<!--[\s\S]*?-->/g, "").replace(/(<([^>]+)>)/ig,"").trim();
+            var snippet = cleanSnippet.length > 200 ? cleanSnippet.substring(0, 200) + "..." : cleanSnippet;
+
+            html += '<div class="yt-list-card">';
+            
+            // Imagen izquierda
+            html += '<div class="yt-list-thumb"><a href="'+url+'"><img src="'+thumb+'"/></a></div>';
+            
+            // Contenido derecha
+            html += '<div class="yt-list-content">';
+            html += '<h2 class="yt-list-title"><a href="'+url+'">'+title+'</a></h2>';
+            html += '<div class="yt-list-snippet">'+snippet+'</div>';
+            html += labels;
+            html += '</div>'; // Fin contenido
+            
+            html += '</div>'; // Fin tarjeta
+        } catch (err) {
+            console.error("Error procesando entrada de búsqueda en índice: " + i, err);
+            continue; // Si una tarjeta falla, salta a la siguiente sin romper la lista
+        }
     }
     html += '</div>';
     
