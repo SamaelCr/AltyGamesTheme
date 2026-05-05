@@ -42,7 +42,8 @@ function renderCategoryPosts(json) {
         var labels = getLabels(entry);    
         
         var rawSnippet = entry.summary ? entry.summary.$t : (entry.content ? entry.content.$t : "");
-        var cleanSnippet = rawSnippet.replace(/(<([^>]+)>)/ig,"").trim();
+        // FIX: Eliminamos comentarios HTML y luego las etiquetas para evitar que se rompa el diseño
+        var cleanSnippet = rawSnippet.replace(/<!--[\s\S]*?-->/g, "").replace(/(<([^>]+)>)/ig,"").trim();
         var snippet = cleanSnippet.length > 200 ? cleanSnippet.substring(0, 200) + "..." : cleanSnippet;
 
         html += '<div class="yt-list-card">';

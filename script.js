@@ -75,13 +75,13 @@ function loadMainGrid(json, currentPage, totalFeatured) {
   for (var i = 0; i < pageEntries.length; i++) {
     var entry = pageEntries[i];
     var title = entry.title.$t;
-    var url = "";
+    var postUrl = "";
     for (var k = 0; k < entry.link.length; k++) {
-      if (entry.link[k].rel == 'alternate') { url = entry.link[k].href; break; }
+      if (entry.link[k].rel == 'alternate') { postUrl = entry.link[k].href; break; }
     }
     var thumb = getSmartThumb(entry);
     var labels = getLabels(entry);
-    html += '<div class="post-card"><div class="post-thumb-wrap"><a href="'+url+'"><img class="post-thumb" src="'+thumb+'"/></a></div><h2><a href="'+url+'">'+title+'</a></h2>'+labels+'</div>';
+    html += '<div class="post-card"><div class="post-thumb-wrap"><a href="'+postUrl+'"><img class="post-thumb" src="'+thumb+'"/></a></div><h2><a href="'+postUrl+'">'+title+'</a></h2>'+labels+'</div>';
   }
   document.getElementById("main-ajax-grid").innerHTML = html;
   
