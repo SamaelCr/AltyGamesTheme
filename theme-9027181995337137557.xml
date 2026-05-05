@@ -22,11 +22,11 @@
 //]]>
 </script>
 
-<!-- 2. CARGA DE ASSETS (3 OPCIONES DE CDN) -->
+<!-- 2. CARGA DE ASSETS (VERSION VANILLA 3.20) -->
 
 <!-- OPCIÓN 1: GITHACK (DESARROLLO - ACTUALIZACIÓN AL INSTANTE) -->
-<link href='https://raw.githack.com/SamaelCr/AltyGamesTheme/main/styles.css?v=2.80' rel='stylesheet' type='text/css'/>
-<script src='https://raw.githack.com/SamaelCr/AltyGamesTheme/main/script.js?v=2.40' type='text/javascript'/>
+<link href='https://raw.githack.com/SamaelCr/AltyGamesTheme/main/styles.css?v=3.20' rel='stylesheet' type='text/css'/>
+<script src='https://raw.githack.com/SamaelCr/AltyGamesTheme/main/script.js?v=3.20' type='text/javascript'/>
 
 <!-- OPCIÓN 2: STATICALLY (DESARROLLO SEMI-PRO) 
 <link href='https://cdn.statically.io/gh/SamaelCr/AltyGamesTheme/main/styles.css' rel='stylesheet' type='text/css'/>
@@ -272,8 +272,7 @@ a { color: $(brand.color); }
                   <b:loop values='data:posts' var='post'>
                     <b:include data='post' name='post'/>
                     <!-- AQUÍ EVITAMOS QUE CARGUE DISQUS SI ESTAMOS EN LA BÚSQUEDA O CATEGORÍAS -->
-                    <b:if cond='data:blog.url contains &quot;search.html&quot; or data:blog.url contains &quot;categories.html&quot;'>
-                    <b:else/>
+                    <b:if cond='!data:blog.url contains &quot;search.html&quot; and !data:blog.url contains &quot;categories.html&quot;'>
                         <b:include cond='data:blog.pageType in {&quot;static_page&quot;,&quot;item&quot;}' data='post' name='comment_picker'/>
                     </b:if>
                   </b:loop>
