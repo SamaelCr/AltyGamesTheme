@@ -14,11 +14,11 @@
     display: flex;
     background: #111;
     border: 2px solid #333;
-    border-radius: 4px; /* Menos curvo, más retro */
+    border-radius: 4px;
     overflow: hidden;
     margin-bottom: 40px;
     transition: 0.3s;
-    box-shadow: 5px 5px 0px rgba(0,0,0,0.8); /* Sombra dura Pixel Art */
+    box-shadow: 5px 5px 0px rgba(0,0,0,0.8);
 }
 
 .yt-search-bar:focus-within {
@@ -53,7 +53,6 @@
     border-left-color: var(--brand-color);
 }
 
-/* Mensajes de estado (cargando, sin resultados) */
 .search-message {
     text-align: center;
     color: #888;
@@ -68,7 +67,6 @@
     color: var(--brand-color);
 }
 
-/* Contenedor de la lista horizontal */
 .yt-list-container {
     display: flex;
     flex-direction: column;
@@ -76,7 +74,6 @@
     width: 100%;
 }
 
-/* Tarjeta individual (Diseño YouTube + Pixel Art) */
 .yt-list-card {
     display: flex;
     gap: 20px;
@@ -85,8 +82,8 @@
     box-shadow: 5px 5px 0px #000;
     padding: 15px;
     transition: 0.2s;
-    border-radius: 0; /* Bordes cuadrados retro */
-    align-items: flex-start; /* Asegura que el contenido no estire la imagen */
+    border-radius: 0;
+    align-items: flex-start;
 }
 
 .yt-list-card:hover {
@@ -95,21 +92,20 @@
     box-shadow: 8px 8px 0px var(--brand-color);
 }
 
-/* Miniatura a la izquierda - NORMALIZADA */
 .yt-list-thumb {
     width: 340px;
-    height: 190px; /* ALTURA FIJA PARA TODAS */
+    height: 190px;
     flex-shrink: 0;
     overflow: hidden;
     border: 2px solid #222;
     box-shadow: 4px 4px 0px #000;
-    background: #000; /* Fondo negro por si la imagen es pequeña */
+    background: #000;
 }
 
 .yt-list-thumb img {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* CORTA Y AJUSTA AUTOMÁTICAMENTE */
+    object-fit: cover;
     display: block;
     transition: transform 0.3s;
 }
@@ -118,21 +114,25 @@
     transform: scale(1.05);
 }
 
-/* Contenido a la derecha (Titulo, descripción, etiquetas) */
 .yt-list-content {
     flex: 1;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    height: 190px; /* Alineado con la altura de la imagen */
+    height: 190px; 
     overflow: hidden;
 }
 
+/* FIX TITULO: Ahora se limita a 2 líneas para que no rompa la tarjeta */
 .yt-list-title {
-    margin: 0 0 10px 0;
-    font-size: 22px;
+    margin: 0 0 8px 0;
+    font-size: 20px;
     font-weight: bold;
-    line-height: 1.3;
+    line-height: 1.2;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 .yt-list-title a {
@@ -144,32 +144,50 @@
     color: var(--brand-color) !important;
 }
 
-/* Sinopsis extraida dinamicamente */
+/* FIX SIPPET: Limitado a 2 líneas para dar espacio a etiquetas */
 .yt-list-snippet {
-    font-size: 14px;
+    font-size: 13px;
     color: #aaa;
-    line-height: 1.6;
+    line-height: 1.5;
     margin-bottom: 10px;
     display: -webkit-box;
-    -webkit-line-clamp: 3; /* Limita a 3 líneas para mantener simetría */
+    -webkit-line-clamp: 2; 
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
 
-/* Sobrescribiendo el estilo de las etiquetas para que sean Pixel Art */
+/* FIX ETIQUETAS: Aplicado Scroll Invisible con Máscara de Desvanecimiento */
 .yt-list-card .post-labels {
     margin-top: auto;
-    max-height: 70px; /* Controla que las etiquetas no empujen la tarjeta */
-    overflow: hidden;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    max-height: 65px; 
+    overflow-y: auto;
+    scrollbar-width: none; /* Firefox */
+    padding-bottom: 5px;
+    /* Máscara de desvanecimiento premium */
+    -webkit-mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
+    mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
 }
+
+.yt-list-card .post-labels::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Edge */
+}
+
 .yt-list-card .post-tag {
+    font-size: 10px;
     border: 2px solid #444;
     box-shadow: 3px 3px 0px #000;
     border-radius: 0;
     background: #222;
     color: #ddd !important;
     transition: 0.1s;
+    padding: 4px 8px;
+    text-transform: uppercase;
+    font-weight: bold;
 }
+
 .yt-list-card .post-tag:hover {
     background: var(--brand-color);
     border-color: var(--brand-color);
@@ -200,4 +218,10 @@
     .yt-list-thumb { width: 100%; height: 200px; }
     .yt-list-content { height: auto; }
     .yt-search-bar { width: 100%; }
+    .yt-list-card .post-labels { 
+        max-height: none; 
+        overflow: visible; 
+        -webkit-mask-image: none; 
+        mask-image: none;
+    }
 }
