@@ -34,7 +34,10 @@ function renderCategoryPosts(json) {
     for (var i = 0; i < json.feed.entry.length; i++) {
         var entry = json.feed.entry[i];
         var title = entry.title.$t;
-        var url = entry.link.find(l => l.rel == 'alternate').href;
+        var url = "";
+        for (var k = 0; k < entry.link.length; k++) {
+            if (entry.link[k].rel == 'alternate') { url = entry.link[k].href; break; }
+        }
         var thumb = getSmartThumb(entry); 
         var labels = getLabels(entry);    
         
