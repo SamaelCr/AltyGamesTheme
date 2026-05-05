@@ -35,6 +35,20 @@ function getLabels(entry) {
   return html;
 }
 
+/* HELPER PARA JSONP (Reemplaza $.ajax para Blogger Feeds) */
+function getJSONP(url, callback) {
+  var name = 'jsonp_' + Math.round(100000 * Math.random());
+  window[name] = function(data) {
+    callback(data);
+    document.getElementById(name).remove();
+    delete window[name];
+  };
+  var script = document.createElement('script');
+  script.id = name;
+  script.src = url + (url.indexOf('?') >= 0 ? '&' : '?') + 'callback=' + name;
+  document.body.appendChild(script);
+}
+
 function loadFeatured(json) {
   var html = "";
   if(!json.feed.entry) return;
@@ -51,7 +65,8 @@ function loadFeatured(json) {
     var labels = getLabels(entry);
     html += '<div class="post-card"><div class="post-thumb-wrap"><a href="'+url+'"><img class="post-thumb" src="'+thumb+'" style="height:210px"/></a></div><h2><a href="'+url+'">'+title+'</a></h2>'+labels+'</div>';
   }
-  document.getElementById("featured-ajax-grid").innerHTML = html;
+  var grid = document.getElementById("featured-ajax-grid");
+  if(grid) grid.innerHTML = html;
 }
 
 /* FIX: Ahora recibe la página actual, construye el DOM directamente y maneja resultados vacíos */
@@ -64,12 +79,18 @@ function loadMainGrid(json, currentPage, totalFeatured) {
   var totalMain = totalAll - totalFeatured;
   var html = "";
   
-  var filteredEntries = entries.filter(e => !(e.category ||[]).some(l => l.term === featured_label));
+  var filteredEntries = entries.filter(function(e) {
+    return !(e.category || []).some(function(l) { return l.term === featured_label; });
+  });
   var pageEntries = filteredEntries.slice(0, posts_per_page);
 
+  var mainGrid = document.getElementById("main-ajax-grid");
+  if (!mainGrid) return;
+
   if (pageEntries.length === 0) {
-      document.getElementById("main-ajax-grid").innerHTML = "<div style='grid-column:1/-1; text-align:center; padding:20px; color:var(--brand-color); font-weight:bold;'>No hay más juegos para mostrar en esta página.</div>";
-      document.getElementById("blog-pager").innerHTML = "";
+      mainGrid.innerHTML = "<div style='grid-column:1/-1; text-align:center; padding:20px; color:var(--brand-color); font-weight:bold;'>No hay más juegos para mostrar en esta página.</div>";
+      var pager = document.getElementById("blog-pager");
+      if(pager) pager.innerHTML = "";
       return;
   }
 
@@ -86,7 +107,7 @@ function loadMainGrid(json, currentPage, totalFeatured) {
     var labels = getLabels(entry);
     html += '<div class="post-card"><div class="post-thumb-wrap"><a href="'+postUrl+'"><img class="post-thumb" src="'+thumb+'"/></a></div><h2><a href="'+postUrl+'">'+title+'</a></h2>'+labels+'</div>';
   }
-  document.getElementById("main-ajax-grid").innerHTML = html;
+  mainGrid.innerHTML = html;
   
   var totalPages = Math.ceil(totalMain / posts_per_page);
   var phtml = "";
@@ -111,122 +132,160 @@ function loadMainGrid(json, currentPage, totalFeatured) {
       if (currentPage < totalPages) {
           phtml += "<a class='showpageNum' href='"+base_url+"&PageNo="+(currentPage+1)+"'>&gt;</a>";
       }
-      document.getElementById("blog-pager").innerHTML = phtml;
+      var pagerContainer = document.getElementById("blog-pager");
+      if(pagerContainer) pagerContainer.innerHTML = phtml;
   } else {
-      document.getElementById("blog-pager").innerHTML = "";
+      var pagerContainerAlt = document.getElementById("blog-pager");
+      if(pagerContainerAlt) pagerContainerAlt.innerHTML = "";
   }
 }
 
-$(document).ready(function() {
+document.addEventListener("DOMContentLoaded", function() {
   /* 1. LÓGICA DE SUBMENÚS (SISTEMA DE MAPEO PREVIO V3) - CORREGIDA */
   var currentParent = null;
   var currentUl = null;
 
-  $('.dark_menu > li').get().forEach(function(el) {
-    var $li = $(el);
-    var $link = $li.find('> a').first();
-    if ($link.length) {
-      var text = $link.text().trim();
+  var menuItems = document.querySelectorAll('.dark_menu > li');
+  menuItems.forEach(function(el) {
+    var link = el.querySelector('a');
+    if (link) {
+      var text = link.textContent.trim();
       if (text.startsWith('_')) {
         if (currentParent) {
           if (!currentUl) {
-            currentUl = $('<ul></ul>');
-            currentParent.append(currentUl);
-            currentParent.addClass('has-children');
+            currentUl = document.createElement('ul');
+            currentParent.appendChild(currentUl);
+            currentParent.classList.add('has-children');
           }
-          $link.text(text.substring(1).trim());
-          currentUl.append($li);
+          link.textContent = text.substring(1).trim();
+          currentUl.appendChild(el);
         }
       } else {
-        currentParent = $li;
+        currentParent = el;
         currentUl = null; 
       }
     }
   });
 
-  $('.dark_menu').addClass('menu-ready');
+  var darkMenu = document.querySelector('.dark_menu');
+  if(darkMenu) darkMenu.classList.add('menu-ready');
 
   /* 2. TOGGLE TEMA */
-  const themeBtn = $('#theme-toggle');
-  const htmlEl = $('html');
-  themeBtn.on('click', function() {
-    if (htmlEl.hasClass('light-theme')) {
-      htmlEl.removeClass('light-theme');
-      localStorage.setItem('theme', 'dark');
-      themeBtn.find('i').attr('class', 'fa-solid fa-sun');
-    } else {
-      htmlEl.addClass('light-theme');
-      localStorage.setItem('theme', 'light');
-      themeBtn.find('i').attr('class', 'fa-solid fa-moon');
-    }
-    if (typeof DISQUS !== 'undefined') {
-        setTimeout(function() { DISQUS.reset({ reload: true }); }, 200); 
-    }
-  });
+  var themeBtn = document.getElementById('theme-toggle');
+  var htmlEl = document.documentElement;
+  if (themeBtn) {
+    themeBtn.addEventListener('click', function() {
+      var icon = themeBtn.querySelector('i');
+      if (htmlEl.classList.contains('light-theme')) {
+        htmlEl.classList.remove('light-theme');
+        localStorage.setItem('theme', 'dark');
+        if(icon) icon.className = 'fa-solid fa-sun';
+      } else {
+        htmlEl.classList.add('light-theme');
+        localStorage.setItem('theme', 'light');
+        if(icon) icon.className = 'fa-solid fa-moon';
+      }
+      if (typeof DISQUS !== 'undefined') {
+          setTimeout(function() { DISQUS.reset({ reload: true }); }, 200); 
+      }
+    });
+  }
 
   /* 3. PANEL LATERAL (SIDE DRAWER) */
-  var menuHTML = $('.menujohanes .dark_menu').html();
-  $('#drawer-content').html('<ul class="dark_menu">' + menuHTML + '</ul>');
-  $('#menu-toggle').on('click', function() { $('body').addClass('drawer-open'); });
-  $('#drawer-close, #drawer-overlay').on('click', function() { $('body').removeClass('drawer-open'); });
-  $(document).on('click', '#side-drawer .has-children > a', function(e) {
-    e.preventDefault();
-    $(this).parent().toggleClass('active');
+  var sourceMenu = document.querySelector('.menujohanes .dark_menu');
+  var drawerContent = document.getElementById('drawer-content');
+  if (sourceMenu && drawerContent) {
+    drawerContent.innerHTML = '<ul class="dark_menu">' + sourceMenu.innerHTML + '</ul>';
+  }
+
+  var menuToggle = document.getElementById('menu-toggle');
+  if (menuToggle) {
+    menuToggle.addEventListener('click', function() { document.body.classList.add('drawer-open'); });
+  }
+
+  var closeTargets = ['drawer-close', 'drawer-overlay'];
+  closeTargets.forEach(function(id) {
+    var el = document.getElementById(id);
+    if(el) el.addEventListener('click', function() { document.body.classList.remove('drawer-open'); });
+  });
+
+  // Delegación de eventos para submenús del drawer
+  document.addEventListener('click', function(e) {
+    var target = e.target.closest('#side-drawer .has-children > a');
+    if (target) {
+      e.preventDefault();
+      target.parentElement.classList.toggle('active');
+    }
   });
 
   /* 4. REUBICACIÓN TÍTULO DE BLOGGER AUTOMÁTICAMENTE */
-  if(($('body').hasClass('item-view') || window.location.href.indexOf('.html') > -1) && window.location.href.indexOf('search.html') === -1 && window.location.href.indexOf('categories.html') === -1) {
+  if((document.body.classList.contains('item-view') || window.location.href.indexOf('.html') > -1) && window.location.href.indexOf('search.html') === -1 && window.location.href.indexOf('categories.html') === -1) {
     var pageTitleText = document.title.split(' - ')[0]; 
     var postTitleHTML = '<h2 class="section-title" style="text-align:center; border:0; margin-top:20px; color:var(--brand-color)!important;">' + pageTitleText + '</h2>';
-    var firstImg = $('.post-body-container img').first();
-    if(firstImg.length) {
-        if(firstImg.parent('a').length) { firstImg.parent('a').after(postTitleHTML); } 
-        else { firstImg.after(postTitleHTML); }
+    var firstImg = document.querySelector('.post-body-container img');
+    if(firstImg) {
+        var firstAnchor = firstImg.closest('a');
+        if(firstAnchor) { 
+          firstAnchor.insertAdjacentHTML('afterend', postTitleHTML); 
+        } else { 
+          firstImg.insertAdjacentHTML('afterend', postTitleHTML); 
+        }
     }
   }
 
   /* 5. INYECCIÓN ABSOLUTA PARA PÁGINA DE BÚSQUEDA */
   if (window.location.href.indexOf('/p/search.html') > -1) {
-      $('body').addClass('is-search-page');
+      document.body.classList.add('is-search-page');
       var cacheBuster = new Date().getTime();
-      $('head').append('<link rel="stylesheet" href="https://raw.githack.com/SamaelCr/AltyGamesTheme/main/pages/search/search.css?v=' + cacheBuster + '">');
-      $('head').append('<script src="https://raw.githack.com/SamaelCr/AltyGamesTheme/main/pages/search/search.js?v=' + cacheBuster + '"></script>');
+      var linkSearch = document.createElement('link');
+      linkSearch.rel = 'stylesheet';
+      linkSearch.href = 'https://raw.githack.com/SamaelCr/AltyGamesTheme/main/pages/search/search.css?v=' + cacheBuster;
+      document.head.appendChild(linkSearch);
+      
+      var scriptSearch = document.createElement('script');
+      scriptSearch.src = 'https://raw.githack.com/SamaelCr/AltyGamesTheme/main/pages/search/search.js?v=' + cacheBuster;
+      document.head.appendChild(scriptSearch);
   }
 
   /* 6. INYECCIÓN ABSOLUTA PARA PÁGINA DE CATEGORÍAS */
   if (window.location.href.indexOf('/p/categories.html') > -1) {
-      $('body').addClass('is-category-page');
+      document.body.classList.add('is-category-page');
       var cbCat = new Date().getTime();
-      $('head').append('<link rel="stylesheet" href="https://raw.githack.com/SamaelCr/AltyGamesTheme/main/pages/search/search.css?v=' + cbCat + '">');
-      $('head').append('<link rel="stylesheet" href="https://raw.githack.com/SamaelCr/AltyGamesTheme/main/pages/categories/categories.css?v=' + cbCat + '">');
-      $('head').append('<script src="https://raw.githack.com/SamaelCr/AltyGamesTheme/main/pages/categories/categories.js?v=' + cbCat + '"></script>');
+      
+      var linkCat1 = document.createElement('link');
+      linkCat1.rel = 'stylesheet';
+      linkCat1.href = 'https://raw.githack.com/SamaelCr/AltyGamesTheme/main/pages/search/search.css?v=' + cbCat;
+      document.head.appendChild(linkCat1);
+
+      var linkCat2 = document.createElement('link');
+      linkCat2.rel = 'stylesheet';
+      linkCat2.href = 'https://raw.githack.com/SamaelCr/AltyGamesTheme/main/pages/categories/categories.css?v=' + cbCat;
+      document.head.appendChild(linkCat2);
+
+      var scriptCat = document.createElement('script');
+      scriptCat.src = 'https://raw.githack.com/SamaelCr/AltyGamesTheme/main/pages/categories/categories.js?v=' + cbCat;
+      document.head.appendChild(scriptCat);
   }
 
   /* 7. NUEVO SISTEMA DE CARGA AJAX */
-  if ($('#main-ajax-grid').length && !$('body').hasClass('is-category-page') && !$('body').hasClass('is-search-page')) {
+  var mainGridContainer = document.getElementById('main-ajax-grid');
+  if (mainGridContainer && !document.body.classList.contains('is-category-page') && !document.body.classList.contains('is-search-page')) {
       var urlParams = new URLSearchParams(window.location.search);
       var currentPage = parseInt(urlParams.get('PageNo')) || 1;
       var startIndex = ((currentPage - 1) * posts_per_page) + 1;
-      $.ajax({
-          url: "/feeds/posts/summary/-/Destacado?alt=json-in-script&max-results=0",
-          type: "GET",
-          dataType: "jsonp",
-          success: function(dataFeatured) {
-              var totalFeatured = (dataFeatured.feed && dataFeatured.feed.openSearch$totalResults) ? parseInt(dataFeatured.feed.openSearch$totalResults.$t) : 0;
-              $.ajax({
-                  url: "/feeds/posts/summary/-/Destacado?alt=json-in-script&max-results=2",
-                  type: "GET",
-                  dataType: "jsonp",
-                  success: function(json) { loadFeatured(json); }
-              });
-              $('#main-ajax-grid').html('<div style="grid-column:1/-1; text-align:center; padding:20px; color:var(--brand-color);">Cargando juegos...</div>');
-              $.ajax({
-                  url: "/feeds/posts/summary?alt=json-in-script&start-index=" + startIndex + "&max-results=" + (posts_per_page + totalFeatured),
-                  type: "GET",
-                  dataType: "jsonp",
-                  success: function(json) { loadMainGrid(json, currentPage, totalFeatured); }
-              });
-          }
+      
+      getJSONP("/feeds/posts/summary/-/Destacado?alt=json-in-script&max-results=0", function(dataFeatured) {
+          var totalFeatured = (dataFeatured.feed && dataFeatured.feed.openSearch$totalResults) ? parseInt(dataFeatured.feed.openSearch$totalResults.$t) : 0;
+          
+          getJSONP("/feeds/posts/summary/-/Destacado?alt=json-in-script&max-results=2", function(jsonFeatured) { 
+            loadFeatured(jsonFeatured); 
+          });
+
+          mainGridContainer.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:20px; color:var(--brand-color);">Cargando juegos...</div>';
+          
+          getJSONP("/feeds/posts/summary?alt=json-in-script&start-index=" + startIndex + "&max-results=" + (posts_per_page + totalFeatured), function(jsonMain) {
+            loadMainGrid(jsonMain, currentPage, totalFeatured);
+          });
       });
   }
 });
