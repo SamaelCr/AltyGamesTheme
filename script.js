@@ -43,17 +43,14 @@ function loadFeatured(json) {
   document.getElementById("featured-ajax-grid").innerHTML = html;
 }
 
-function loadMainGrid(json) {
+/* FIX: Ahora recibe la página actual y construye el DOM directamente sin filtrar en el cliente */
+function loadMainGrid(json, currentPage) {
   var entries = json.feed.entry ||[];
-  var url = window.location.href;
-  var currentPage = url.indexOf("PageNo=") != -1 ? parseInt(url.split("PageNo=")[1]) : 1;
-  var filteredEntries = entries.filter(e => !(e.category ||[]).some(l => l.term === featured_label));
-  var start = (currentPage - 1) * posts_per_page;
-  var end = start + posts_per_page;
-  var pageEntries = filteredEntries.slice(start, end);
+  var totalResults = parseInt(json.feed.openSearch$totalResults.$t); // Total exacto que nos da el servidor de Blogger
   var html = "";
-  for (var i = 0; i < pageEntries.length; i++) {
-    var entry = pageEntries[i];
+  
+  for (var i = 0; i < entries.length; i++) {
+    var entry = entries[i];
     var title = entry.title.$t;
     var postUrl = entry.link.find(l => l.rel == 'alternate').href;
     var thumb = getSmartThumb(entry);
@@ -61,15 +58,34 @@ function loadMainGrid(json) {
     html += '<div class="post-card"><div class="post-thumb-wrap"><a href="'+postUrl+'"><img class="post-thumb" src="'+thumb+'"/></a></div><h2><a href="'+postUrl+'">'+title+'</a></h2>'+labels+'</div>';
   }
   document.getElementById("main-ajax-grid").innerHTML = html;
-  var totalPages = Math.ceil(filteredEntries.length / posts_per_page);
+  
+  /* LÓGICA DE PAGINACIÓN ADAPTADA AL TOTAL DEL SERVIDOR */
+  var totalPages = Math.ceil(totalResults / posts_per_page);
   var phtml = "";
-  var base_url = url.split("?")[0] + "?max-results=" + posts_per_page;
+  var base_url = window.location.href.split("?")[0] + "?max-results=" + posts_per_page;
+  
   if (currentPage > 1) phtml += "<a class='showpageNum' href='"+base_url+"&PageNo="+(currentPage-1)+"'>&lt;</a>";
-  for (var j = 1; j <= totalPages; j++) {
+  
+  var startPage = Math.max(1, currentPage - 2);
+  var endPage = Math.min(totalPages, currentPage + 2);
+  
+  if (startPage > 1) {
+      phtml += "<a class='showpageNum' href='"+base_url+"&PageNo=1'>1</a>";
+      if (startPage > 2) phtml += "<span class='showpagePoint' style='background:transparent;border:0;box-shadow:none'>...</span>";
+  }
+  
+  for (var j = startPage; j <= endPage; j++) {
     if (j == currentPage) phtml += "<span class='showpagePoint'>"+j+"</span>";
     else phtml += "<a class='showpageNum' href='"+base_url+"&PageNo="+j+"'>"+j+"</a>";
   }
+  
+  if (endPage < totalPages) {
+      if (endPage < totalPages - 1) phtml += "<span class='showpagePoint' style='background:transparent;border:0;box-shadow:none'>...</span>";
+      phtml += "<a class='showpageNum' href='"+base_url+"&PageNo="+totalPages+"'>"+totalPages+"</a>";
+  }
+  
   if (currentPage < totalPages) phtml += "<a class='showpageNum' href='"+base_url+"&PageNo="+(currentPage+1)+"'>&gt;</a>";
+  
   document.getElementById("blog-pager").innerHTML = phtml;
 }
 
@@ -78,7 +94,6 @@ $(document).ready(function() {
   var currentParent = null;
   var currentUl = null;
 
-  // FIX: Convertimos a array estático (.get()) para evitar que el bucle se salte elementos al moverlos en el DOM
   $('.dark_menu > li').get().forEach(function(el) {
     var $li = $(el);
     var $link = $li.find('> a').first();
@@ -87,26 +102,18 @@ $(document).ready(function() {
       var text = $link.text().trim();
 
       if (text.startsWith('_')) {
-        // Es un hijo, lo agregamos al padre activo
         if (currentParent) {
-          
           if (!currentUl) {
-            // Si no existe el <ul>, lo creamos una sola vez para este padre
             currentUl = $('<ul></ul>');
             currentParent.append(currentUl);
             currentParent.addClass('has-children');
           }
-          
-          // Limpiamos el "_" del texto
           $link.text(text.substring(1).trim());
-          
-          // Movemos el elemento hijo adentro del <ul> de forma segura
           currentUl.append($li);
         }
       } else {
-        // Es un enlace normal, por lo tanto es un "padre potencial"
         currentParent = $li;
-        currentUl = null; // Reiniciamos el contenedor para el nuevo padre
+        currentUl = null; 
       }
     }
   });
@@ -127,7 +134,6 @@ $(document).ready(function() {
       themeBtn.find('i').attr('class', 'fa-solid fa-moon');
     }
 
-    /* FIX: Recarga de Disqus con retraso para detectar el nuevo fondo */
     if (typeof DISQUS !== 'undefined') {
         setTimeout(function() {
             DISQUS.reset({ reload: true });
@@ -141,7 +147,6 @@ $(document).ready(function() {
   $('#menu-toggle').on('click', function() { $('body').addClass('drawer-open'); });
   $('#drawer-close, #drawer-overlay').on('click', function() { $('body').removeClass('drawer-open'); });
   
-  // Delegación de eventos para el menú móvil
   $(document).on('click', '#side-drawer .has-children > a', function(e) {
     e.preventDefault();
     $(this).parent().toggleClass('active');
@@ -173,5 +178,46 @@ $(document).ready(function() {
       $('head').append('<link rel="stylesheet" href="https://raw.githack.com/SamaelCr/AltyGamesTheme/main/pages/search/search.css?v=' + cbCat + '">');
       $('head').append('<link rel="stylesheet" href="https://raw.githack.com/SamaelCr/AltyGamesTheme/main/pages/categories/categories.css?v=' + cbCat + '">');
       $('head').append('<script src="https://raw.githack.com/SamaelCr/AltyGamesTheme/main/pages/categories/categories.js?v=' + cbCat + '"></script>');
+  }
+
+  /* =========================================================================
+     7. NUEVO SISTEMA DE CARGA AJAX (PAGINACIÓN SERVER-SIDE REAL)
+     ========================================================================= */
+  if ($('body').hasClass('index-view') || window.location.href === window.location.origin + '/' || window.location.href.indexOf('?max-results') > -1) {
+      
+      var url = window.location.href;
+      var currentPage = url.indexOf("PageNo=") != -1 ? parseInt(url.split("PageNo=")[1]) : 1;
+      if (isNaN(currentPage)) currentPage = 1;
+
+      // A. Carga del Grid Destacado (solo lo traemos, el HTML se encarga de mostrarlo)
+      if ($('#featured-ajax-grid').length) {
+          $.ajax({
+              url: "/feeds/posts/summary/-/Destacado?alt=json&max-results=2",
+              type: "GET",
+              dataType: "json",
+              success: function(json) { loadFeatured(json); }
+          });
+      }
+
+      // B. Carga del Grid Principal con Offset y exclusión de etiqueta (MAGIA)
+      if ($('#main-ajax-grid').length) {
+          // Calculamos el OFFSET para Blogger
+          var startIndex = ((currentPage - 1) * posts_per_page) + 1;
+          
+          // Agregamos un "-" antes de la etiqueta para decirle a Blogger "EXCLUYE ESTA ETIQUETA"
+          var excludeLabel = encodeURIComponent("-" + featured_label); 
+          
+          $('#main-ajax-grid').html('<div style="grid-column:1/-1; text-align:center; padding:20px; color:var(--brand-color);">Cargando juegos...</div>');
+          
+          $.ajax({
+              // Ruta dinámica: /feeds/posts/summary/-/-Destacado?start-index=10&max-results=9
+              url: "/feeds/posts/summary/-/" + excludeLabel + "?alt=json&start-index=" + startIndex + "&max-results=" + posts_per_page,
+              type: "GET",
+              dataType: "json",
+              success: function(json) {
+                  loadMainGrid(json, currentPage);
+              }
+          });
+      }
   }
 });

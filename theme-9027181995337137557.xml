@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE html>
-<html b:css='false' b:default-jumplink-target='_blank' b:layoutsVersion='3' b:responsive='true' xmlns='http://www.w3.org/1999/xhtml' xmlns:b='http://www.google.com/2005/gml/b' xmlns:data='http://www.google.com/2005/gml/data' xmlns:expr='http://www.google.com/2005/gml/border'>
+<html b:css='false' b:default-jumplink-target='_blank' b:layoutsVersion='3' b:responsive='true' xmlns='http://www.w3.org/1999/xhtml' xmlns:b='http://www.google.com/2005/gml/b' xmlns:data='http://www.google.com/2005/gml/data' xmlns:expr='http://www.google.com/2005/gml/expr'>
 <head>
 <b:if cond='data:blog.url == data:blog.homepageUrl'><title><data:blog.pageTitle/></title></b:if>
-<b:if cond='data:blog.pageType == "item"'><title><data:blog.pageName/></title></b:if>
+<b:if cond='data:blog.pageType == &quot;item&quot;'><title><data:blog.pageName/></title></b:if>
 <meta content='width=device-width,initial-scale=1' name='viewport'/>
 <meta content='blogger' name='generator'/>
 
@@ -26,8 +26,8 @@
 <!-- 2. CARGA DE ASSETS (3 OPCIONES DE CDN) -->
 
 <!-- OPCIÓN 1: GITHACK (DESARROLLO - ACTUALIZACIÓN AL INSTANTE) -->
-<link href='https://raw.githack.com/SamaelCr/AltyGamesTheme/main/styles.css' rel='stylesheet' type='text/css'/>
-<script src='https://raw.githack.com/SamaelCr/AltyGamesTheme/main/script.js' type='text/javascript'/>
+<link href='https://raw.githack.com/SamaelCr/AltyGamesTheme/main/styles.css?v=2.80' rel='stylesheet' type='text/css'/>
+<script src='https://raw.githack.com/SamaelCr/AltyGamesTheme/main/script.js?v=2.15' type='text/javascript'/>
 
 <!-- OPCIÓN 2: STATICALLY (DESARROLLO SEMI-PRO) 
 <link href='https://cdn.statically.io/gh/SamaelCr/AltyGamesTheme/main/styles.css' rel='stylesheet' type='text/css'/>
@@ -46,7 +46,7 @@ Theme Name: Devil Survivor 2 (Restoration Final)
 Design by: AltyGames
 -----------------------------------------------
 <Group description="Fondo" selector="body">
-  <Variable name="body.background" description="Imagen de fondo" type="background" color="$(body.bg)" default="$(color) url(https://1.bp.blogspot.com/-d7NByOREYKU/VpTJ7zJgvUI/AAAAAAAACTw/X6HasrYaVs4/s000/bg_body.gif) repeat fixed top center" value="$(color) url(https://1.bp.blogspot.com/-d7NByOREYKU/VpTJ7zJgvUI/AAAAAAAACTw/X6HasrYaVs4/s000/bg_body.gif) repeat fixed top center"/>
+  <Variable name="body.background" description="Imagen de fondo" type="background" color="$(body.bg)" default="$(color) url(https://1.bp.blogspot.com/-d7NByOREYKU/VpTJ7zJgvUI/AAAAAAAACTw/X6HasrYaVs4/s000/bg_body.gif) repeat fixed top center" value="$(color) url(https://blogger.googleusercontent.com/img/a/AVvXsEhKEsbKEhO9djX2GX9-nNeeQUZhsK4OBbXc-kLgND37iEzP4Qfzai9TzigmMDQwZzwwZobcn_LX_RLhzTQZjk8EA4W9Tq5XY9vywmQBMekWL4jcGaE9OGm6vUPkdtCKTgXq6jshMne2Sw3W_teOykvjCavbR5FECmqHN0n-PK6zLHZ2_9OiSQ5z5Y50Bec=s1600) repeat scroll top left"/>
 </Group>
 <Group description="AltyGames: Colores" selector="body">
   <Variable name="brand.color" description="Color Principal" type="color" default="#0860ca" value="#0860ca"/>
@@ -118,25 +118,50 @@ a { color: $(brand.color); }
     <div class='header-inner'>
       <b:section class='blognames' id='blognames' maxwidgets='1' showaddelement='no'>
         <b:widget id='Header1' locked='true' title='AltyGames (cabecera)' type='Header' version='1'>
+          <b:widget-settings>
+            <b:widget-setting name='displayUrl'>https://blogger.googleusercontent.com/img/a/AVvXsEghd-V12AIsPlu3hXmHw8uR22fj1Z5WG_e8-uJCzCIP-G_kxCcgygHxw0YEegz4nrVmSJ_uuM7gpe70fP6nGLILPTvXeElbQQSaZhKPOUSKVT5IpUylK5OWnxobSGpXiu8WzNJbja_DQPqGP_tFsFYT7xO2Y2Wnu8HTRj0toPwKrVNeokssd6gg_Av8wDE=s1600</b:widget-setting>
+            <b:widget-setting name='displayHeight'>900</b:widget-setting>
+            <b:widget-setting name='sectionWidth'>150</b:widget-setting>
+            <b:widget-setting name='useImage'>true</b:widget-setting>
+            <b:widget-setting name='shrinkToFit'>false</b:widget-setting>
+            <b:widget-setting name='imagePlacement'>BEHIND</b:widget-setting>
+            <b:widget-setting name='displayWidth'>1600</b:widget-setting>
+          </b:widget-settings>
           <b:includable id='main'>
-            <b:if cond='data:useImage'><style type='text/css'>#header { background-image: url("<data:sourceUrl/>"); }</style></b:if>
+            <b:if cond='data:useImage'><style type='text/css'>#header { background-image: url(&quot;<data:sourceUrl/>&quot;); }</style></b:if>
             <h1 id='blog-title'><a expr:href='data:blog.homepageUrl'><data:title/></a></h1>
           </b:includable>
+          <b:includable id='description'>
+  <div class='descriptionwrapper'>
+    <p class='description'><span><data:description/></span></p>
+  </div>
+</b:includable>
+          <b:includable id='title'>
+  <b:tag cond='data:blog.url != data:blog.homepageUrl' expr:href='data:blog.homepageUrl' name='a'>
+    <data:title/>
+  </b:tag>
+</b:includable>
         </b:widget>
       </b:section>
       <div class='jorib'>
         <b:section id='Social' maxwidgets='1' showaddelement='yes'>
           <b:widget id='LinkList2' locked='false' title='Redes Sociales' type='LinkList' version='1'>
+            <b:widget-settings>
+              <b:widget-setting name='shownum'>2</b:widget-setting>
+              <b:widget-setting name='sorting'>NONE</b:widget-setting>
+              <b:widget-setting name='text-0'>facebook</b:widget-setting>
+              <b:widget-setting name='link-0'>https://www.facebook.com/?locale=es_LA</b:widget-setting>
+            </b:widget-settings>
             <b:includable id='main'>
               <ul class='jorib'>
                 <b:loop values='data:links' var='link'>
                   <li>
                     <a expr:href='data:link.target'>
-                      <b:if cond='data:link.name contains "facebook"'><i class='fa-brands fa-facebook-f'/></b:if>
-                      <b:if cond='data:link.name contains "twitter"'><i class='fa-brands fa-twitter'/></b:if>
-                      <b:if cond='data:link.name contains "discord"'><i class='fa-brands fa-discord'/></b:if>
-                      <b:if cond='data:link.name contains "instagram"'><i class='fa-brands fa-instagram'/></b:if>
-                      <b:if cond='data:link.name contains "youtube"'><i class='fa-brands fa-youtube'/></b:if>
+                      <b:if cond='data:link.name contains &quot;facebook&quot;'><i class='fa-brands fa-facebook-f'/></b:if>
+                      <b:if cond='data:link.name contains &quot;twitter&quot;'><i class='fa-brands fa-twitter'/></b:if>
+                      <b:if cond='data:link.name contains &quot;discord&quot;'><i class='fa-brands fa-discord'/></b:if>
+                      <b:if cond='data:link.name contains &quot;instagram&quot;'><i class='fa-brands fa-instagram'/></b:if>
+                      <b:if cond='data:link.name contains &quot;youtube&quot;'><i class='fa-brands fa-youtube'/></b:if>
                     </a>
                   </li>
                 </b:loop>
@@ -152,6 +177,20 @@ a { color: $(brand.color); }
   <div class='menujohanes'>
     <b:section id='Navigation' maxwidgets='1' showaddelement='yes'>
       <b:widget id='LinkList1' locked='false' title='Navegacion' type='LinkList' version='1'>
+        <b:widget-settings>
+          <b:widget-setting name='shownum'>10</b:widget-setting>
+          <b:widget-setting name='link-3'>https://altygames.blogspot.com/p/categories.html?cat=Accion</b:widget-setting>
+          <b:widget-setting name='sorting'>NONE</b:widget-setting>
+          <b:widget-setting name='link-4'>https://https://altygames.blogspot.com/p/categories.html?cat=2D</b:widget-setting>
+          <b:widget-setting name='text-1'>CATEGORIAS</b:widget-setting>
+          <b:widget-setting name='link-1'>#</b:widget-setting>
+          <b:widget-setting name='text-0'>HOME</b:widget-setting>
+          <b:widget-setting name='link-2'>https://altygames.blogspot.com/p/categories.html?cat=Plataformas</b:widget-setting>
+          <b:widget-setting name='text-3'>_Accion</b:widget-setting>
+          <b:widget-setting name='link-0'>/</b:widget-setting>
+          <b:widget-setting name='text-2'>_Plataformas</b:widget-setting>
+          <b:widget-setting name='text-4'>_2D</b:widget-setting>
+        </b:widget-settings>
         <b:includable id='main'>
           <ul class='dark_menu'>
             <b:loop values='data:links' var='link'>
@@ -166,11 +205,26 @@ a { color: $(brand.color); }
       <div class='tool-btn' id='theme-toggle'><i class='fa-solid fa-sun'/></div>
       <b:section id='LupaConfig' maxwidgets='1' showaddelement='yes'>
         <b:widget id='LinkList3' locked='false' title='Configuración Lupa' type='LinkList' version='2' visible='true'>
+          <b:widget-settings>
+            <b:widget-setting name='shownum'>1</b:widget-setting>
+            <b:widget-setting name='sorting'>NONE</b:widget-setting>
+            <b:widget-setting name='text-0'>search</b:widget-setting>
+            <b:widget-setting name='link-0'>https://altygames.blogspot.com/p/search.html</b:widget-setting>
+          </b:widget-settings>
           <b:includable id='main'>
             <b:loop values='data:links' var='link'>
               <a class='tool-btn' expr:href='data:link.target'><i class='fa-solid fa-magnifying-glass'/></a>
             </b:loop>
           </b:includable>
+          <b:includable id='content'>
+ <div class='widget-content'>
+   <ul>
+     <b:loop values='data:links' var='link'>
+       <li><a expr:href='data:link.target'><data:link.name/></a></li>
+     </b:loop>
+   </ul>
+ </div>
+</b:includable>
         </b:widget>
       </b:section>
     </div>
@@ -179,60 +233,73 @@ a { color: $(brand.color); }
   <!-- CONTENIDO PRINCIPAL -->
   <div id='casing'>
     <div id='content-wrapper'>
-      <b:if cond='data:blog.pageType == "index"'>
+      <b:if cond='data:blog.pageType == &quot;index&quot;'>
         <div class='section-title'><i class='fa-solid fa-star'/> DESTACADOS</div>
         <div id='featured-ajax-grid'/>
-        <script src='/feeds/posts/summary/-/Destacado?alt=json-in-script&amp;callback=loadFeatured&amp;max-results=2' type='text/javascript'/>
+        
         <div class='section-title'><i class='fa-solid fa-calendar-days'/> ÚLTIMAS PUBLICACIONES</div>
         <div class='latest-grid-container' id='main-ajax-grid'/>
         <div id='blog-pager'/>
-        <script src='/feeds/posts/summary?alt=json-in-script&amp;callback=loadMainGrid&amp;max-results=999' type='text/javascript'/>
+        
       </b:if>
-      <b:if cond='data:blog.pageType in {"item","static_page"}'>
+      <b:if cond='data:blog.pageType in {&quot;item&quot;,&quot;static_page&quot;}'>
           <b:section id='MainGrid' showaddelement='no'>
-            <b:widget id='Blog1' locked='true' title='Entradas del blog' type='Blog'>
+            <b:widget id='Blog1' locked='true' title='Entradas del blog' type='Blog' version='1'>
+              <b:widget-settings>
+                <b:widget-setting name='showDateHeader'>false</b:widget-setting>
+                <b:widget-setting name='style.textcolor'>#ffffff</b:widget-setting>
+                <b:widget-setting name='showShareButtons'>true</b:widget-setting>
+                <b:widget-setting name='authorLabel'>By</b:widget-setting>
+                <b:widget-setting name='showCommentLink'>true</b:widget-setting>
+                <b:widget-setting name='style.urlcolor'>#ffffff</b:widget-setting>
+                <b:widget-setting name='showAuthor'>false</b:widget-setting>
+                <b:widget-setting name='style.linkcolor'>#ffffff</b:widget-setting>
+                <b:widget-setting name='style.unittype'>TextAndImage</b:widget-setting>
+                <b:widget-setting name='style.bgcolor'>#ffffff</b:widget-setting>
+                <b:widget-setting name='reactionsLabel'/>
+                <b:widget-setting name='showAuthorProfile'>false</b:widget-setting>
+                <b:widget-setting name='style.layout'>1x1</b:widget-setting>
+                <b:widget-setting name='showLabels'>true</b:widget-setting>
+                <b:widget-setting name='showLocation'>true</b:widget-setting>
+                <b:widget-setting name='showTimestamp'>true</b:widget-setting>
+                <b:widget-setting name='postsPerAd'>1</b:widget-setting>
+                <b:widget-setting name='showBacklinks'>false</b:widget-setting>
+                <b:widget-setting name='style.bordercolor'>#ffffff</b:widget-setting>
+                <b:widget-setting name='showInlineAds'>false</b:widget-setting>
+                <b:widget-setting name='showReactions'>false</b:widget-setting>
+              </b:widget-settings>
               <b:includable id='main' var='top'>
                 <div class='blog-posts hfeed'>
                   <b:loop values='data:posts' var='post'>
                     <b:include data='post' name='post'/>
                     <!-- AQUÍ EVITAMOS QUE CARGUE DISQUS SI ESTAMOS EN LA BÚSQUEDA O CATEGORÍAS -->
-                    <b:if cond='data:blog.url contains "search.html" or data:blog.url contains "categories.html"'>
+                    <b:if cond='data:blog.url contains &quot;search.html&quot; or data:blog.url contains &quot;categories.html&quot;'>
                     <b:else/>
-                        <b:include cond='data:blog.pageType in {"static_page","item"}' data='post' name='comment_picker'/>
+                        <b:include cond='data:blog.pageType in {&quot;static_page&quot;,&quot;item&quot;}' data='post' name='comment_picker'/>
                     </b:if>
                   </b:loop>
                 </div>
               </b:includable>
-              <b:includable id='post' var='post'>
-                <article class='post hentry' itemprop='blogPost' itemscope='itemscope' itemtype='http://schema.org/BlogPosting'>
-                  <div class='post-body entry-content' expr:id='"post-body-" + data:post.id' itemprop='articleBody'>
-                    <b:if cond='data:blog.pageType == "item"'>
-                        <div class='post-body-container'>
-                            <data:post.body/>
-                        </div>
-                    <b:else/>
-                        <data:post.body/>
-                    </b:if>
-                    <div style='clear: both;'/>
-                  </div>
-                </article>
-              </b:includable>
-              <!-- MODULO DE COMENTARIOS DISQUS -->
+              <b:includable id='backlinkDeleteIcon' var='backlink'/>
+              <b:includable id='backlinks' var='post'/>
+              <b:includable id='comment-form' var='post'/>
+              <b:includable id='commentDeleteIcon' var='comment'/>
+              <b:includable id='comment_count_picker' var='post'/>
               <b:includable id='comment_picker' var='post'>
                 <div class='comments' id='comments'>
                   <h4>Comunidad</h4>
                   <div id='disqus_thread'/>
                   <script type='text/javascript'>
-                    var disqus_shortname = 'altygames'; 
+                    var disqus_shortname = &#39;altygames&#39;; 
                     var disqus_config = function () {
-                      this.page.url = "<data:post.url.canonical/>";
-                      this.page.identifier = "<data:post.id/>";
+                      this.page.url = &quot;<data:post.url.canonical/>&quot;;
+                      this.page.identifier = &quot;<data:post.id/>&quot;;
                     };
                     (function() {
-                      var d = document, s = d.createElement('script');
+                      var d = document, s = d.createElement(&#39;script&#39;);
                       s.async = true;
-                      s.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
-                      s.setAttribute('data-timestamp', +new Date());
+                      s.src = &#39;https://&#39; + disqus_shortname + &#39;.disqus.com/embed.js&#39;;
+                      s.setAttribute(&#39;data-timestamp&#39;, +new Date());
                       (d.head || d.body).appendChild(s);
                     })();
                   </script>
@@ -246,6 +313,39 @@ a { color: $(brand.color); }
                   </div>
                 </div>
               </b:includable>
+              <b:includable id='feedLinks'/>
+              <b:includable id='feedLinksBody' var='links'/>
+              <b:includable id='iframe_comments' var='post'>
+                <div class='comments' id='comments'>
+                   <h4>Comentarios</h4>
+                   <script expr:src='data:post.commentSrc' type='text/javascript'/>
+                   <div class='cmt_iframe_holder' expr:data-href='data:post.url' expr:data-viewtype='data:post.viewType'/>
+                </div>
+              </b:includable>
+              <b:includable id='mobile-index-post' var='post'/>
+              <b:includable id='mobile-main' var='top'/>
+              <b:includable id='mobile-nextprev'/>
+              <b:includable id='mobile-post' var='post'/>
+              <b:includable id='nextprev'/>
+              <b:includable id='post' var='post'>
+                <article class='post hentry' itemprop='blogPost' itemscope='itemscope' itemtype='http://schema.org/BlogPosting'>
+                  <div class='post-body entry-content' expr:id='&quot;post-body-&quot; + data:post.id' itemprop='articleBody'>
+                    <b:if cond='data:blog.pageType == &quot;item&quot;'>
+                        <div class='post-body-container'>
+                            <data:post.body/>
+                        </div>
+                    <b:else/>
+                        <data:post.body/>
+                    </b:if>
+                    <div style='clear: both;'/>
+                  </div>
+                </article>
+              </b:includable>
+              <b:includable id='postQuickEdit' var='post'/>
+              <b:includable id='shareButtons' var='post'/>
+              <b:includable id='status-message'/>
+              <b:includable id='threaded-comment-form' var='post'/>
+              <b:includable id='threaded_comment_js' var='post'/>
               <b:includable id='threaded_comments' var='post'>
                 <div class='comments' id='comments'>
                   <h4>Comentarios</h4>
@@ -254,15 +354,6 @@ a { color: $(brand.color); }
                   </div>
                 </div>
               </b:includable>
-              <b:includable id='iframe_comments' var='post'>
-                <div class='comments' id='comments'>
-                   <h4>Comentarios</h4>
-                   <script expr:src='data:post.commentSrc' type='text/javascript'/>
-                   <div class='cmt_iframe_holder' expr:data-href='data:post.url' expr:data-viewtype='data:post.viewType'/>
-                </div>
-              </b:includable>
-              <!-- Otros includables (vacíos para evitar errores) -->
-              <b:includable id='backlinkDeleteIcon' var='backlink'/><b:includable id='backlinks' var='post'/><b:includable id='comment-form' var='post'/><b:includable id='commentDeleteIcon' var='comment'/><b:includable id='comment_count_picker' var='post'/><b:includable id='feedLinks'/><b:includable id='feedLinksBody' var='links'/><b:includable id='mobile-index-post' var='post'/><b:includable id='mobile-main' var='top'/><b:includable id='mobile-nextprev'/><b:includable id='mobile-post' var='post'/><b:includable id='nextprev'/><b:includable id='postQuickEdit' var='post'/><b:includable id='shareButtons' var='post'/><b:includable id='status-message'/><b:includable id='threaded-comment-form' var='post'/><b:includable id='threaded_comment_js' var='post'/>
             </b:widget>
           </b:section>
       </b:if>
@@ -270,13 +361,16 @@ a { color: $(brand.color); }
     <div class='sidebar'>
       <div class='sidebar-search'>
         <!-- FORMULARIO REDIRIGIDO A TU NUEVA PÁGINA -->
-        <form expr:action='data:blog.homepageUrl + "p/search.html"' method='get'>
+        <form expr:action='data:blog.homepageUrl + &quot;p/search.html&quot;' method='get'>
           <input name='q' placeholder='search' type='text'/>
           <button type='submit'><i class='fa-solid fa-magnifying-glass'/></button>
         </form>
       </div>
       <b:section id='SidebarArea' showaddelement='yes'>
         <b:widget id='HTML1' locked='false' title='Anuncio' type='HTML' version='1'>
+          <b:widget-settings>
+            <b:widget-setting name='content'/>
+          </b:widget-settings>
           <b:includable id='main'>
             <div class='widget-content'>
               <div class='sidebar-box'>PUBLICIDAD</div>
