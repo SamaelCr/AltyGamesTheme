@@ -192,7 +192,7 @@ $(document).ready(function() {
   }
 
   /* =========================================================================
-     7. SISTEMA DE CARGA AJAX (VERSION FINAL ESTABLE)
+     7. NUEVO SISTEMA DE CARGA AJAX (PAGINACIÓN SERVER-SIDE REAL) - FIX TOTAL
      ========================================================================= */
   if ($('#main-ajax-grid').length) {
       
@@ -200,28 +200,27 @@ $(document).ready(function() {
       var currentPage = parseInt(urlParams.get('PageNo')) || 1;
       var startIndex = ((currentPage - 1) * posts_per_page) + 1;
 
-      // A. Carga del Grid Destacado
+      // A. Carga del Grid Destacado (JSONP para compatibilidad total)
       $.ajax({
-          url: "/feeds/posts/summary/-/Destacado?alt=json-in-script&max-results=2",
+          url: "/feeds/posts/summary/-/Destacado?alt=json-in-script",
           type: "GET",
           dataType: "jsonp",
-          jsonpCallback: 'callback',
           success: function(json) { loadFeatured(json); }
       });
 
-      // B. Carga del Grid Principal con exclusión robusta
+      // B. Carga del Grid Principal (Filtrado negativo por ruta para total exacto)
       $('#main-ajax-grid').html('<div style="grid-column:1/-1; text-align:center; padding:20px; color:var(--brand-color);">Cargando juegos...</div>');
       
       $.ajax({
-          url: "/feeds/posts/summary?alt=json-in-script&q=" + encodeURIComponent("-label:" + featured_label) + "&start-index=" + startIndex + "&max-results=" + posts_per_page,
+          // La ruta /-/-Destacado es el estándar más fiable para openSearch$totalResults
+          url: "/feeds/posts/summary/-/-" + featured_label + "?alt=json-in-script&start-index=" + startIndex + "&max-results=" + posts_per_page,
           type: "GET",
           dataType: "jsonp",
-          jsonpCallback: 'callback',
           success: function(json) {
               loadMainGrid(json, currentPage);
           },
           error: function() {
-              $('#main-ajax-grid').html('<div style="grid-column:1/-1; text-align:center; padding:20px; color:red;">Error al conectar con el servidor de juegos.</div>');
+              $('#main-ajax-grid').html('<div style="grid-column:1/-1; text-align:center; padding:20px; color:red;">Error de conexión con el servidor.</div>');
           }
       });
   }
