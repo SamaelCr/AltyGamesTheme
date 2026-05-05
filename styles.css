@@ -145,11 +145,24 @@ ul.dark_menu li ul li { display: block; width: 100%; }
 #featured-ajax-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px; margin-bottom: 40px; width: 100%; }
 .latest-grid-container { display: grid !important; grid-template-columns: repeat(3, 1fr) !important; gap: 25px !important; width: 100% !important; }
 
-.post-card { display: flex; flex-direction: column; margin-bottom: 20px; }
-.post-thumb-wrap { width: 100%; height: 160px; overflow: hidden; border-radius: 4px; margin-bottom: 10px; background: #222; border-bottom: 3px solid transparent; transition: 0.3s;}
+/* FIX ALINEACIÓN: Altura fija en componentes clave */
+.post-card { display: flex; flex-direction: column; margin-bottom: 30px; position: relative; }
+.post-thumb-wrap { width: 100%; height: 160px; overflow: hidden; border-radius: 4px; margin-bottom: 12px; background: #222; border-bottom: 3px solid transparent; transition: 0.3s;}
 .post-card:hover .post-thumb-wrap { border-color: var(--brand-color); }
 .post-thumb { width: 100%; height: 100%; object-fit: cover; }
-.post-card h2 { margin: 5px 0 3px 0; font-size: 14px; line-height: 1.3; font-weight: bold; height: 38px; overflow: hidden; }
+
+/* Altura fija para el título (máximo 2 líneas) */
+.post-card h2 { 
+    margin: 0 0 8px 0; 
+    font-size: 15px; 
+    line-height: 1.3; 
+    font-weight: bold; 
+    height: 40px; 
+    overflow: hidden; 
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
 .post-card h2 a { color: inherit; text-decoration: none !important; border: 0 !important; }
 
 /* --- 7. FICHA, REQUISITOS Y DESCRIPCIÓN --- */
@@ -223,8 +236,17 @@ body.drawer-open #drawer-overlay { display: block; }
 #side-drawer ul.dark_menu li.has-children.active > a::after { transform: translateY(-50%) rotate(90deg); }
 
 /* --- 12. ETIQUETAS Y PAGINACIÓN --- */
-.post-labels { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
-.post-tag { font-size: 11px; text-transform: uppercase; background: rgba(255,255,255,0.1); padding: 5px 10px; border-radius: 4px; color: #ccc !important; font-weight: bold; transition: all 0.3s ease; text-decoration: none !important; }
+/* FIX ALINEACIÓN: Altura fija para el contenedor de etiquetas (aprox 3 líneas) */
+.post-labels { 
+    display: flex; 
+    flex-wrap: wrap; 
+    gap: 5px; 
+    margin-top: 10px; 
+    height: 70px; 
+    overflow: hidden; 
+    align-content: flex-start;
+}
+.post-tag { font-size: 10px; text-transform: uppercase; background: rgba(255,255,255,0.1); padding: 4px 8px; border-radius: 3px; color: #bbb !important; font-weight: bold; transition: all 0.2s ease; text-decoration: none !important; }
 .post-tag:hover { background: var(--brand-color); color: #fff !important; }
 
 #blog-pager { clear: both; width: 100%; display: flex; justify-content: center; align-items: center; gap: 8px; margin: 40px auto 20px auto; padding: 20px 0; border-top: 1px solid rgba(255,255,255,0.1); }
@@ -237,7 +259,7 @@ body.drawer-open #drawer-overlay { display: block; }
     margin: 40px 0; 
     padding: 20px; 
     border: 1px solid var(--brand-color); 
-    background: #0b0b0b !important; /* Fondo sólido oscuro obligatorio */
+    background: #0b0b0b !important; 
     border-radius: 4px; 
 }
 #comments h4 { font-size: 18px; text-transform: uppercase; color: var(--brand-color); margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; }
@@ -255,10 +277,13 @@ body.drawer-open #drawer-overlay { display: block; }
 .light-theme .sidebar-search button { background: #f0f0f0 !important; color: #333333 !important; }
 .light-theme .sidebar-box { background: #ffffff !important; border: 2px solid #dddddd !important; color: #888888 !important; }
 
-/* FIX PAGINACIÓN MODO CLARO (FORZADO DINÁMICO) */
 html.light-theme .showpageNum, .light-theme .showpageNum { background: #e0e0e0 !important; color: #111 !important; border: 1px solid #ccc !important; }
 html.light-theme .showpageNum:hover, .light-theme .showpageNum:hover { background: var(--brand-color) !important; color: #fff !important; border-color: var(--brand-color) !important; }
 html.light-theme .showpagePoint, .light-theme .showpagePoint { background: var(--brand-color) !important; color: #fff !important; border-color: var(--brand-color) !important; }
+
+/* FIX VISIBILIDAD ETIQUETAS MODO CLARO */
+.light-theme .post-tag { background: #eee !important; color: #444 !important; border: 1px solid #ddd; }
+.light-theme .post-tag:hover { background: var(--brand-color) !important; color: #fff !important; }
 
 /* --- 15. MEDIA QUERIES --- */
 @media screen and (max-width: 768px) {
@@ -273,6 +298,8 @@ html.light-theme .showpagePoint, .light-theme .showpagePoint { background: var(-
     .sidebar { width: 100%; border-top: 1px solid var(--brand-color); margin-top: 20px; padding: 20px 15px; }
     #featured-ajax-grid, .latest-grid-container, .info-grid, .req-grid { grid-template-columns: 1fr !important; }
     .steam-buy-box { flex-direction: column; gap: 10px; text-align: center; }
+    /* Mobile: Permitimos que las etiquetas crezcan si es necesario */
+    .post-labels { height: auto; max-height: 120px; }
 }
 
 .fleft { text-align: center; padding: 15px; border: 1px solid var(--brand-color); background: rgba(0,0,0,0.8); color: #999; max-width: 1120px; width: 95%; margin: 10px auto; }
