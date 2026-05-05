@@ -167,7 +167,6 @@ document.addEventListener("DOMContentLoaded", function() {
   var drawer = document.getElementById('drawer-content');
   if (menuData && drawer) {
     drawer.innerHTML = '<ul class="dark_menu">' + menuData.innerHTML + '</ul>';
-    // Re-aplicar visibilidad al clon
     drawer.querySelectorAll('.dark_menu').forEach(function(m) { m.style.opacity = "1"; });
   }
 
@@ -181,9 +180,9 @@ document.addEventListener("DOMContentLoaded", function() {
     if (el) el.onclick = function() { document.body.classList.remove('drawer-open'); };
   });
 
-  /* 4. CARGA AJAX */
+  /* 4. CARGA AJAX HOME */
   var mainGrid = document.getElementById('main-ajax-grid');
-  if (mainGrid && !document.body.classList.contains('is-search-page')) {
+  if (mainGrid && !document.body.classList.contains('is-search-page') && !document.body.classList.contains('is-category-page')) {
     var params = new URLSearchParams(window.location.search);
     var page = parseInt(params.get('PageNo')) || 1;
     var start = ((page - 1) * posts_per_page) + 1;
@@ -192,12 +191,32 @@ document.addEventListener("DOMContentLoaded", function() {
 
     getJSONP("/feeds/posts/summary/-/Destacado?max-results=0", function(data) {
       var totalF = (data.feed && data.feed.openSearch$totalResults) ? parseInt(data.feed.openSearch$totalResults.$t) : 0;
-      
       getJSONP("/feeds/posts/summary/-/Destacado?max-results=2", loadFeatured);
-      
       getJSONP("/feeds/posts/summary?start-index="+start+"&max-results="+(posts_per_page + totalF), function(json) {
         loadMainGrid(json, page, totalF);
       });
     });
+  }
+
+  /* 5. INYECCIÓN DINÁMICA DE MÓDULOS (SEARCH / CATEGORIES) */
+  var cacheBuster = new Date().getTime();
+  if (window.location.href.indexOf('/p/search.html') > -1) {
+      document.body.classList.add('is-search-page');
+      var s_css = document.createElement('link'); s_css.rel = 'stylesheet';
+      s_css.href = 'https://raw.githack.com/SamaelCr/AltyGamesTheme/main/pages/search/search.css?v=' + cacheBuster;
+      document.head.appendChild(s_css);
+      var s_js = document.createElement('script');
+      s_js.src = 'https://raw.githack.com/SamaelCr/AltyGamesTheme/main/pages/search/search.js?v=' + cacheBuster;
+      document.head.appendChild(s_js);
+  }
+
+  if (window.location.href.indexOf('/p/categories.html') > -1) {
+      document.body.classList.add('is-category-page');
+      var c_css = document.createElement('link'); c_css.rel = 'stylesheet';
+      c_css.href = 'https://raw.githack.com/SamaelCr/AltyGamesTheme/main/pages/categories/categories.css?v=' + cacheBuster;
+      document.head.appendChild(c_css);
+      var c_js = document.createElement('script');
+      c_js.src = 'https://raw.githack.com/SamaelCr/AltyGamesTheme/main/pages/categories/categories.js?v=' + cacheBuster;
+      document.head.appendChild(c_js);
   }
 });
