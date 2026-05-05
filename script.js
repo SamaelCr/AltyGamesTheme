@@ -48,6 +48,10 @@ function loadMainGrid(json, currentPage, totalFeatured) {
   var entries = json.feed.entry ||[];
   var totalAll = json.feed.openSearch$totalResults ? parseInt(json.feed.openSearch$totalResults.$t) : 0;
   
+  // Seguridad para parámetros opcionales (evita NaN en categorías)
+  currentPage = currentPage || 1;
+  totalFeatured = totalFeatured || 0;
+  
   // El total de la cuadrícula es el total del blog menos los que son destacados
   var totalMain = totalAll - totalFeatured;
   
@@ -203,9 +207,10 @@ $(document).ready(function() {
   }
 
   /* =========================================================================
-     7. NUEVO SISTEMA DE CARGA AJAX (PAGINACIÓN ESTABLE)
+     7. NUEVO SISTEMA DE CARGA AJAX (PAGINACIÓN ESTABLE) - SOLO EN HOME
      ========================================================================= */
-  if ($('#main-ajax-grid').length) {
+  // Verificamos que el contenedor exista y que NO estemos en categorías ni búsqueda
+  if ($('#main-ajax-grid').length && !$('body').hasClass('is-category-page') && !$('body').hasClass('is-search-page')) {
       
       var urlParams = new URLSearchParams(window.location.search);
       var currentPage = parseInt(urlParams.get('PageNo')) || 1;
