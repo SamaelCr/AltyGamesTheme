@@ -1,56 +1,60 @@
-$(document).ready(function() {
+document.addEventListener("DOMContentLoaded", function() {
     var urlParams = new URLSearchParams(window.location.search);
     var category = urlParams.get('cat');
     var currentPage = parseInt(urlParams.get('PageNo')) || 1;
-    var $container = $('#cat-results');
-    var $title = $('#cat-name');
+    var container = document.getElementById('cat-results');
+    var titleEl = document.getElementById('cat-name');
 
     if (category) {
-        $title.text(category.replace(/-/g, ' '));
+        if (titleEl) titleEl.textContent = category.replace(/-/g, ' ');
         loadCategoryPosts(category, currentPage);
     } else {
-        $container.html('<div class="search-message"><i class="fa-solid fa-tags"></i><br>Selecciona una categoría para ver los juegos.</div>');
+        if (container) {
+            container.innerHTML = '<div class="search-message"><i class="fa-solid fa-tags"></i><br>Selecciona una categoría para ver los juegos.</div>';
+        }
     }
 });
 
 function loadCategoryPosts(cat, page) {
-    $('#cat-results').html('<div class="search-message"><i class="fa-solid fa-circle-notch fa-spin"></i><br>Cargando juegos de '+cat+'...</div>');
+    var container = document.getElementById('cat-results');
+    if (!container) return;
+
+    container.innerHTML = '<div class="search-message"><i class="fa-solid fa-circle-notch fa-spin"></i><br>Cargando juegos de '+cat+'...</div>';
     
     // Calculamos el inicio según la página (9 juegos por página)
     var posts_per_page = 9;
     var startIndex = ((page - 1) * posts_per_page) + 1;
 
-    // Llamada a la API de Blogger filtrando por etiqueta y con paginación
-    $.ajax({
-        url: '/feeds/posts/summary/-/' + encodeURIComponent(cat) + '?alt=json-in-script&start-index=' + startIndex + '&max-results=' + posts_per_page,
-        type: "GET",
-        dataType: "jsonp",
-        success: function(json) {
+    // Llamada a la API de Blogger usando el helper global getJSONP
+    var feedUrl = '/feeds/posts/summary/-/' + encodeURIComponent(cat) + '?start-index=' + startIndex + '&max-results=' + posts_per_page;
+    
+    if (typeof getJSONP === 'function') {
+        getJSONP(feedUrl, function(json) {
             renderCategoryPosts(json, page, cat);
-        },
-        error: function() {
-            $('#cat-results').html('<div class="search-message">Error al cargar la categoría.</div>');
-        }
-    });
+        });
+    } else {
+        console.error("Error: getJSONP no está definido en script.js");
+    }
 }
 
 function renderCategoryPosts(json, currentPage, cat) {
     var html = '';
-    var $container = $('#cat-results');
+    var container = document.getElementById('cat-results');
     var posts_per_page = 9;
 
-    if (!json.feed.entry || json.feed.entry.length === 0) {
-        $container.html('<div class="search-message"><i class="fa-regular fa-face-frown"></i><br>No hay más juegos en esta página.</div>');
+    if (!json.feed || !json.feed.entry || json.feed.entry.length === 0) {
+        if (container) container.innerHTML = '<div class="search-message"><i class="fa-regular fa-face-frown"></i><br>No hay más juegos en esta página.</div>';
         return;
     }
 
     var totalResults = parseInt(json.feed.openSearch$totalResults.$t);
 
     html += '<div class="yt-list-container">'; 
-    for (var i = 0; i < json.feed.entry.length; i++) {
-        // BLOQUE DE SEGURIDAD (Try/Catch)
+    var entries = json.feed.entry;
+
+    for (var i = 0; i < entries.length; i++) {
         try {
-            var entry = json.feed.entry[i];
+            var entry = entries[i];
             var title = entry.title.$t;
             var url = "#";
             if (entry.link) {
@@ -59,8 +63,9 @@ function renderCategoryPosts(json, currentPage, cat) {
                 }
             }
             
-            var thumb = getSmartThumb(entry); 
-            var labels = getLabels(entry);    
+            // Usamos las funciones globales de script.js
+            var thumb = typeof getSmartThumb === 'function' ? getSmartThumb(entry) : ""; 
+            var labels = typeof getLabels === 'function' ? getLabels(entry) : "";    
             
             var rawSnippet = entry.summary ? entry.summary.$t : (entry.content ? entry.content.$t : "");
             // Limpieza radical para evitar que comentarios HTML rompan el diseño
@@ -80,9 +85,9 @@ function renderCategoryPosts(json, currentPage, cat) {
             continue; 
         }
     }
-    html += '</div>'; // Fin yt-list-container
+    html += '</div>'; 
 
-    // DIBUJAR EL PAGINADOR (Sincronizado con script.js)
+    // DIBUJAR EL PAGINADOR
     var totalPages = Math.ceil(totalResults / posts_per_page);
     if (totalPages > 1) {
         html += '<div id="blog-pager" style="margin-top:40px">';
@@ -116,5 +121,5 @@ function renderCategoryPosts(json, currentPage, cat) {
         html += '</div>';
     }
     
-    $container.html(html);
+    if (container) container.innerHTML = html;
 }
