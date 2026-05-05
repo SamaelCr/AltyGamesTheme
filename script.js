@@ -5,12 +5,14 @@ var featured_label = "Destacado";
 function getSmartThumb(entry) {
   var thumb = "";
   try {
-    if (entry.media$thumbnail) { thumb = entry.media$thumbnail.url; } 
-    else {
+    if (entry.media$thumbnail) { 
+      thumb = entry.media$thumbnail.url; 
+    } else {
       var content = entry.content ? entry.content.$t : (entry.summary ? entry.summary.$t : "");
       var match = content.match(/<img[^>]+src="([^">]+)"/);
       thumb = match ? match[1] : "https://via.placeholder.com/400x250?text=No+Image";
     }
+    // Optimización de resolución para Blogger/Google
     if (thumb.indexOf("googleusercontent.com") != -1 || thumb.indexOf("bp.blogspot.com") != -1) {
       thumb = thumb.replace(/\/s[0-9]+.*?\//, "/s1600/").replace(/=s[0-9]+.*/, "=s1600");
     }
@@ -35,25 +37,29 @@ function getLabels(entry) {
   return html;
 }
 
-/* HELPER PARA JSONP (Reemplaza $.ajax para Blogger Feeds) */
+/* HELPER PARA JSONP (Resistente) */
 function getJSONP(url, callback) {
-  var name = 'jsonp_' + Math.round(100000 * Math.random());
-  window[name] = function(data) {
+  var callbackName = 'callback_' + Math.round(100000 * Math.random());
+  window[callbackName] = function(data) {
     callback(data);
-    document.getElementById(name).remove();
-    delete window[name];
+    delete window[callbackName];
+    var scriptTag = document.getElementById(callbackName);
+    if (scriptTag) scriptTag.remove();
   };
   var script = document.createElement('script');
-  script.id = name;
-  script.src = url + (url.indexOf('?') >= 0 ? '&' : '?') + 'callback=' + name;
+  script.id = callbackName;
+  // Blogger requiere alt=json-in-script para activar JSONP
+  var separator = url.indexOf('?') >= 0 ? '&' : '?';
+  script.src = url + separator + 'alt=json-in-script&callback=' + callbackName;
   document.body.appendChild(script);
 }
 
 function loadFeatured(json) {
   var html = "";
-  if(!json.feed.entry) return;
-  for (var i = 0; i < json.feed.entry.length; i++) {
-    var entry = json.feed.entry[i];
+  if(!json.feed || !json.feed.entry) return;
+  var entries = json.feed.entry;
+  for (var i = 0; i < entries.length; i++) {
+    var entry = entries[i];
     var title = entry.title.$t;
     var url = "#";
     try {
@@ -69,28 +75,30 @@ function loadFeatured(json) {
   if(grid) grid.innerHTML = html;
 }
 
-/* FIX: Ahora recibe la página actual, construye el DOM directamente y maneja resultados vacíos */
 function loadMainGrid(json, currentPage, totalFeatured) {
-  var entries = json.feed.entry ||[];
-  var totalAll = json.feed.openSearch$totalResults ? parseInt(json.feed.openSearch$totalResults.$t) : 0;
+  var entries = (json.feed && json.feed.entry) ? json.feed.entry : [];
+  var totalAll = (json.feed && json.feed.openSearch$totalResults) ? parseInt(json.feed.openSearch$totalResults.$t) : 0;
   
   currentPage = currentPage || 1;
   totalFeatured = totalFeatured || 0;
   var totalMain = totalAll - totalFeatured;
   var html = "";
   
+  // Filtrar para no repetir destacados en el grid principal
   var filteredEntries = entries.filter(function(e) {
-    return !(e.category || []).some(function(l) { return l.term === featured_label; });
+    var labels = e.category || [];
+    for(var j=0; j<labels.length; j++) {
+        if(labels[j].term === featured_label) return false;
+    }
+    return true;
   });
-  var pageEntries = filteredEntries.slice(0, posts_per_page);
 
+  var pageEntries = filteredEntries.slice(0, posts_per_page);
   var mainGrid = document.getElementById("main-ajax-grid");
   if (!mainGrid) return;
 
   if (pageEntries.length === 0) {
-      mainGrid.innerHTML = "<div style='grid-column:1/-1; text-align:center; padding:20px; color:var(--brand-color); font-weight:bold;'>No hay más juegos para mostrar en esta página.</div>";
-      var pager = document.getElementById("blog-pager");
-      if(pager) pager.innerHTML = "";
+      mainGrid.innerHTML = "<div style='grid-column:1/-1; text-align:center; padding:20px; color:var(--brand-color); font-weight:bold;'>No hay más juegos para mostrar.</div>";
       return;
   }
 
@@ -109,6 +117,7 @@ function loadMainGrid(json, currentPage, totalFeatured) {
   }
   mainGrid.innerHTML = html;
   
+  // Paginación
   var totalPages = Math.ceil(totalMain / posts_per_page);
   var phtml = "";
   var base_url = window.location.href.split("?")[0] + "?max-results=" + posts_per_page;
@@ -134,17 +143,13 @@ function loadMainGrid(json, currentPage, totalFeatured) {
       }
       var pagerContainer = document.getElementById("blog-pager");
       if(pagerContainer) pagerContainer.innerHTML = phtml;
-  } else {
-      var pagerContainerAlt = document.getElementById("blog-pager");
-      if(pagerContainerAlt) pagerContainerAlt.innerHTML = "";
   }
 }
 
 document.addEventListener("DOMContentLoaded", function() {
-  /* 1. LÓGICA DE SUBMENÚS (SISTEMA DE MAPEO PREVIO V3) - CORREGIDA */
+  /* 1. LÓGICA DE SUBMENÚS */
   var currentParent = null;
   var currentUl = null;
-
   var menuItems = document.querySelectorAll('.dark_menu > li');
   menuItems.forEach(function(el) {
     var link = el.querySelector('a');
@@ -191,7 +196,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   }
 
-  /* 3. PANEL LATERAL (SIDE DRAWER) */
+  /* 3. PANEL LATERAL */
   var sourceMenu = document.querySelector('.menujohanes .dark_menu');
   var drawerContent = document.getElementById('drawer-content');
   if (sourceMenu && drawerContent) {
@@ -203,13 +208,11 @@ document.addEventListener("DOMContentLoaded", function() {
     menuToggle.addEventListener('click', function() { document.body.classList.add('drawer-open'); });
   }
 
-  var closeTargets = ['drawer-close', 'drawer-overlay'];
-  closeTargets.forEach(function(id) {
+  ['drawer-close', 'drawer-overlay'].forEach(function(id) {
     var el = document.getElementById(id);
     if(el) el.addEventListener('click', function() { document.body.classList.remove('drawer-open'); });
   });
 
-  // Delegación de eventos para submenús del drawer
   document.addEventListener('click', function(e) {
     var target = e.target.closest('#side-drawer .has-children > a');
     if (target) {
@@ -218,72 +221,63 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   });
 
-  /* 4. REUBICACIÓN TÍTULO DE BLOGGER AUTOMÁTICAMENTE */
+  /* 4. REUBICACIÓN TÍTULO */
   if((document.body.classList.contains('item-view') || window.location.href.indexOf('.html') > -1) && window.location.href.indexOf('search.html') === -1 && window.location.href.indexOf('categories.html') === -1) {
     var pageTitleText = document.title.split(' - ')[0]; 
     var postTitleHTML = '<h2 class="section-title" style="text-align:center; border:0; margin-top:20px; color:var(--brand-color)!important;">' + pageTitleText + '</h2>';
     var firstImg = document.querySelector('.post-body-container img');
     if(firstImg) {
         var firstAnchor = firstImg.closest('a');
-        if(firstAnchor) { 
-          firstAnchor.insertAdjacentHTML('afterend', postTitleHTML); 
-        } else { 
-          firstImg.insertAdjacentHTML('afterend', postTitleHTML); 
-        }
+        (firstAnchor || firstImg).insertAdjacentHTML('afterend', postTitleHTML);
     }
   }
 
-  /* 5. INYECCIÓN ABSOLUTA PARA PÁGINA DE BÚSQUEDA */
-  if (window.location.href.indexOf('/p/search.html') > -1) {
-      document.body.classList.add('is-search-page');
-      var cacheBuster = new Date().getTime();
-      var linkSearch = document.createElement('link');
-      linkSearch.rel = 'stylesheet';
-      linkSearch.href = 'https://raw.githack.com/SamaelCr/AltyGamesTheme/main/pages/search/search.css?v=' + cacheBuster;
-      document.head.appendChild(linkSearch);
+  /* 5 & 6. INYECCIÓN PÁGINAS ESPECIALES */
+  if (window.location.href.indexOf('/p/search.html') > -1 || window.location.href.indexOf('/p/categories.html') > -1) {
+      var isCat = window.location.href.indexOf('/p/categories.html') > -1;
+      if(isCat) document.body.classList.add('is-category-page');
+      else document.body.classList.add('is-search-page');
       
-      var scriptSearch = document.createElement('script');
-      scriptSearch.src = 'https://raw.githack.com/SamaelCr/AltyGamesTheme/main/pages/search/search.js?v=' + cacheBuster;
-      document.head.appendChild(scriptSearch);
+      var cb = new Date().getTime();
+      var styles = ['/pages/search/search.css'];
+      if(isCat) styles.push('/pages/categories/categories.css');
+      
+      styles.forEach(function(path){
+          var l = document.createElement('link'); l.rel = 'stylesheet';
+          l.href = 'https://raw.githack.com/SamaelCr/AltyGamesTheme/main' + path + '?v=' + cb;
+          document.head.appendChild(l);
+      });
+
+      var s = document.createElement('script');
+      s.src = 'https://raw.githack.com/SamaelCr/AltyGamesTheme/main/pages/' + (isCat ? 'categories/categories.js' : 'search/search.js') + '?v=' + cb;
+      document.head.appendChild(s);
   }
 
-  /* 6. INYECCIÓN ABSOLUTA PARA PÁGINA DE CATEGORÍAS */
-  if (window.location.href.indexOf('/p/categories.html') > -1) {
-      document.body.classList.add('is-category-page');
-      var cbCat = new Date().getTime();
-      
-      var linkCat1 = document.createElement('link');
-      linkCat1.rel = 'stylesheet';
-      linkCat1.href = 'https://raw.githack.com/SamaelCr/AltyGamesTheme/main/pages/search/search.css?v=' + cbCat;
-      document.head.appendChild(linkCat1);
-
-      var linkCat2 = document.createElement('link');
-      linkCat2.rel = 'stylesheet';
-      linkCat2.href = 'https://raw.githack.com/SamaelCr/AltyGamesTheme/main/pages/categories/categories.css?v=' + cbCat;
-      document.head.appendChild(linkCat2);
-
-      var scriptCat = document.createElement('script');
-      scriptCat.src = 'https://raw.githack.com/SamaelCr/AltyGamesTheme/main/pages/categories/categories.js?v=' + cbCat;
-      document.head.appendChild(scriptCat);
-  }
-
-  /* 7. NUEVO SISTEMA DE CARGA AJAX */
+  /* 7. CARGA AJAX PRINCIPAL */
   var mainGridContainer = document.getElementById('main-ajax-grid');
   if (mainGridContainer && !document.body.classList.contains('is-category-page') && !document.body.classList.contains('is-search-page')) {
       var urlParams = new URLSearchParams(window.location.search);
       var currentPage = parseInt(urlParams.get('PageNo')) || 1;
       var startIndex = ((currentPage - 1) * posts_per_page) + 1;
       
-      getJSONP("/feeds/posts/summary/-/Destacado?alt=json-in-script&max-results=0", function(dataFeatured) {
+      mainGridContainer.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:20px; color:var(--brand-color);">Cargando juegos...</div>';
+
+      // 1. Obtener conteo de destacados
+      getJSONP("/feeds/posts/summary/-/Destacado?max-results=0", function(dataFeatured) {
           var totalFeatured = (dataFeatured.feed && dataFeatured.feed.openSearch$totalResults) ? parseInt(dataFeatured.feed.openSearch$totalResults.$t) : 0;
           
-          getJSONP("/feeds/posts/summary/-/Destacado?alt=json-in-script&max-results=2", function(jsonFeatured) { 
-            loadFeatured(jsonFeatured); 
-          });
+          // 2. Cargar los destacados visibles (Top 2)
+          if(totalFeatured > 0) {
+            getJSONP("/feeds/posts/summary/-/Destacado?max-results=2", function(jsonFeatured) { 
+                loadFeatured(jsonFeatured); 
+            });
+          } else {
+            var fGrid = document.getElementById("featured-ajax-grid");
+            if(fGrid) fGrid.innerHTML = "<div style='grid-column:1/-1; opacity:0.5'>No hay destacados.</div>";
+          }
 
-          mainGridContainer.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:20px; color:var(--brand-color);">Cargando juegos...</div>';
-          
-          getJSONP("/feeds/posts/summary?alt=json-in-script&start-index=" + startIndex + "&max-results=" + (posts_per_page + totalFeatured), function(jsonMain) {
+          // 3. Cargar el grid principal (ajustando startIndex para saltar duplicados si fuera necesario)
+          getJSONP("/feeds/posts/summary?start-index=" + startIndex + "&max-results=" + (posts_per_page + totalFeatured), function(jsonMain) {
             loadMainGrid(jsonMain, currentPage, totalFeatured);
           });
       });
