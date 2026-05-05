@@ -22,11 +22,11 @@
 //]]>
 </script>
 
-<!-- 2. CARGA DE ASSETS (VERSION VANILLA 3.20) -->
+<!-- 2. CARGA DE ASSETS (VERSION VANILLA 3.40) -->
 
 <!-- OPCIÓN 1: GITHACK (DESARROLLO - ACTUALIZACIÓN AL INSTANTE) -->
 <link href='https://raw.githack.com/SamaelCr/AltyGamesTheme/main/styles.css?v=3.20' rel='stylesheet' type='text/css'/>
-<script src='https://raw.githack.com/SamaelCr/AltyGamesTheme/main/script.js?v=3.20' type='text/javascript'/>
+<script src='https://raw.githack.com/SamaelCr/AltyGamesTheme/main/script.js?v=3.40' type='text/javascript'/>
 
 <!-- OPCIÓN 2: STATICALLY (DESARROLLO SEMI-PRO) 
 <link href='https://cdn.statically.io/gh/SamaelCr/AltyGamesTheme/main/styles.css' rel='stylesheet' type='text/css'/>
@@ -271,8 +271,8 @@ a { color: $(brand.color); }
                 <div class='blog-posts hfeed'>
                   <b:loop values='data:posts' var='post'>
                     <b:include data='post' name='post'/>
-                    <!-- CORRECCIÓN DE SINTAXIS PARA OCULTAR DISQUS -->
-                    <b:if cond='!data:blog.url.contains(&quot;search.html&quot;) and !data:blog.url.contains(&quot;categories.html&quot;)'>
+                    <!-- FIX SINTAXIS: SE USA EL OPERADOR CONTAINS DE BLOGGER CORRECTAMENTE -->
+                    <b:if cond='! (data:blog.url contains &quot;search.html&quot; or data:blog.url contains &quot;categories.html&quot;)'>
                         <b:include cond='data:blog.pageType in {&quot;static_page&quot;,&quot;item&quot;}' data='post' name='comment_picker'/>
                     </b:if>
                   </b:loop>

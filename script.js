@@ -111,11 +111,14 @@ function loadMainGrid(json, currentPage, totalFeatured) {
   }
 }
 
+/* INICIO DE LÓGICA DOM */
 document.addEventListener("DOMContentLoaded", function() {
-  /* 1. SISTEMA DE MENÚ */
+  
+  /* 1. SISTEMA DE MENÚ (Submenús por prefijo _) */
   var currentParent = null;
   var currentUl = null;
   var menuItems = document.querySelectorAll('.dark_menu > li');
+  
   menuItems.forEach(function(li) {
     var link = li.querySelector('a');
     if (link) {
@@ -137,7 +140,9 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   });
 
-  document.querySelectorAll('.dark_menu').forEach(function(m) { m.classList.add('menu-ready'); m.style.opacity = "1"; });
+  // Forzar visibilidad del menú tras procesar
+  var darkMenus = document.querySelectorAll('.dark_menu');
+  darkMenus.forEach(function(m) { m.classList.add('menu-ready'); m.style.opacity = "1"; });
 
   /* 2. MODO CLARO / OSCURO */
   var themeBtn = document.getElementById('theme-toggle');
@@ -166,7 +171,9 @@ document.addEventListener("DOMContentLoaded", function() {
   }
 
   var btnToggle = document.getElementById('menu-toggle');
-  if (btnToggle) btnToggle.onclick = function() { document.body.classList.add('drawer-open'); };
+  if (btnToggle) {
+    btnToggle.onclick = function() { document.body.classList.add('drawer-open'); };
+  }
   
   ['drawer-close', 'drawer-overlay'].forEach(function(id) {
     var el = document.getElementById(id);
@@ -179,7 +186,9 @@ document.addEventListener("DOMContentLoaded", function() {
     var params = new URLSearchParams(window.location.search);
     var page = parseInt(params.get('PageNo')) || 1;
     var start = ((page - 1) * posts_per_page) + 1;
+
     mainGrid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:40px;">Cargando contenido...</div>';
+
     getJSONP("/feeds/posts/summary/-/Destacado?max-results=0", function(data) {
       var totalF = (data.feed && data.feed.openSearch$totalResults) ? parseInt(data.feed.openSearch$totalResults.$t) : 0;
       getJSONP("/feeds/posts/summary/-/Destacado?max-results=2", loadFeatured);
@@ -189,25 +198,31 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   }
 
-  /* 5. INYECCIÓN DINÁMICA CON CACHE BUSTER */
-  var cb = new Date().getTime();
+  /* 5. INYECCIÓN DINÁMICA DE MÓDULOS (SEARCH / CATEGORIES) */
+  var cacheBuster = new Date().getTime();
   if (window.location.href.indexOf('/p/search.html') > -1) {
       document.body.classList.add('is-search-page');
       var s_css = document.createElement('link'); s_css.rel = 'stylesheet';
-      s_css.href = 'https://raw.githack.com/SamaelCr/AltyGamesTheme/main/pages/search/search.css?v=' + cb;
+      s_css.href = 'https://raw.githack.com/SamaelCr/AltyGamesTheme/main/pages/search/search.css?v=' + cacheBuster;
       document.head.appendChild(s_css);
       var s_js = document.createElement('script');
-      s_js.src = 'https://raw.githack.com/SamaelCr/AltyGamesTheme/main/pages/search/search.js?v=' + cb;
+      s_js.src = 'https://raw.githack.com/SamaelCr/AltyGamesTheme/main/pages/search/search.js?v=' + cacheBuster;
       document.head.appendChild(s_js);
   }
 
   if (window.location.href.indexOf('/p/categories.html') > -1) {
       document.body.classList.add('is-category-page');
+      // Inyectar CSS de búsqueda (base) y categorías (específico)
+      var c_css_base = document.createElement('link'); c_css_base.rel = 'stylesheet';
+      c_css_base.href = 'https://raw.githack.com/SamaelCr/AltyGamesTheme/main/pages/search/search.css?v=' + cacheBuster;
+      document.head.appendChild(c_css_base);
+
       var c_css = document.createElement('link'); c_css.rel = 'stylesheet';
-      c_css.href = 'https://raw.githack.com/SamaelCr/AltyGamesTheme/main/pages/categories/categories.css?v=' + cb;
+      c_css.href = 'https://raw.githack.com/SamaelCr/AltyGamesTheme/main/pages/categories/categories.css?v=' + cacheBuster;
       document.head.appendChild(c_css);
+
       var c_js = document.createElement('script');
-      c_js.src = 'https://raw.githack.com/SamaelCr/AltyGamesTheme/main/pages/categories/categories.js?v=' + cb;
+      c_js.src = 'https://raw.githack.com/SamaelCr/AltyGamesTheme/main/pages/categories/categories.js?v=' + cacheBuster;
       document.head.appendChild(c_js);
   }
 });
