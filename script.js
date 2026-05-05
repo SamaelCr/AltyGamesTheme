@@ -217,7 +217,7 @@ $(document).ready(function() {
           type: "GET",
           dataType: "jsonp",
           success: function(dataFeatured) {
-              var totalFeatured = dataFeatured.feed.openSearch$totalResults ? parseInt(dataFeatured.feed.openSearch$totalResults.$t) : 0;
+              var totalFeatured = (dataFeatured.feed && dataFeatured.feed.openSearch$totalResults) ? parseInt(dataFeatured.feed.openSearch$totalResults.$t) : 0;
 
               // Cargamos los destacados reales para el grid superior
               $.ajax({
@@ -227,10 +227,10 @@ $(document).ready(function() {
                   success: function(json) { loadFeatured(json); }
               });
 
-              // Cargamos el grid principal (pedimos 11 para tener margen por si hay destacados)
+              // Cargamos el grid principal
               $('#main-ajax-grid').html('<div style="grid-column:1/-1; text-align:center; padding:20px; color:var(--brand-color);">Cargando juegos...</div>');
               $.ajax({
-                  url: "/feeds/posts/summary?alt=json-in-script&start-index=" + startIndex + "&max-results=" + (posts_per_page + 2),
+                  url: "/feeds/posts/summary?alt=json-in-script&start-index=" + startIndex + "&max-results=" + (posts_per_page + totalFeatured),
                   type: "GET",
                   dataType: "jsonp",
                   success: function(json) {
