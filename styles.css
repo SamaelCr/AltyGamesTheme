@@ -255,6 +255,11 @@ body.drawer-open #drawer-overlay { display: block; }
 .light-theme .sidebar-search button { background: #f0f0f0 !important; color: #333333 !important; }
 .light-theme .sidebar-box { background: #ffffff !important; border: 2px solid #dddddd !important; color: #888888 !important; }
 
+/* FIX PAGINACIÓN MODO CLARO */
+.light-theme .showpageNum { background: #f0f0f0 !important; color: #333 !important; border-color: #ddd !important; }
+.light-theme .showpageNum:hover { background: var(--brand-color) !important; color: #fff !important; }
+.light-theme .showpagePoint { background: var(--brand-color) !important; color: #fff !important; }
+
 /* --- 15. MEDIA QUERIES --- */
 @media screen and (max-width: 768px) {
     #header { height: 200px; }
